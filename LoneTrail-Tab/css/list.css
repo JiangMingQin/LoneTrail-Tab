@@ -9,7 +9,7 @@
     height: 60px; margin-bottom: 10px; padding: 0 25px;
     
     background-color: var(--glass-bg);
-    background-image: var(--glass-sheen);
+    background-image: var(--glass-sheen), var(--glass-oxidize);
     border: 1px solid var(--glass-border); 
     border-radius: 6px;
     color: var(--text-sub);
@@ -19,7 +19,7 @@
     font-family: var(--font-ui);
 
     backdrop-filter: blur(var(--glass-blur)) saturate(1.2); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
-    box-shadow: var(--glass-rim), 0 2px 8px var(--shadow-soft);
+    box-shadow: var(--glass-rim);
     
     cursor: pointer; overflow: hidden;
     
@@ -38,30 +38,6 @@
     content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 0%;
     background-color: var(--accent); z-index: 1; 
     transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-/* 扫描线：hover 与选中时一次性横扫，克制频率 */
-.list-item::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -60%;
-    bottom: 0;
-    width: 45%;
-    z-index: 3;
-    background: linear-gradient(105deg, transparent, var(--panel-highlight) 50%, transparent);
-    transform: skewX(-15deg);
-    opacity: 0;
-    pointer-events: none;
-}
-.list-item:hover::after,
-.list-item.selected::after {
-    opacity: 1;
-    animation: list-scan 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-@keyframes list-scan {
-    from { left: -60%; }
-    to { left: 130%; }
 }
 
 .list-item .title, .list-item .url, .list-item .list-favicon, .list-item .folder-indicator {
@@ -124,7 +100,7 @@
     z-index: 0;
     
     background-color: var(--glass-bg);
-    background-image: var(--glass-sheen);
+    background-image: var(--glass-sheen), var(--glass-oxidize);
     backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
     box-shadow: var(--glass-rim);
