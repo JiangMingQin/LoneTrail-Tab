@@ -5,7 +5,6 @@
 
     /* 基础 */
     --bg-color: #F5F7F9;
-    --surface: rgba(255, 255, 255, 0.72);  /* 面板/磨砂底 */
     --inset: rgba(32, 48, 60, 0.05);       /* 内部轻微填充 */
 
     /* 文字 */
@@ -33,16 +32,26 @@
     --overlay: rgba(16, 20, 24, 0.60);
 
     /* 组件派生 */
-    --dial-bg: var(--surface);
-    --dial-border: rgba(32, 48, 60, 0.14);
     --dial-active-bg: var(--text-main);
     --dial-idx-active: rgba(184, 233, 134, 0.30);
-    --modal-bg: rgba(250, 251, 252, 0.90);
     --decoration-ring: rgba(32, 48, 60, 0.08);
 
     /* 字体 */
+    --font-ui: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
     --font-stack: "Roboto Mono", "Consolas", "Monaco", monospace;
     --ui-font-size: 14px;
+
+    /* 磨砂亚克力材质（明色） */
+    --panel-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.45) 100%);
+    --panel-border: rgba(206, 190, 150, 0.32);
+    --panel-highlight: rgba(255, 255, 255, 0.75);
+    --panel-blur: 18px;
+    --patina: rgba(214, 190, 140, 0.35);
+
+    /* 背景柔光斑 */
+    --glow-spot-1: rgba(143, 184, 0, 0.10);
+    --glow-spot-2: rgba(214, 190, 140, 0.16);
+    --glow-spot-3: rgba(150, 180, 205, 0.10);
 }
 
 [data-theme="dark"] {
@@ -51,7 +60,6 @@
        ========================================= */
 
     --bg-color: #101418;
-    --surface: rgba(26, 32, 38, 0.72);
     --inset: rgba(230, 236, 240, 0.06);
 
     --text-main: #E6ECF0;
@@ -73,10 +81,19 @@
     --shadow-soft: rgba(0, 0, 0, 0.25);
     --overlay: rgba(0, 0, 0, 0.60);
 
-    --dial-bg: var(--surface);
-    --dial-border: rgba(230, 236, 240, 0.14);
     --dial-active-bg: var(--text-main);
     --dial-idx-active: rgba(143, 184, 0, 0.35);
-    --modal-bg: rgba(18, 22, 27, 0.92);
     --decoration-ring: rgba(230, 236, 240, 0.10);
+
+    /* 液态玻璃材质（暗色） */
+    --panel-bg: linear-gradient(150deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(0, 0, 0, 0.12) 100%);
+    --panel-border: rgba(255, 255, 255, 0.16);
+    --panel-highlight: rgba(255, 255, 255, 0.28);
+    --panel-blur: 20px;
+    --patina: rgba(255, 214, 150, 0.10);
+
+    /* 背景柔光斑 */
+    --glow-spot-1: rgba(100, 170, 60, 0.14);
+    --glow-spot-2: rgba(70, 130, 150, 0.14);
+    --glow-spot-3: rgba(160, 200, 230, 0.06);
 }

@@ -15,7 +15,7 @@ body {
     height: 100vh;
     overflow: hidden;
     
-    font-family: var(--font-stack);
+    font-family: var(--font-ui);
     background-color: var(--bg-color);
     color: var(--text-main);
     
@@ -49,6 +49,19 @@ body {
     z-index: -1;
     overflow: hidden;
     background-color: var(--bg-color);
+}
+
+/* 柔光斑层：位于等高线之下，磨砂面板之上提供通透感 */
+#bg-layer::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background-image:
+        radial-gradient(circle at 16% 20%, var(--glow-spot-1) 0%, transparent 52%),
+        radial-gradient(circle at 84% 66%, var(--glow-spot-2) 0%, transparent 58%),
+        radial-gradient(circle at 52% 90%, var(--glow-spot-3) 0%, transparent 48%);
 }
 
 /* =========================================

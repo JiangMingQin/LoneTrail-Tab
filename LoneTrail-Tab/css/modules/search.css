@@ -1,7 +1,9 @@
 .top-search-wrapper {
     display: flex; align-items: center;
-    background: var(--dial-bg); /* 跟随主题的磨砂背景 */
-    border-bottom: 1px solid var(--dial-border); /* 只保留底边框，更像输入线 */
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--panel-border);
+    backdrop-filter: blur(14px) saturate(1.25);
+    -webkit-backdrop-filter: blur(14px) saturate(1.25);
     
     height: 30px; /* 稍微矮一点 */
     width: 180px; 
@@ -22,6 +24,7 @@
 .search-icon { 
     font-size: 10px; font-weight: bold; color: var(--accent); margin-right: 8px; 
     white-space: nowrap; opacity: 0.8; letter-spacing: 1px; padding-left: 5px;
+    font-family: var(--font-stack);
 }
 
 #top-search-input {

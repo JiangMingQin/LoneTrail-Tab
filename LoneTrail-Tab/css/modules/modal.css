@@ -12,9 +12,11 @@
 
 /* 核心面板：固定大卡片 */
 .rhine-panel {
-    background: var(--modal-bg);
-    border: 1px solid var(--accent);
-    box-shadow: 0 0 0 1px var(--border), 0 30px 80px var(--shadow);
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    backdrop-filter: blur(24px) saturate(1.4);
+    -webkit-backdrop-filter: blur(24px) saturate(1.4);
+    box-shadow: inset 0 1px 0 var(--patina), 0 0 0 1px var(--border), 0 30px 80px var(--shadow);
     
     /* [修改] 固定大尺寸 */
     width: 900px;
@@ -35,14 +37,14 @@
 
 /* 头部 */
 .modal-header {
-    background: var(--dial-bg); /*稍微浅一点的背景*/
+    background: var(--panel-bg);
     padding: 0 30px; height: 60px;
     display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid var(--grid-line);
+    border-bottom: 1px solid var(--panel-border);
     flex-shrink: 0; /* 防止被压缩 */
 }
-.header-title h3 { margin: 0; font-size: 18px; font-weight: 900; letter-spacing: 2px; color: var(--text-main); }
-.header-sub { font-size: 10px; font-weight: bold; color: var(--accent); letter-spacing: 1px; margin-left: 10px; background: var(--inset); padding: 2px 6px; border-radius: 2px; }
+.header-title h3 { margin: 0; font-size: 18px; font-weight: 900; letter-spacing: 2px; color: var(--text-main); font-family: var(--font-ui); }
+.header-sub { font-size: 10px; font-weight: bold; color: var(--accent); letter-spacing: 1px; margin-left: 10px; background: var(--inset); padding: 2px 6px; border-radius: 2px; font-family: var(--font-stack); }
 
 .close-modal-btn {
     font-size: 12px; font-weight: 800; color: var(--text-sub);
@@ -80,22 +82,22 @@
 /* 模块标题 */
 .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
 .section-num { font-size: 32px; font-weight: 900; color: var(--grid-line); font-family: "Impact"; line-height: 1; }
-.section-title { font-size: 14px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-main); }
+.section-title { font-size: 14px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-main); font-family: var(--font-ui); }
 .section-line { flex: 1; height: 2px; background: var(--grid-line); }
 
 /* --- 设置项样式 (保持之前的 List Layout) --- */
 .keybind-list { display: flex; flex-direction: column; gap: 10px; }
 .key-row {
     display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 15px; background: var(--dial-bg);
+    padding: 12px 15px; background: var(--panel-bg);
     border: 1px solid transparent; border-radius: 4px; transition: 0.2s;
 }
 .key-row:hover { background: var(--inset); border-color: var(--accent-dim); }
-.key-label { font-size: 11px; font-weight: 700; color: var(--text-sub); letter-spacing: 0.5px; }
+.key-label { font-size: 11px; font-weight: 700; color: var(--text-sub); letter-spacing: 0.5px; font-family: var(--font-stack); }
 
 .bind-group { display: flex; gap: 8px; width: 140px; }
 .key-bind-btn {
-    flex: 1; background: var(--bg-color); border: 1px solid var(--dial-border);
+    flex: 1; background: var(--bg-color); border: 1px solid var(--panel-border);
     color: var(--text-main); padding: 6px 0; border-radius: 2px;
     font-family: var(--font-stack); font-size: 11px; font-weight: bold;
     cursor: pointer; transition: 0.2s;
@@ -111,13 +113,13 @@
     background: transparent;
 }
 
-.switch-label span { font-size: 13px; font-weight: 700; color: var(--text-main); display: block;}
+.switch-label span { font-size: 13px; font-weight: 700; color: var(--text-main); display: block; font-family: var(--font-ui);}
 .switch-label small { font-size: 11px; color: var(--text-sub); margin-top: 4px; display: block; }
 
 /* 底部按钮区 */
 .modal-footer {
-    padding: 20px 30px; background: var(--dial-bg);
-    border-top: 1px solid var(--grid-line);
+    padding: 20px 30px; background: var(--panel-bg);
+    border-top: 1px solid var(--panel-border);
     display: flex; justify-content: space-between; align-items: center;
     flex-shrink: 0;
 }
@@ -161,8 +163,8 @@
     position: absolute;
     cursor: pointer;
     top: 0; left: 0; right: 0; bottom: 0;
-    background-color: var(--dial-bg);
-    border: 1px solid var(--grid-line);
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
     transition: .3s;
     border-radius: 2px; /* 方形风格 */
 }
