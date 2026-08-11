@@ -23,15 +23,6 @@
     box-shadow: inset 0 0 0 1px var(--decoration-ring);
     pointer-events: none;
     z-index: 0;
-    /* 磁带卷轴辐条 + 同心圆 */
-    background:
-        repeating-conic-gradient(var(--decoration-ring) 0deg 4deg, transparent 4deg 28deg),
-        radial-gradient(circle at center,
-            transparent 0 42%,
-            var(--decoration-ring) 42% 43%,
-            transparent 43% 60%,
-            var(--decoration-ring) 60% 61%,
-            transparent 61%);
 }
 
 .dial-container {
