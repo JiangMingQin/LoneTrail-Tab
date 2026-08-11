@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { escapeHtml } from './utils.js';
 import { Actions } from './actions.js';
-import { Algorithm } from './features/algorithm.js';
+import { Frecency } from './features/algorithm.js';
 
 /** DOM element references */
 const els = {
@@ -140,7 +140,7 @@ export function renderChildrenDOM() {
     const activeParent = state.parents[state.parentIndex];
 
     if (activeParent && activeParent.id === 'QUICK_START') {
-        activeParent.children = Algorithm.getShortcuts();
+        activeParent.children = Frecency.getShortcuts();
     }
 
     if (activeParent) {

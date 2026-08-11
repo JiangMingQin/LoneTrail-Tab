@@ -28,11 +28,9 @@ const DEFAULT_CONFIG = {
         soundFx: false,
         theme: 'dark',
         clearSearchOnActivate: false,
-        // --- SASA 算法相关配置 ---
-        quickLaunchMax: 7,      // 快捷栏默认显示数量 (7-20)
-        deathThreshold: 0.05,   // 权重死亡阈值
-        halfLife: 15,           // 启动期半衰期 (h)
-        anchorCount: 3,         // 锚点数量 (m)
+        // --- Frecency 算法相关配置 ---
+        quickLaunchMax: 7,       // 快捷栏默认显示数量 (3-12)
+        frecencyHalfLifeDays: 7, // 分数半衰期 (天)
     },
     keys: { ...DEFAULT_KEYS },
 };
@@ -55,16 +53,11 @@ export const state = {
     searchResults: [],
     searchQuery: '',
 
-    // --- SASA 算法运行状态 (持久化) ---
-    algorithm: {
-        phase: 'BOOTSTRAP',    // 当前阶段: BOOTSTRAP / STABLE
-        weights: {},           // 权重池 { urlId: weight_float }，上限 20
-        lastClick: {},         // 上次点击时间戳 { urlId: t }
-        totalClicks: 0,        // 总点击数 (τ)
-        t: 0,                  // 逻辑时间 (启动期为τ，稳定期为锚点点击数)
-        anchors: [],           // 当前锚点 ID 列表
-        shortcuts: [],         // 快捷栏队列 (存储 ID，按进入顺序倒序)
-        alpha: 0.2,            // 锚点点击频率估计值
+    // --- Frecency 算法运行状态 (持久化) ---
+    frecency: {
+        version: 1,        // 数据结构版本，便于未来迁移
+        scores: {},        // 分数池 { urlId: score_float }，上限 50
+        lastVisit: {},     // 上次点击时间戳 { urlId: timestamp }
     },
 
     // Config
@@ -81,20 +74,30 @@ export async function loadConfig() {
 
     try {
         const parsed = JSON.parse(json);
-        
-        // 1. 恢复配置项
+
+        // 0. 迁移：检测到旧 SASA 数据（algorithm 字段）则清零重来
+        if (parsed.algorithm) {
+            console.info('Frecency: legacy SASA data detected, resetting algorithm state.');
+            delete parsed.algorithm;
+        }
+
+        // 1. 恢复配置项（剥离旧 SASA 配置字段）
+        const legacyPrefs = parsed.preferences || {};
+        delete legacyPrefs.deathThreshold;
+        delete legacyPrefs.halfLife;
+        delete legacyPrefs.anchorCount;
+
         state.config = {
             ...state.config,
-            ...parsed,
-            preferences: { ...state.config.preferences, ...(parsed.preferences || {}) },
+            preferences: { ...state.config.preferences, ...legacyPrefs },
             keys: { ...state.config.keys, ...(parsed.keys || {}) },
         };
 
-        // 2. 恢复算法状态 (如果有)
-        if (parsed.algorithm) {
-            state.algorithm = {
-                ...state.algorithm,
-                ...parsed.algorithm
+        // 2. 恢复 Frecency 状态 (如果有)
+        if (parsed.frecency) {
+            state.frecency = {
+                ...state.frecency,
+                ...parsed.frecency,
             };
         }
     } catch (e) {
@@ -110,7 +113,7 @@ export function saveConfig() {
     const dataToSave = {
         preferences: state.config.preferences,
         keys: state.config.keys,
-        algorithm: state.algorithm // 将权重和阶段持久化
+        frecency: state.frecency // 将分数与时间戳持久化
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
 }

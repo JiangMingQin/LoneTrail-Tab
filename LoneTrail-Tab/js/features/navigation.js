@@ -1,6 +1,6 @@
 import { state } from '../state.js';
 import { fullRender, updateCursor } from '../render.js';
-import { Algorithm } from './algorithm.js';
+import { Frecency } from './algorithm.js';
 
 /**
  * Navigation feature - handles focus movement, drill-down, and back navigation
@@ -116,7 +116,7 @@ export const NavigationFeature = {
             // [核心修改] 只有是有效的 URL 点击才触发算法更新
             // 排除虚拟节点 ID 或非书签项（视你的具体 ID 分配而定）
             if (item.id && !item.id.startsWith('search-')) {
-                Algorithm.update(item.id); 
+                Frecency.update(item.id);
             }
 
             this._openUrl(item.url);
@@ -148,7 +148,7 @@ export const NavigationFeature = {
         // [新增] 特殊逻辑：如果进入的是 QUICK_START 虚拟文件夹
         // 我们需要确保其 children 是实时的
         if (folderNode.id === 'QUICK_START') {
-            folderNode.children = Algorithm.getShortcuts();
+            folderNode.children = Frecency.getShortcuts();
         }
 
         state.navStack.push({

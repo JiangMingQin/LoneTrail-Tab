@@ -1,7 +1,7 @@
 import { state, saveConfig } from './state.js';
 import { Actions } from './actions.js';
 import { applyTheme } from './utils.js';
-import { updateKeyHints } from './render.js';
+import { fullRender, updateKeyHints } from './render.js';
 
 /** Currently recording key binding button */
 let recordingBtn = null;
@@ -212,6 +212,14 @@ function initSettingsModal() {
         };
     }
 
+    const quickLaunchRange = document.getElementById('setting-quick-launch');
+    if (quickLaunchRange) {
+        quickLaunchRange.oninput = (e) => {
+            const valSpan = document.getElementById('quick-launch-val');
+            if (valSpan) valSpan.textContent = e.target.value;
+        };
+    }
+
     if (saveBtn) saveBtn.onclick = () => saveSettings(modal);
     if (resetBtn) {
         resetBtn.onclick = () => {
@@ -241,11 +249,17 @@ function openSettingsModal(modal, msgEl) {
         newTabCheck: document.getElementById('setting-open-newtab'),
         soundCheck: document.getElementById('setting-sound-fx'),
         clearSearchCheck: document.getElementById('setting-clear-search'),
+        quickLaunchRange: document.getElementById('setting-quick-launch'),
+        quickLaunchVal: document.getElementById('quick-launch-val'),
     };
 
     if (controls.fontRange) {
         controls.fontRange.value = prefs.uiFontSize || 14;
         if (controls.fontVal) controls.fontVal.textContent = controls.fontRange.value + 'px';
+    }
+    if (controls.quickLaunchRange) {
+        controls.quickLaunchRange.value = prefs.quickLaunchMax || 7;
+        if (controls.quickLaunchVal) controls.quickLaunchVal.textContent = controls.quickLaunchRange.value;
     }
     if (controls.clockCheck) controls.clockCheck.checked = prefs.showClock !== false;
     if (controls.dateCheck) controls.dateCheck.checked = prefs.showDate !== false;
@@ -299,9 +313,11 @@ function saveSettings(modal) {
         newTabCheck: document.getElementById('setting-open-newtab'),
         soundCheck: document.getElementById('setting-sound-fx'),
         clearSearchCheck: document.getElementById('setting-clear-search'),
+        quickLaunchRange: document.getElementById('setting-quick-launch'),
     };
 
     if (controls.fontRange) prefs.uiFontSize = parseInt(controls.fontRange.value);
+    if (controls.quickLaunchRange) prefs.quickLaunchMax = parseInt(controls.quickLaunchRange.value);
     if (controls.clockCheck) prefs.showClock = controls.clockCheck.checked;
     if (controls.dateCheck) prefs.showDate = controls.dateCheck.checked;
     if (controls.newTabCheck) prefs.openNewTab = controls.newTabCheck.checked;
@@ -358,6 +374,9 @@ function applyVisualChanges(prefs) {
         dateEl.style.display = dateDisplay;
         weekEl.style.display = dateDisplay;
     }
+
+    // 刷新 QUICK_START 快捷栏（数量变化即时生效）
+    fullRender();
 }
 
 /** Initializes theme toggle button */
