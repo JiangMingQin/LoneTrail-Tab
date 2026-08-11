@@ -25,7 +25,7 @@
 
     /* 线条与分隔 */
     --border: rgba(32, 48, 60, 0.12);
-    --grid-line: var(--border);
+    --grid-line: rgba(32, 48, 60, 0.14);
 
     /* 阴影与遮罩 */
     --shadow: rgba(16, 20, 24, 0.10);
@@ -88,7 +88,7 @@
     --danger-glow: rgba(255, 107, 107, 0.5);
 
     --border: rgba(230, 236, 240, 0.10);
-    --grid-line: var(--border);
+    --grid-line: rgba(230, 236, 240, 0.16);
 
     --shadow: rgba(0, 0, 0, 0.35);
     --shadow-soft: rgba(0, 0, 0, 0.25);

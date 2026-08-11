@@ -49,8 +49,6 @@ body {
     z-index: -1;
     overflow: hidden;
     background-color: var(--bg-color);
-    /* 液态玻璃边缘增强：只作用于背景层，不触碰 UI 文字 */
-    filter: contrast(2.8);
 }
 
 /* 柔光斑层：位于等高线之下，磨砂面板之上提供通透感 */
