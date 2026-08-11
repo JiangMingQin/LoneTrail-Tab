@@ -51,17 +51,9 @@
     --led-glow: rgba(17, 17, 17, 0.5);
     --key-highlight: rgba(255, 255, 255, 0.9);
     --key-shadow: rgba(0, 0, 0, 0.20);
-    --scanline: rgba(0, 0, 0, 0.04);
     --vu-1: #333333;
     --vu-2: #666666;
     --vu-3: #999999;
-
-    /* 辉光管（亮色下唯一暖色点缀） */
-    --tube: #17150F;
-    --tube-sheen: rgba(255, 255, 255, 0.08);
-    --tube-text: rgba(255, 176, 92, 0.75);
-    --nixie: #FF8A00;
-    --nixie-glow: rgba(255, 128, 0, 0.65);
 
     /* 字体 */
     --font-ui: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
@@ -114,16 +106,8 @@
     --led-glow: rgba(51, 255, 102, 0.8);
     --key-highlight: rgba(255, 255, 255, 0.10);
     --key-shadow: rgba(0, 0, 0, 0.55);
-    --scanline: rgba(0, 0, 0, 0.32);
     --phosphor-glow: rgba(51, 255, 102, 0.55);
     --vu-1: #33FF66;
     --vu-2: #E9B949;
     --vu-3: #FF5555;
-
-    /* 辉光管（经典暖橙，明暗一致） */
-    --tube: #050705;
-    --tube-sheen: rgba(255, 255, 255, 0.08);
-    --tube-text: rgba(255, 176, 92, 0.75);
-    --nixie: #FF8A00;
-    --nixie-glow: rgba(255, 128, 0, 0.65);
 }
