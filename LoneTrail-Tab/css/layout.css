@@ -14,23 +14,8 @@
     
     /* 视觉风格 */
     border-top: 4px solid var(--accent);
-    border-bottom: 1px solid var(--panel-border);
-    background-color: var(--panel-bg);
-    background-image: var(--panel-sheen);
-    box-shadow: var(--panel-rim);
-    backdrop-filter: blur(var(--panel-blur)) saturate(1.3);
-    -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.3);
-}
-
-/* 液态/磨砂边缘折射暗环 */
-.top-bar::before {
-    content: '';
-    position: absolute;
-    inset: 6px;
-    z-index: -1;
-    border: 1px solid var(--ring-color);
-    filter: blur(6px);
-    pointer-events: none;
+    border-bottom: 1px solid var(--border);
+    background-color: var(--bg-color);
 }
 
 /* 左侧系统标识 */
@@ -81,11 +66,9 @@
 
 .icon-btn:hover { 
     opacity: 1; 
-    background: var(--panel-bg); 
-    border-color: var(--panel-border);
+    background: var(--surface); 
+    border-color: var(--border);
     color: var(--accent); 
-    backdrop-filter: blur(8px) saturate(1.2);
-    -webkit-backdrop-filter: blur(8px) saturate(1.2);
 }
 
 

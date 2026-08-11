@@ -31,15 +31,6 @@
     letter-spacing: 2px;
     
     color: var(--text-main);
-    /* 文字渐变 (仅 Webkit 支持，增强科技感) */
-    background: linear-gradient(to bottom, var(--text-main) 50%, var(--text-sub) 100%);
-    
-    background-clip: text;
-    -webkit-background-clip: text;
-    /* 文字填充透明 */
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    
     position: relative;
 }
 
