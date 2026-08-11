@@ -59,6 +59,8 @@ export function renderDialDOM() {
         const div = document.createElement('div');
         div.className = 'dial-item';
         div.dataset.index = index;
+        div.setAttribute('role', 'button');
+        div.setAttribute('aria-label', node.title || 'Untitled');
 
         const indexStr = String(index).padStart(2, '0');
         let iconHtml = '<span class="dial-icon-folder">/</span>';
@@ -217,6 +219,8 @@ function createChildItem(node, index) {
     const div = document.createElement('div');
     div.className = 'list-item animate-enter';
     div.style.setProperty('--i', index);
+    div.setAttribute('role', 'button');
+    div.setAttribute('aria-label', node.title || 'Untitled');
 
     const titleSpan = document.createElement('span');
     titleSpan.className = 'title';
@@ -275,8 +279,10 @@ function updateChildrenSelection() {
                 div.classList.add('selected');
                 div.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
             }
+            div.setAttribute('aria-current', 'true');
         } else {
             div.classList.remove('selected');
+            div.removeAttribute('aria-current');
         }
     });
 }

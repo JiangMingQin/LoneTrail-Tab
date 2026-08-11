@@ -12,11 +12,12 @@
 
 /* 核心面板：固定大卡片 */
 .rhine-panel {
-    background: var(--panel-bg);
+    background-color: var(--panel-bg);
+    background-image: var(--panel-sheen);
     border: 1px solid var(--panel-border);
-    backdrop-filter: blur(24px) saturate(1.4);
-    -webkit-backdrop-filter: blur(24px) saturate(1.4);
-    box-shadow: inset 0 1px 0 var(--patina), 0 0 0 1px var(--border), 0 30px 80px var(--shadow);
+    backdrop-filter: blur(var(--panel-blur)) saturate(1.4);
+    -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.4);
+    box-shadow: var(--panel-rim), 0 0 0 1px var(--border), 0 30px 80px var(--shadow);
     
     /* [修改] 固定大尺寸 */
     width: 900px;
@@ -26,8 +27,20 @@
     display: flex; flex-direction: column; /* 垂直布局：头-身-脚 */
     position: relative; overflow: hidden;
     
-    animation: panelEnter 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    animation: panelEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     transform-style: preserve-3d;
+}
+
+/* 液态/磨砂边缘折射暗环 */
+.rhine-panel::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    z-index: -1;
+    border: 1px solid var(--ring-color);
+    border-radius: inherit;
+    filter: blur(6px);
+    pointer-events: none;
 }
 
 @keyframes panelEnter {
@@ -44,7 +57,7 @@
     flex-shrink: 0; /* 防止被压缩 */
 }
 .header-title h3 { margin: 0; font-size: 18px; font-weight: 900; letter-spacing: 2px; color: var(--text-main); font-family: var(--font-ui); }
-.header-sub { font-size: 10px; font-weight: bold; color: var(--accent); letter-spacing: 1px; margin-left: 10px; background: var(--inset); padding: 2px 6px; border-radius: 2px; font-family: var(--font-stack); }
+.header-sub { font-size: 11px; font-weight: bold; color: var(--accent-text); letter-spacing: 1px; margin-left: 10px; background: var(--inset); padding: 2px 6px; border-radius: 2px; font-family: var(--font-stack); }
 
 .close-modal-btn {
     font-size: 12px; font-weight: 800; color: var(--text-sub);
@@ -103,7 +116,6 @@
     cursor: pointer; transition: 0.2s;
 }
 .key-bind-btn:hover { border-color: var(--accent); color: var(--accent); }
-.key-bind-btn.recording { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); animation: pulse 1s infinite; }
 
 /* 右侧开关样式优化 */
 .behavior-grid { display: flex; flex-direction: column; gap: 10px; }
@@ -141,9 +153,6 @@
 .tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
 .bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
 .br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
-
-/* 动画定义 */
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
 
 /* --- Toggle Switch (开关样式) --- */
 .setting-switch {

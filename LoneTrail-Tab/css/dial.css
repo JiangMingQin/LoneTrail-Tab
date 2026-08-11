@@ -53,7 +53,8 @@
     justify-content: space-between;
     padding: 0 20px 0 25px;
     
-    background: var(--panel-bg);
+    background-color: var(--panel-bg);
+    background-image: var(--panel-sheen);
     border: 1px solid var(--panel-border);
     
     /* 右下角单切角形状 */
@@ -61,7 +62,7 @@
     
     backdrop-filter: blur(var(--panel-blur)) saturate(1.3);
     -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.3);
-    box-shadow: inset 0 1px 0 var(--patina), 0 8px 24px var(--shadow-soft);
+    box-shadow: var(--panel-rim), 0 8px 24px var(--shadow-soft);
     
     color: var(--text-sub);
     font-size: var(--ui-font-size);
@@ -80,12 +81,23 @@
                 backdrop-filter 0.3s;
 }
 
+/* 液态/磨砂边缘折射暗环 */
+.dial-item::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    z-index: -1;
+    border: 1px solid var(--ring-color);
+    filter: blur(6px);
+    pointer-events: none;
+}
+
 /* 序列号 */
 .dial-idx {
     font-family: "Impact", "Roboto Mono", monospace;
     font-size: 14px;
-    color: var(--accent);
-    opacity: 0.4;
+    color: var(--accent-text);
+    opacity: 0.55;
     letter-spacing: 1px;
     
     position: relative;
@@ -127,7 +139,7 @@
 
 .dial-icon-folder {
     font-weight: bold;
-    color: var(--accent);
+    color: var(--accent-text);
 }
 
 /* 右侧装饰条 */
@@ -153,22 +165,22 @@
     clip-path: polygon(0 0, 100% 0, 100% 70%, 94% 100%, 0 100%);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    box-shadow: -5px 5px 30px var(--shadow), 0 0 28px var(--accent-dim);
+    box-shadow: -5px 5px 30px var(--shadow), -8px 8px 28px var(--accent-dim);
     z-index: 100;
 }
 
 /* 选中时序号 - 放大作为背景装饰 */
 .dial-item.active .dial-idx {
     position: absolute;
-    top: -12px;
-    left: -2px;
+    top: 50%;
+    left: 10px;
     margin: 0;
-    font-size: 80px;
+    font-size: 64px;
     font-style: normal;
     line-height: 1;
     color: var(--dial-idx-active);
-    opacity: 0.25;
-    transform: none;
+    opacity: 0.22;
+    transform: translateY(-55%);
     pointer-events: none;
 }
 

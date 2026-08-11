@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>RHINE LAB TERMINAL</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
+    <div id="bg-layer"></div>
     <div class="top-bar">
         <div class="system-status">RHINE LAB. // OS</div>
         
         <div class="top-right-group">
-            <div class="icon-btn" id="settings-btn" title="CONFIG">⚙️</div>
-            <div class="icon-btn" id="theme-btn" title="THEME">◑</div>
+            <div class="icon-btn" id="settings-btn" title="CONFIG" aria-label="Open settings">⚙️</div>
+            <div class="icon-btn" id="theme-btn" title="THEME" aria-label="Toggle theme">◑</div>
         </div>
     </div>
 
@@ -39,7 +41,7 @@
                 
                 <div class="top-search-wrapper">
                     <span class="search-icon">SEARCH ::</span>
-                    <input type="text" id="top-search-input" placeholder="INPUT KEYWORD..." autocomplete="off">
+                    <input type="text" id="top-search-input" placeholder="INPUT KEYWORD..." autocomplete="off" aria-label="Search bookmarks">
                 </div>
             </div>
             
@@ -57,14 +59,14 @@
     
     <div class="hex-decoration"><div class="hex"></div><div class="hex"></div><div class="hex"></div></div>
 
-    <div id="settings-modal" class="modal hidden">
+    <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <div class="modal-content rhine-panel">
             <div class="corner tl"></div><div class="corner tr"></div>
             <div class="corner bl"></div><div class="corner br"></div>
 
             <div class="modal-header">
                 <div class="header-title">
-                    <h3>TERMINAL_CONFIG</h3>
+                    <h3 id="modal-title">TERMINAL_CONFIG</h3>
                     <span class="header-sub">Ver. 1.0 // USER_PREFS</span>
                 </div>
                 <div class="close-modal-btn"></div>

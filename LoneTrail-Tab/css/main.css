@@ -27,3 +27,15 @@
     50% { opacity: 0.6; transform: scale(0.95); } /*稍微缩小一点产生呼吸感*/
     100% { opacity: 1; transform: scale(1); }
 }
+
+/* =========================================
+   Keyboard Focus Visibility
+   ========================================= */
+
+.icon-btn:focus-visible,
+.key-bind-btn:focus-visible,
+.dial-item:focus-visible,
+.list-item:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}

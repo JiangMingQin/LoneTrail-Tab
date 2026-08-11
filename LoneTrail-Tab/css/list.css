@@ -1,20 +1,3 @@
-.content-wrapper {
-    flex: 1; padding: 40px 40px 40px 60px;
-    display: flex; flex-direction: column; overflow: hidden;
-}
-
-.content-header h2 {
-    font-size: 36px; font-weight: 300; letter-spacing: -1px; margin: 0;
-    color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.header-line {
-    width: 100%; height: 1px;
-    background: repeating-linear-gradient(to right, var(--accent) 0, var(--accent) 4px, transparent 4px, transparent 8px);
-    margin-top: 15px; opacity: 0.6;
-    animation: expandLine 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; transform-origin: left;
-}
-@keyframes expandLine { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-
 .content-list {
     flex: 1; overflow-y: auto; padding-top: 20px; padding-right: 20px; padding-left: 20px;
     scrollbar-width: none; 
@@ -25,8 +8,9 @@
     position: relative; display: flex; align-items: center;
     height: 60px; margin-bottom: 10px; padding: 0 25px;
     
-    background: var(--panel-bg); 
-    border: 1px solid var(--panel-border); 
+    background-color: var(--glass-bg);
+    background-image: var(--glass-sheen);
+    border: 1px solid var(--glass-border); 
     border-radius: 6px;
     color: var(--text-sub);
     
@@ -34,8 +18,8 @@
     font-weight: 500;
     font-family: var(--font-ui);
 
-    backdrop-filter: blur(var(--panel-blur)) saturate(1.3); -webkit-backdrop-filter: blur(var(--panel-blur)) saturate(1.3);
-    box-shadow: inset 0 1px 0 var(--patina), 0 2px 8px var(--shadow-soft);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.2); -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    box-shadow: var(--glass-rim), 0 2px 8px var(--shadow-soft);
     
     cursor: pointer; overflow: hidden;
     
@@ -87,7 +71,7 @@
 .list-item.selected {
     transform: translateX(15px) scale(1.02) !important;
     box-shadow: 0 10px 30px var(--shadow);
-    border-left: 6px solid var(--bg-color); border-color: var(--border);
+    border-color: var(--border);
     opacity: 1; backdrop-filter: none; -webkit-backdrop-filter: none; background-color: transparent; 
 }
 .list-item.selected::before { width: 100%; }
@@ -100,9 +84,9 @@
 .list-item.selected .folder-indicator { color: var(--text-on-accent) !important; transform: scale(1.1); }
 .list-item .list-favicon { width: 16px; height: 16px; margin-right: 20px; opacity: 0.7; vertical-align: middle; transition: transform 0.3s; }
 .list-item.selected .list-favicon { opacity: 1; transform: scale(1.15); filter: none; }
-.list-item .folder-indicator { margin-right: 15px; transition: 0.2s; color: var(--accent); font-weight: bold; }
+.list-item .folder-indicator { margin-right: 15px; transition: 0.2s; color: var(--accent-text); font-weight: bold; }
 .list-item .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.list-item .url { font-size: 12px; margin-left: 20px; opacity: 0.5; font-family: var(--font-stack); }
+.list-item .url { font-size: 11px; margin-left: 20px; opacity: 0.75; font-family: var(--font-stack); }
 
 /* =========================================================
    Empty State / Endpoint Decoration (Rhine Lab Style v19)
@@ -139,11 +123,15 @@
     inset: 20px;
     z-index: 0;
     
-    background-color: transparent; 
+    background-color: var(--glass-bg);
+    background-image: var(--glass-sheen);
+    backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(1.2);
+    box-shadow: var(--glass-rim);
     opacity: 1; 
     
     /* 极细边框，界定玻璃范围 */
-    border: 1px solid var(--border);
+    border: 1px solid var(--glass-border);
     border-radius: 2px;
 }
 
@@ -209,7 +197,7 @@
     top: 0;
     left: 0;
     bottom: 0;
-    width: 6px; 
+    width: 3px; 
     
     /* [修正 2] 强制使用高亮绿 */
     background-color: var(--accent); 
@@ -231,7 +219,7 @@
 }
 
 .es-sub {
-    font-size: 10px;
+    font-size: 11px;
     letter-spacing: 1px;
     font-weight: 700;
     color: inherit;

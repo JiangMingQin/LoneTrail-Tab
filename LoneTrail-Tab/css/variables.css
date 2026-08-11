@@ -15,7 +15,8 @@
     --text-on-danger: #FFFFFF;             /* 红色警示底上的文字 */
 
     /* 强调色（莱茵荧光绿） */
-    --accent: #8FB800;
+    --accent: #8FB800;                     /* 填充/边框/光效 */
+    --accent-text: #6E8F00;                /* 小字号文字绿（AA 达标） */
     --accent-dim: rgba(143, 184, 0, 0.14);
 
     /* 警示色 */
@@ -41,12 +42,23 @@
     --font-stack: "Roboto Mono", "Consolas", "Monaco", monospace;
     --ui-font-size: 14px;
 
-    /* 磨砂亚克力材质（明色） */
-    --panel-bg: linear-gradient(160deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.45) 100%);
-    --panel-border: rgba(206, 190, 150, 0.32);
-    --panel-highlight: rgba(255, 255, 255, 0.75);
-    --panel-blur: 18px;
-    --patina: rgba(214, 190, 140, 0.35);
+    /* 近透明磨砂（拨盘/顶栏/弹窗/搜索） */
+    --panel-bg: rgba(255, 255, 255, 0.08);
+    --panel-blur: 6px;
+    --panel-border: rgba(206, 190, 150, 0.22);
+    --panel-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, transparent 35%, transparent 65%, rgba(255, 255, 255, 0.15) 100%);
+    --panel-rim: inset 1px -1px 0.5px -0.5px rgba(255, 255, 255, 0.35), inset -1px 1px 0.5px -0.5px rgba(255, 255, 255, 0.18), inset 0 0 1px rgba(32, 48, 60, 0.12);
+    --panel-highlight: rgba(255, 255, 255, 0.75); /* 扫描线高光 */
+
+    /* 液态玻璃（右栏，双主题同配方、明暗仅强度区分） */
+    --glass-bg: rgba(255, 255, 255, 0.07);
+    --glass-blur: 6px;
+    --glass-border: rgba(32, 48, 60, 0.14);
+    --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.35) 100%);
+    --glass-rim: inset 1.5px -1.5px 0.5px -0.5px rgba(255, 255, 255, 0.60), inset -1.5px 1.5px 0.5px -0.5px rgba(255, 255, 255, 0.35), inset 0 0 1.5px rgba(32, 48, 60, 0.30);
+
+    /* 模糊暗环（液态/磨砂边缘折射缝） */
+    --ring-color: rgba(32, 48, 60, 0.28);
 
     /* 背景柔光斑 */
     --glow-spot-1: rgba(143, 184, 0, 0.10);
@@ -69,6 +81,7 @@
     --text-on-danger: #FFFFFF;
 
     --accent: #B8E986;
+    --accent-text: #B8E986;
     --accent-dim: rgba(184, 233, 134, 0.12);
 
     --danger: #FF6B6B;
@@ -85,14 +98,23 @@
     --dial-idx-active: rgba(143, 184, 0, 0.35);
     --decoration-ring: rgba(230, 236, 240, 0.10);
 
-    /* 液态玻璃材质（暗色） */
-    --panel-bg: linear-gradient(150deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.03) 45%, rgba(0, 0, 0, 0.12) 100%);
-    --panel-border: rgba(255, 255, 255, 0.16);
-    --panel-highlight: rgba(255, 255, 255, 0.28);
-    --panel-blur: 20px;
-    --patina: rgba(255, 214, 150, 0.10);
+    /* 液态玻璃（暗色） */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-blur: 8px;
+    --glass-border: rgba(255, 255, 255, 0.14);
+    --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.12) 100%);
+    --glass-rim: inset 1.5px -1.5px 0.5px -0.5px rgba(255, 255, 255, 0.28), inset -1.5px 1.5px 0.5px -0.5px rgba(255, 255, 255, 0.14), inset 0 0 1.5px rgba(0, 0, 0, 0.45);
 
-    /* 背景柔光斑 */
+    /* 暗色其余面板 = 与右栏同族的液态玻璃 */
+    --panel-bg: var(--glass-bg);
+    --panel-blur: var(--glass-blur);
+    --panel-border: var(--glass-border);
+    --panel-sheen: var(--glass-sheen);
+    --panel-rim: var(--glass-rim);
+    --panel-highlight: rgba(255, 255, 255, 0.28);
+
+    --ring-color: rgba(0, 0, 0, 0.45);
+
     --glow-spot-1: rgba(100, 170, 60, 0.14);
     --glow-spot-2: rgba(70, 130, 150, 0.14);
     --glow-spot-3: rgba(160, 200, 230, 0.06);

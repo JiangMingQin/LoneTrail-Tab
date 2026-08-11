@@ -49,6 +49,8 @@ body {
     z-index: -1;
     overflow: hidden;
     background-color: var(--bg-color);
+    /* 液态玻璃边缘增强：只作用于背景层，不触碰 UI 文字 */
+    filter: contrast(2.8);
 }
 
 /* 柔光斑层：位于等高线之下，磨砂面板之上提供通透感 */
@@ -75,6 +77,15 @@ body {
     /* 缩放时保持线宽一致 */
     vector-effect: non-scaling-stroke;
     transform-origin: center;
+}
+
+/* 动效克制：尊重系统减弱动态偏好 */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 /* =========================================

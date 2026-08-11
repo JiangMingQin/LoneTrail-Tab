@@ -13,7 +13,7 @@
     
     /* [新增] 左侧粗装饰线，增强锚点感 */
     padding-left: 20px;
-    border-left: 6px solid var(--accent);
+    border-left: 3px solid var(--accent);
     
     pointer-events: none;
     transition: opacity 0.3s;
@@ -48,12 +48,12 @@
     content: "SYS_LOCAL_TIME //";
     position: absolute;
     top: -14px; left: 2px;
-    font-size: 10px;
-    color: var(--accent);
+    font-size: 11px;
+    color: var(--accent-text);
     letter-spacing: 1px;
     font-family: var(--font-stack);
     font-weight: bold;
-    -webkit-text-fill-color: var(--accent); /* 覆盖上面的渐变 */
+    -webkit-text-fill-color: var(--accent-text); /* 覆盖上面的渐变 */
 }
 
 /* 日期与星期容器 */

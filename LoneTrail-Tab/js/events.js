@@ -67,6 +67,14 @@ function handleInputKey(key, e) {
 
 /** Handles global navigation keys */
 function handleGlobalKey(key, e) {
+    // 设置弹窗打开时，Esc 直接关闭
+    const settingsModal = document.getElementById('settings-modal');
+    if (key === 'escape' && settingsModal && !settingsModal.classList.contains('hidden')) {
+        settingsModal.classList.add('hidden');
+        e.preventDefault();
+        return;
+    }
+
     const keyMap = state.config.keys;
     const matchedActions = Object.keys(keyMap).filter(actionId => 
         keyMap[actionId]?.includes(key)
