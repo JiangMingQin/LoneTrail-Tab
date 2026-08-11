@@ -4,38 +4,38 @@
        ========================================= */
 
     /* 基础 */
-    --bg-color: #F5F7F9;
-    --inset: rgba(32, 48, 60, 0.05);       /* 内部轻微填充 */
+    --bg-color: #F2EFE9;
+    --inset: rgba(74, 69, 64, 0.05);       /* 内部轻微填充 */
 
     /* 文字 */
-    --text-main: #20303C;
-    --text-sub: #5C6B76;
+    --text-main: #4A4540;
+    --text-sub: #7A7268;
     --text-inverse: #FFFFFF;               /* 深色激活底上的文字 */
-    --text-on-accent: #101418;             /* 绿色填充上的文字 */
+    --text-on-accent: #2A2520;             /* 暖金填充上的文字 */
     --text-on-danger: #FFFFFF;             /* 红色警示底上的文字 */
 
     /* 强调色（莱茵荧光绿） */
-    --accent: #8FB800;                     /* 填充/边框/光效 */
-    --accent-text: #6E8F00;                /* 小字号文字绿（AA 达标） */
-    --accent-dim: rgba(143, 184, 0, 0.14);
+    --accent: #B08D57;                     /* 暖金：填充/边框/光效 */
+    --accent-text: #7C5F31;                /* 深琥珀文字（AA 达标） */
+    --accent-dim: rgba(176, 141, 87, 0.16);
 
     /* 警示色 */
     --danger: #D64541;
     --danger-glow: rgba(214, 69, 65, 0.5);
 
     /* 线条与分隔 */
-    --border: rgba(32, 48, 60, 0.12);
-    --grid-line: rgba(32, 48, 60, 0.14);
+    --border: rgba(74, 69, 64, 0.14);
+    --grid-line: rgba(74, 69, 64, 0.08);   /* 等高线大幅减淡，避免摩尔纹 */
 
     /* 阴影与遮罩 */
-    --shadow: rgba(16, 20, 24, 0.10);
-    --shadow-soft: rgba(16, 20, 24, 0.04);
-    --overlay: rgba(16, 20, 24, 0.60);
+    --shadow: rgba(74, 60, 40, 0.12);
+    --shadow-soft: rgba(74, 60, 40, 0.05);
+    --overlay: rgba(58, 47, 35, 0.55);
 
     /* 组件派生 */
     --dial-active-bg: var(--text-main);
-    --dial-idx-active: rgba(184, 233, 134, 0.30);
-    --decoration-ring: rgba(32, 48, 60, 0.08);
+    --dial-idx-active: rgba(255, 235, 200, 0.32);
+    --decoration-ring: rgba(74, 69, 64, 0.08);
 
     /* 字体 */
     --font-ui: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
@@ -48,22 +48,29 @@
     --panel-border: rgba(206, 190, 150, 0.22);
     --panel-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, transparent 35%, transparent 65%, rgba(255, 255, 255, 0.15) 100%);
     --panel-rim: inset 1px -1px 0.5px -0.5px rgba(255, 255, 255, 0.35), inset -1px 1px 0.5px -0.5px rgba(255, 255, 255, 0.18), inset 0 0 1px rgba(32, 48, 60, 0.12);
+    --panel-highlight: rgba(255, 255, 255, 0.60); /* 面板顶部内高光 */
 
-    /* 液态玻璃（右栏，双主题同配方、明暗仅强度区分） */
-    --glass-bg: rgba(255, 255, 255, 0.04);
-    --glass-blur: 2px;
-    --glass-border: rgba(32, 48, 60, 0.14);
-    --glass-sheen: linear-gradient(45deg, rgba(255, 255, 255, 0.55) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.30) 100%);
+    /* 右栏单块玻璃面板（明色：暖象牙） */
+    --glass-bg: rgba(255, 250, 242, 0.55);
+    --glass-blur: 24px;
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.50) 0%, transparent 35%, transparent 75%, rgba(255, 255, 255, 0.15) 100%);
     --glass-oxidize: radial-gradient(circle at 50% 50%, transparent 55%, rgba(200, 170, 120, 0.06) 85%, rgba(180, 150, 100, 0.04) 100%);
-    --glass-rim: inset 2px -2px 1px -1px rgba(255, 255, 255, 0.65), inset -2px 2px 1px -1px rgba(255, 255, 255, 0.40), inset 0 0 2px rgba(32, 48, 60, 0.25), inset 0 0 10px -2px rgba(32, 48, 60, 0.28), inset 0 0 16px rgba(180, 140, 90, 0.05), 0 4px 8px rgba(16, 20, 24, 0.08);
+
+    /* 扁平行（右栏面板内部） */
+    --row-sep: rgba(200, 185, 160, 0.18);
+    --row-hover: rgba(255, 255, 255, 0.30);
+    --row-active-bg: rgba(220, 200, 170, 0.28);
+    --row-active-text: #4A3F2E;
+    --row-indicator: rgba(180, 150, 100, 0.7);
 
     /* 模糊暗环（液态/磨砂边缘折射缝） */
     --ring-color: rgba(32, 48, 60, 0.28);
 
     /* 背景柔光斑 */
-    --glow-spot-1: rgba(143, 184, 0, 0.10);
-    --glow-spot-2: rgba(214, 190, 140, 0.16);
-    --glow-spot-3: rgba(150, 180, 205, 0.10);
+    --glow-spot-1: rgba(200, 170, 120, 0.07);
+    --glow-spot-2: rgba(230, 210, 170, 0.09);
+    --glow-spot-3: rgba(255, 240, 215, 0.08);
 }
 
 [data-theme="dark"] {
@@ -98,11 +105,11 @@
     --dial-idx-active: rgba(143, 184, 0, 0.35);
     --decoration-ring: rgba(230, 236, 240, 0.10);
 
-    /* 液态玻璃（暗色） */
-    --glass-bg: rgba(255, 255, 255, 0.04);
-    --glass-blur: 2px;
-    --glass-border: rgba(255, 255, 255, 0.14);
-    --glass-sheen: linear-gradient(45deg, rgba(255, 255, 255, 0.28) 0%, transparent 30%, transparent 70%, rgba(255, 255, 255, 0.12) 100%);
+    /* 右栏单块玻璃面板（暗色：冷调深玻璃） */
+    --glass-bg: rgba(22, 28, 33, 0.62);
+    --glass-blur: 24px;
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-sheen: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, transparent 35%, transparent 75%, rgba(255, 255, 255, 0.05) 100%);
     --glass-oxidize: radial-gradient(circle at 50% 50%, transparent 55%, rgba(255, 190, 120, 0.05) 85%, rgba(255, 170, 100, 0.04) 100%);
     --glass-rim: inset 2px -2px 1px -1px rgba(255, 255, 255, 0.22), inset -2px 2px 1px -1px rgba(255, 255, 255, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.55), inset 0 0 10px -2px rgba(0, 0, 0, 0.45), inset 0 0 16px rgba(255, 190, 120, 0.04), 0 4px 8px rgba(0, 0, 0, 0.35);
 
@@ -112,6 +119,14 @@
     --panel-border: var(--glass-border);
     --panel-sheen: var(--glass-sheen);
     --panel-rim: var(--glass-rim);
+    --panel-highlight: rgba(255, 255, 255, 0.10); /* 面板顶部内高光 */
+
+    /* 扁平行（右栏面板内部） */
+    --row-sep: rgba(230, 236, 240, 0.08);
+    --row-hover: rgba(255, 255, 255, 0.06);
+    --row-active-bg: rgba(184, 233, 134, 0.10);
+    --row-active-text: #E6ECF0;
+    --row-indicator: var(--accent);
 
     --ring-color: rgba(0, 0, 0, 0.45);
 
