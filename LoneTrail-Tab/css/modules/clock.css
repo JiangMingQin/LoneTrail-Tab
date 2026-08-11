@@ -1,7 +1,6 @@
 /* 时钟容器：HUD 风格 */
 .clock-container {
     position: absolute;
-    /* [修改] 往右移动，给左侧背景圆环留出空间 */
     left: 100px; 
     top: 50%;
     transform: translateY(-50%);
@@ -11,8 +10,12 @@
     flex-direction: column;
     justify-content: center;
     
-    /* [新增] 左侧粗装饰线，增强锚点感 */
-    padding-left: 20px;
+    /* 显示屏模块：深色井底 + 边框 + 内阴影 */
+    padding: 18px 22px;
+    background: var(--well);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: inset 0 2px 6px var(--key-shadow), 0 8px 24px var(--shadow-soft);
     border-left: 3px solid var(--accent);
     
     pointer-events: none;
@@ -31,6 +34,7 @@
     letter-spacing: 2px;
     
     color: var(--text-main);
+    text-shadow: 0 0 12px var(--phosphor-glow);
     position: relative;
 }
 

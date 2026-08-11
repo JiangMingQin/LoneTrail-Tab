@@ -73,6 +73,20 @@ body {
     }
 }
 
+/* CRT 扫描线（暗色明显、明色极淡） */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        transparent 0 2px,
+        var(--scanline) 2px 3px
+    );
+}
+
 /* =========================================
    UTILITIES
    ========================================= */

@@ -2,6 +2,13 @@
     flex: 1; overflow-y: auto; padding: 0;
     scrollbar-width: none;
 }
+/* 暗色：CRT 屏幕井 */
+[data-theme="dark"] .content-list {
+    background-color: var(--well);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: inset 0 2px 8px var(--key-shadow);
+}
 .content-list::-webkit-scrollbar { display: none; } 
 
 .list-item {
