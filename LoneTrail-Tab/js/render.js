@@ -112,11 +112,13 @@ function updateDialStyles() {
         if (diff === 0) {
             // Active item - centered and scaled
             div.classList.add('active');
+            div.classList.toggle('focus-dimmed', state.focusColumn !== 'left');
             div.style.transform = 'translate(-30px, -50%) scale(1)';
             div.style.opacity = '1';
             div.style.zIndex = '100';
             div.style.pointerEvents = 'auto';
         } else {
+            div.classList.remove('focus-dimmed');
             // Inactive items - positioned on circular arc
             const angleDeg = diff * ITEM_ANGLE_GAP;
             const angleRad = angleDeg * (Math.PI / 180);

@@ -41,9 +41,8 @@
 
     /* 扁平行（右栏） */
     --row-sep: rgba(0, 0, 0, 0.10);
-    --row-hover: rgba(0, 0, 0, 0.04);
-    --row-active-bg: rgba(0, 0, 0, 0.06);
-    --row-active-text: #111111;
+    --row-active-bg: #111111;               /* 实色底（黑底白字） */
+    --row-active-text: #F7F7F5;
     --row-indicator: var(--accent);
 
     /* 磁带机装饰 */
@@ -96,7 +95,6 @@
     --decoration-ring: rgba(51, 255, 102, 0.10);
 
     --row-sep: rgba(51, 255, 102, 0.12);
-    --row-hover: rgba(51, 255, 102, 0.06);
     --row-active-bg: var(--accent);         /* 方块光标 */
     --row-active-text: var(--text-on-accent);
     --row-indicator: var(--accent);

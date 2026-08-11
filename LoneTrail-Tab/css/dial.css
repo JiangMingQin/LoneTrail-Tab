@@ -203,6 +203,26 @@
     filter: none;
 }
 
+/* 焦点不在左栏时：选中项降级为描边态 */
+.dial-item.active.focus-dimmed {
+    background: transparent;
+    color: var(--text-main);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
+.dial-item.active.focus-dimmed .dial-idx {
+    position: static;
+    font-size: 14px;
+    margin-right: 15px;
+    opacity: 0.55;
+    transform: none;
+    color: var(--accent-text);
+}
+.dial-item.active.focus-dimmed::after {
+    opacity: 0.25;
+    box-shadow: 0 0 4px var(--led-glow);
+}
+
 /* =========================================
    POINTER INDICATOR
    ========================================= */
