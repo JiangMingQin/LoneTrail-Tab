@@ -28,7 +28,13 @@ function updateClock() {
     const dateEl = document.getElementById('clock-date');
     const weekEl = document.getElementById('clock-week');
 
-    if (timeEl) timeEl.textContent = `${hours}:${minutes}`;
+    if (timeEl) {
+        timeEl.innerHTML = [...`${hours}:${minutes}`]
+            .map(ch => ch === ':'
+                ? '<span class="nixie-sep"></span>'
+                : `<span class="nixie-digit" data-digit="${ch}">${ch}</span>`)
+            .join('');
+    }
 
     if (dateEl) {
         const year = now.getFullYear();

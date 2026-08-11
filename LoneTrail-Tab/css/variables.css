@@ -4,58 +4,64 @@
        ========================================= */
 
     /* 机身 */
-    --bg-color: #EAE2D0;                    /* 奶油机壳 */
-    --surface: #F3EDDE;                     /* 凸起键面 */
-    --well: #D8CFB9;                        /* 嵌槽/显示屏井 */
-    --inset: rgba(60, 50, 35, 0.08);        /* 内部轻微填充 */
+    --bg-color: #F7F7F5;                    /* 近白机身 */
+    --surface: #FFFFFF;                     /* 纯白键面 */
+    --well: #E8E8E6;                        /* 灰阶嵌槽 */
+    --inset: rgba(0, 0, 0, 0.06);           /* 内部轻微填充 */
 
     /* 文字 */
-    --text-main: #2B2620;
-    --text-sub: #6F6658;
-    --text-inverse: #F3EDDE;
-    --text-on-accent: #0B0F0B;
+    --text-main: #111111;
+    --text-sub: #666666;
+    --text-inverse: #F7F7F5;
+    --text-on-accent: #FFFFFF;              /* 黑底白字（尼尔式反相） */
     --text-on-danger: #FFFFFF;
 
-    /* 强调色（CRT 荧光绿，奶油底可读） */
-    --accent: #2F9E4E;
-    --accent-text: #1F7A33;
-    --accent-dim: rgba(47, 158, 78, 0.16);
+    /* 单色强调（纯黑白） */
+    --accent: #111111;
+    --accent-text: #111111;
+    --accent-dim: rgba(17, 17, 17, 0.08);
 
     /* 警示色 */
     --danger: #D64541;
     --danger-glow: rgba(214, 69, 65, 0.5);
 
     /* 线条与分隔 */
-    --border: rgba(60, 50, 35, 0.18);
-    --grid-line: rgba(60, 50, 35, 0.06);
+    --border: rgba(0, 0, 0, 0.14);
+    --grid-line: rgba(0, 0, 0, 0.05);
 
     /* 阴影与遮罩 */
-    --shadow: rgba(60, 45, 25, 0.14);
-    --shadow-soft: rgba(60, 45, 25, 0.06);
-    --overlay: rgba(35, 30, 20, 0.55);
+    --shadow: rgba(0, 0, 0, 0.10);
+    --shadow-soft: rgba(0, 0, 0, 0.04);
+    --overlay: rgba(0, 0, 0, 0.55);
 
     /* 组件派生 */
     --dial-active-bg: var(--text-main);
-    --dial-idx-active: rgba(47, 158, 78, 0.35);
-    --decoration-ring: rgba(60, 50, 35, 0.10);
+    --dial-idx-active: rgba(255, 255, 255, 0.30);
+    --decoration-ring: rgba(0, 0, 0, 0.08);
 
     /* 扁平行（右栏） */
-    --row-sep: rgba(60, 50, 35, 0.10);
-    --row-hover: rgba(60, 50, 35, 0.05);
-    --row-active-bg: rgba(47, 158, 78, 0.12);
-    --row-active-text: #2B2620;
+    --row-sep: rgba(0, 0, 0, 0.10);
+    --row-hover: rgba(0, 0, 0, 0.04);
+    --row-active-bg: rgba(0, 0, 0, 0.06);
+    --row-active-text: #111111;
     --row-indicator: var(--accent);
 
     /* 磁带机装饰 */
-    --led: #22C55E;
-    --led-glow: rgba(34, 197, 94, 0.65);
-    --key-highlight: rgba(255, 255, 255, 0.55);
-    --key-shadow: rgba(60, 50, 35, 0.28);
-    --scanline: rgba(0, 0, 0, 0.05);
-    --phosphor-glow: rgba(47, 158, 78, 0.35);
-    --vu-1: #22C55E;
-    --vu-2: #D9A520;
-    --vu-3: #D64541;
+    --led: #111111;
+    --led-glow: rgba(17, 17, 17, 0.5);
+    --key-highlight: rgba(255, 255, 255, 0.9);
+    --key-shadow: rgba(0, 0, 0, 0.20);
+    --scanline: rgba(0, 0, 0, 0.04);
+    --vu-1: #333333;
+    --vu-2: #666666;
+    --vu-3: #999999;
+
+    /* 辉光管（亮色下唯一暖色点缀） */
+    --tube: #17150F;
+    --tube-sheen: rgba(255, 255, 255, 0.08);
+    --tube-text: rgba(255, 176, 92, 0.75);
+    --nixie: #FF8A00;
+    --nixie-glow: rgba(255, 128, 0, 0.65);
 
     /* 字体 */
     --font-ui: "Segoe UI", "Microsoft YaHei", "PingFang SC", "Helvetica Neue", sans-serif;
@@ -113,4 +119,11 @@
     --vu-1: #33FF66;
     --vu-2: #E9B949;
     --vu-3: #FF5555;
+
+    /* 辉光管（经典暖橙，明暗一致） */
+    --tube: #050705;
+    --tube-sheen: rgba(255, 255, 255, 0.08);
+    --tube-text: rgba(255, 176, 92, 0.75);
+    --nixie: #FF8A00;
+    --nixie-glow: rgba(255, 128, 0, 0.65);
 }
