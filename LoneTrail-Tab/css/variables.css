@@ -43,7 +43,6 @@
     --row-sep: rgba(0, 0, 0, 0.10);
     --row-active-bg: #111111;               /* 实色底（黑底白字） */
     --row-active-text: #F7F7F5;
-    --row-indicator: var(--accent);
 
     /* 磁带机装饰 */
     --led: #111111;
@@ -97,7 +96,6 @@
     --row-sep: rgba(51, 255, 102, 0.12);
     --row-active-bg: var(--accent);         /* 方块光标 */
     --row-active-text: var(--text-on-accent);
-    --row-indicator: var(--accent);
 
     /* 磁带机装饰 */
     --led: #33FF66;

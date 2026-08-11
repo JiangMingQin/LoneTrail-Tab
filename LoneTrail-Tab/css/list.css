@@ -22,7 +22,10 @@
 
     cursor: pointer;
     border-bottom: 1px solid var(--row-sep);
-    transition: background-color 0.25s ease, color 0.25s ease;
+    transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                background-color 0.25s ease,
+                color 0.25s ease;
+    transform-origin: left center;
     opacity: 0; transform: translateX(-20px);
 }
 .list-item:last-child { border-bottom: none; }
@@ -36,14 +39,13 @@
 .list-item::before {
     content: '';
     position: absolute;
+    top: 0;
     left: 0;
-    top: 20%;
-    height: 60%;
-    width: 3px;
-    background: var(--row-indicator);
-    border-radius: 0 2px 2px 0;
-    opacity: 0;
-    transition: opacity 0.25s ease;
+    bottom: 0;
+    width: 0;
+    background: var(--row-active-bg);
+    z-index: 1;
+    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .list-item .title, .list-item .url, .list-item .list-favicon, .list-item .folder-indicator {
@@ -51,11 +53,12 @@
 }
 
 .list-item.selected {
-    background: var(--row-active-bg);
+    transform: translateX(15px) scale(1.02);
+    background: transparent;
     color: var(--row-active-text);
     opacity: 1;
 }
-.list-item.selected::before { opacity: 1; }
+.list-item.selected::before { width: 100%; }
 
 .list-item.selected .title,
 .list-item.selected .url {
