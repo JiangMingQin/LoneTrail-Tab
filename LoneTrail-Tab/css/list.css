@@ -34,7 +34,7 @@
     font-weight: 500;
 
     backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 2px 8px var(--shadow-soft);
     
     cursor: pointer; overflow: hidden;
     
@@ -61,19 +61,18 @@
 
 .list-item.selected {
     transform: translateX(15px) scale(1.02) !important;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    border-left: 6px solid #fff; border-color: rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px var(--shadow);
+    border-left: 6px solid var(--bg-color); border-color: var(--border);
     opacity: 1; backdrop-filter: none; -webkit-backdrop-filter: none; background-color: transparent; 
 }
-[data-theme="dark"] .list-item.selected { border-left-color: #121417; border-color: rgba(255,255,255,0.05); }
 .list-item.selected::before { width: 100%; }
 
 .list-item.selected .title,
 .list-item.selected .url {
-    color: #1A1C20 !important; /* 无论黑白模式，绿色背景上都用深色字 */
+    color: var(--text-on-accent) !important; /* 绿色填充上统一使用高对比深色字 */
     font-weight: 800;
 }
-.list-item.selected .folder-indicator { color: #1A1C20 !important; transform: scale(1.1); }
+.list-item.selected .folder-indicator { color: var(--text-on-accent) !important; transform: scale(1.1); }
 .list-item .list-favicon { width: 16px; height: 16px; margin-right: 20px; opacity: 0.7; vertical-align: middle; transition: transform 0.3s; }
 .list-item.selected .list-favicon { opacity: 1; transform: scale(1.15); filter: none; }
 .list-item .folder-indicator { margin-right: 15px; transition: 0.2s; color: var(--accent); font-weight: bold; }
@@ -83,19 +82,6 @@
 /* =========================================================
    Empty State / Endpoint Decoration (Rhine Lab Style v19)
    ========================================================= */
-
-:root {
-    --es-line-fixed: #ffffff;
-    /* [新增] 强制高亮莱茵绿 (Fluorescent Green) */
-    --es-rhine-green: #b8e986; 
-}
-
-[data-theme="light"] {
-    --es-line-fixed: #000000;
-    /* 亮色模式下也可以保持这个绿，或者稍微深一点点，
-       但用户要求"绿而不是墨绿"，所以保持鲜艳 */
-    --es-rhine-green: #95C900; 
-}
 
 /* 下沉动画 */
 @keyframes es-slide-down {
@@ -132,7 +118,7 @@
     opacity: 1; 
     
     /* 极细边框，界定玻璃范围 */
-    border: 1px solid var(--border-primary);
+    border: 1px solid var(--border);
     border-radius: 2px;
 }
 
@@ -148,7 +134,7 @@
     position: absolute;
     width: 1px;
     height: 100%;
-    background: var(--es-line-fixed);
+    background: var(--text-sub);
     opacity: 1;
 }
 .es-line-vert.left { left: 0; }
@@ -161,7 +147,7 @@
     background: linear-gradient(
         to top right,
         transparent calc(50% - 0.5px), 
-        var(--es-line-fixed) 50%, 
+        var(--text-sub) 50%, 
         transparent calc(50% + 0.5px)
     );
     opacity: 1;
@@ -175,7 +161,7 @@
     
     /* 基础反色填充 */
     background: var(--text-main); 
-    color: var(--bg-core);     
+    color: var(--bg-color);     
     
     text-align: center;
     
@@ -188,7 +174,7 @@
         0 100%
     );
     
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px var(--shadow);
 }
 
 /* [修正 2] 左侧高亮身份条 */
@@ -201,7 +187,7 @@
     width: 6px; 
     
     /* [修正 2] 强制使用高亮绿 */
-    background-color: var(--es-rhine-green); 
+    background-color: var(--accent); 
     
     z-index: 11;
 }
@@ -210,7 +196,7 @@
 .es-title {
     font-size: 20px;
     font-weight: 900;
-    font-family: var(--font-primary);
+    font-family: var(--font-stack);
     letter-spacing: 3px;
     text-transform: uppercase;
     color: inherit;
@@ -234,10 +220,10 @@
 
 /* 无结果样式 */
 .empty-state-wrapper[data-type="no-result"] .es-center-box {
-    background: #ff4444; 
-    color: #ffffff;
-    outline-color: #ff4444;
+    background: var(--danger); 
+    color: var(--text-on-danger);
+    outline-color: var(--danger);
 }
 .empty-state-wrapper[data-type="no-result"] .es-center-box::before {
-    background-color: #ffffff; 
+    background-color: var(--text-on-danger); 
 }

@@ -6,7 +6,7 @@ import { applyTheme } from './utils.js';
 import { initBackground } from './background.js';
 
 /** Default theme if not configured */
-const DEFAULT_THEME = 'dark';
+const DEFAULT_THEME = 'light';
 
 /** Default UI font size in pixels */
 const DEFAULT_FONT_SIZE = 14;

@@ -13,10 +13,10 @@
 
 /* 录制状态：强制红色背景 + 闪烁 */
 .key-bind-btn.recording {
-    background-color: #ff4c4c !important; /* 使用亮红色，防止变量未定义 */
-    color: #ffffff !important;            /* 强制白字 */
-    border-color: #ff4c4c !important;
-    box-shadow: 0 0 10px rgba(255, 76, 76, 0.5); /* 添加发光效果 */
+    background-color: var(--danger) !important;
+    color: var(--text-on-danger) !important;
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 10px var(--danger-glow); /* 添加发光效果 */
     animation: blink-recording 1s infinite ease-in-out;
     cursor: wait; /* 鼠标变成等待状态 */
 }

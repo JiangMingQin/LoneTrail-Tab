@@ -83,7 +83,7 @@
     
     /* 变成一个小标签样式 */
     display: inline-block;
-    background: rgba(0,0,0,0.05);
+    background: var(--inset);
     padding: 2px 8px;
     border-radius: 2px;
     width: fit-content;

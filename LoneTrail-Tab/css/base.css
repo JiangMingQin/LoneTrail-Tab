@@ -57,20 +57,11 @@ body {
 
 .bg-line {
     fill: none;
-    stroke: var(--grid-line, rgba(255, 255, 255, 0.1));
+    stroke: var(--grid-line);
     stroke-width: 1.5px;
     /* 缩放时保持线宽一致 */
     vector-effect: non-scaling-stroke;
     transform-origin: center;
-}
-
-/* 主题适配 */
-[data-theme="light"] .bg-line {
-    stroke: rgba(0, 0, 0, 0.08);
-}
-
-[data-theme="dark"] .bg-line {
-    stroke: rgba(255, 255, 255, 0.08);
 }
 
 /* =========================================

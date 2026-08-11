@@ -385,7 +385,7 @@ function initThemeSwitcher() {
     if (!themeBtn) return;
 
     themeBtn.onclick = () => {
-        const currentTheme = state.config.preferences.theme || 'dark';
+        const currentTheme = state.config.preferences.theme || 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         state.config.preferences.theme = newTheme;
         applyTheme(newTheme);

@@ -1,7 +1,7 @@
 /* 模态框背景 */
 .modal {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.6); 
+    background: var(--overlay); 
     backdrop-filter: blur(8px); /* 加重背景模糊 */
     z-index: 1000;
     display: flex; justify-content: center; align-items: center;
@@ -14,7 +14,7 @@
 .rhine-panel {
     background: var(--modal-bg);
     border: 1px solid var(--accent);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 30px 80px rgba(0,0,0,0.4);
+    box-shadow: 0 0 0 1px var(--border), 0 30px 80px var(--shadow);
     
     /* [修改] 固定大尺寸 */
     width: 900px;
@@ -42,14 +42,14 @@
     flex-shrink: 0; /* 防止被压缩 */
 }
 .header-title h3 { margin: 0; font-size: 18px; font-weight: 900; letter-spacing: 2px; color: var(--text-main); }
-.header-sub { font-size: 10px; font-weight: bold; color: var(--accent); letter-spacing: 1px; margin-left: 10px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 2px; }
+.header-sub { font-size: 10px; font-weight: bold; color: var(--accent); letter-spacing: 1px; margin-left: 10px; background: var(--inset); padding: 2px 6px; border-radius: 2px; }
 
 .close-modal-btn {
     font-size: 12px; font-weight: 800; color: var(--text-sub);
     cursor: pointer; transition: 0.2s; letter-spacing: 1px;
     display: flex; align-items: center; gap: 5px;
 }
-.close-modal-btn:hover { color: #ff4d4f; }
+.close-modal-btn:hover { color: var(--danger); }
 .close-modal-btn::after { content: '✕'; font-size: 14px; }
 
 /* [核心] 内容区：双栏网格布局 */
@@ -90,7 +90,7 @@
     padding: 12px 15px; background: var(--dial-bg);
     border: 1px solid transparent; border-radius: 4px; transition: 0.2s;
 }
-.key-row:hover { background: rgba(0,0,0,0.03); border-color: var(--accent-dim); }
+.key-row:hover { background: var(--inset); border-color: var(--accent-dim); }
 .key-label { font-size: 11px; font-weight: 700; color: var(--text-sub); letter-spacing: 0.5px; }
 
 .bind-group { display: flex; gap: 8px; width: 140px; }
@@ -101,7 +101,7 @@
     cursor: pointer; transition: 0.2s;
 }
 .key-bind-btn:hover { border-color: var(--accent); color: var(--accent); }
-.key-bind-btn.recording { background: var(--accent); color: #000; border-color: var(--accent); animation: pulse 1s infinite; }
+.key-bind-btn.recording { background: var(--accent); color: var(--text-on-accent); border-color: var(--accent); animation: pulse 1s infinite; }
 
 /* 右侧开关样式优化 */
 .behavior-grid { display: flex; flex-direction: column; gap: 10px; }
@@ -128,9 +128,9 @@
     border: none; cursor: pointer; border-radius: 2px; text-transform: uppercase;
 }
 #reset-settings { background: transparent; color: var(--text-sub); border: 1px solid var(--grid-line); margin-right: auto; }
-#reset-settings:hover { border-color: #ff4d4f; color: #ff4d4f; }
+#reset-settings:hover { border-color: var(--danger); color: var(--danger); }
 
-#save-settings { background: var(--accent); color: #1A1C20; margin-left: 10px; }
+#save-settings { background: var(--accent); color: var(--text-on-accent); margin-left: 10px; }
 #save-settings:hover { filter: brightness(1.1); box-shadow: 0 5px 15px var(--accent-dim); }
 
 /* 角落装饰 */

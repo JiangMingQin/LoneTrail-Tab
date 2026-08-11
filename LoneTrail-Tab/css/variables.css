@@ -1,50 +1,82 @@
 :root {
-    /* --- LIGHT MODE (DEFAULT) --- */
-    --bg-color: #F0F2F5;
-    
-    /* [修改] 加深了透明度 (0.06 -> 0.15)，让曲线在亮色下清晰可见 */
-    --grid-line: rgba(0, 0, 0, 0.06);
-    
-    --text-main: #2C3E50;
-    --text-sub: #607D8B;
-    --text-inverse: #FFFFFF;
-    
-    --accent: #95C900;              
-    --accent-dim: rgba(149, 201, 0, 0.15);
-    
-    --dial-idx-active: #95C900; 
+    /* =========================================
+       LIGHT MODE (DEFAULT) — 莱茵实验室浅色基调
+       ========================================= */
 
-    --dial-bg: rgba(255, 255, 255, 0.15);
-    --dial-border: rgba(255, 255, 255, 0.6);
-    --dial-active-bg: #2C3E50;
-    
-    --modal-bg: rgba(240, 242, 245, 0.85);
-    --decoration-ring: rgba(44, 62, 80, 0.08); 
-    
+    /* 基础 */
+    --bg-color: #F5F7F9;
+    --surface: rgba(255, 255, 255, 0.72);  /* 面板/磨砂底 */
+    --inset: rgba(32, 48, 60, 0.05);       /* 内部轻微填充 */
+
+    /* 文字 */
+    --text-main: #20303C;
+    --text-sub: #5C6B76;
+    --text-inverse: #FFFFFF;               /* 深色激活底上的文字 */
+    --text-on-accent: #101418;             /* 绿色填充上的文字 */
+    --text-on-danger: #FFFFFF;             /* 红色警示底上的文字 */
+
+    /* 强调色（莱茵荧光绿） */
+    --accent: #8FB800;
+    --accent-dim: rgba(143, 184, 0, 0.14);
+
+    /* 警示色 */
+    --danger: #D64541;
+    --danger-glow: rgba(214, 69, 65, 0.5);
+
+    /* 线条与分隔 */
+    --border: rgba(32, 48, 60, 0.12);
+    --grid-line: var(--border);
+
+    /* 阴影与遮罩 */
+    --shadow: rgba(16, 20, 24, 0.10);
+    --shadow-soft: rgba(16, 20, 24, 0.04);
+    --overlay: rgba(16, 20, 24, 0.60);
+
+    /* 组件派生 */
+    --dial-bg: var(--surface);
+    --dial-border: rgba(32, 48, 60, 0.14);
+    --dial-active-bg: var(--text-main);
+    --dial-idx-active: rgba(184, 233, 134, 0.30);
+    --modal-bg: rgba(250, 251, 252, 0.90);
+    --decoration-ring: rgba(32, 48, 60, 0.08);
+
+    /* 字体 */
     --font-stack: "Roboto Mono", "Consolas", "Monaco", monospace;
-    --ui-font-size: 14px; 
+    --ui-font-size: 14px;
 }
 
 [data-theme="dark"] {
-    /* --- DARK MODE --- */
-    --bg-color: #121417;
-    
-    /* [修改] 暗色模式稍微提亮一点点 (0.08 -> 0.10) */
-    --grid-line: rgba(255, 255, 255, 0.08);
-    
-    --text-main: #ECF0F1;
-    --text-sub: #94A3B8;
-    --text-inverse: #121417;
-    
-    --accent: #B8E986; 
-    --accent-dim: rgba(184, 233, 134, 0.1);
-    
-    --dial-idx-active: #486600; 
-    
-    --dial-bg: rgba(40, 44, 52, 0.25);
-    --dial-border: rgba(255, 255, 255, 0.12);
-    --dial-active-bg: #ECF0F1;
-    
-    --modal-bg: rgba(18, 20, 23, 0.9);
-    --decoration-ring: rgba(255, 255, 255, 0.12);
+    /* =========================================
+       DARK MODE — 独立设计的暗色实验室终端
+       ========================================= */
+
+    --bg-color: #101418;
+    --surface: rgba(26, 32, 38, 0.72);
+    --inset: rgba(230, 236, 240, 0.06);
+
+    --text-main: #E6ECF0;
+    --text-sub: #8FA0AC;
+    --text-inverse: #101418;
+    --text-on-accent: #101418;
+    --text-on-danger: #FFFFFF;
+
+    --accent: #B8E986;
+    --accent-dim: rgba(184, 233, 134, 0.12);
+
+    --danger: #FF6B6B;
+    --danger-glow: rgba(255, 107, 107, 0.5);
+
+    --border: rgba(230, 236, 240, 0.10);
+    --grid-line: var(--border);
+
+    --shadow: rgba(0, 0, 0, 0.35);
+    --shadow-soft: rgba(0, 0, 0, 0.25);
+    --overlay: rgba(0, 0, 0, 0.60);
+
+    --dial-bg: var(--surface);
+    --dial-border: rgba(230, 236, 240, 0.14);
+    --dial-active-bg: var(--text-main);
+    --dial-idx-active: rgba(143, 184, 0, 0.35);
+    --modal-bg: rgba(18, 22, 27, 0.92);
+    --decoration-ring: rgba(230, 236, 240, 0.10);
 }

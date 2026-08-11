@@ -151,7 +151,7 @@
     clip-path: polygon(0 0, 100% 0, 100% 70%, 94% 100%, 0 100%);
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: -5px 5px 30px var(--shadow);
     z-index: 100;
 }
 

@@ -26,7 +26,7 @@ const DEFAULT_CONFIG = {
         showDate: true,
         openNewTab: false,
         soundFx: false,
-        theme: 'dark',
+        theme: 'light',
         clearSearchOnActivate: false,
         // --- Frecency 算法相关配置 ---
         quickLaunchMax: 7,       // 快捷栏默认显示数量 (3-12)

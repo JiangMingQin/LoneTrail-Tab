@@ -16,7 +16,7 @@
     width: 300px; 
     background: var(--bg-color);
     border-color: var(--accent);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 5px 15px var(--shadow-soft);
 }
 
 .search-icon { 
