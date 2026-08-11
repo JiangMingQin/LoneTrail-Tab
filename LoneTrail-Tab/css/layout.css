@@ -1,0 +1,185 @@
+/* --- 1. 顶部栏 (Top Bar) --- */
+.top-bar {
+    position: absolute; 
+    top: 0; 
+    width: 100%; 
+    height: 60px;
+    
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    
+    padding: 0 40px;
+    z-index: 20; 
+    
+    /* 视觉风格 */
+    border-top: 4px solid var(--accent);
+    background: linear-gradient(to bottom, var(--bg-color) 80%, transparent);
+}
+
+/* 左侧系统标识 */
+.system-status {
+    font-size: 14px; 
+    font-weight: 800; 
+    letter-spacing: 2px; 
+    color: var(--text-main);
+    display: flex; 
+    align-items: center;
+}
+
+.system-status::before {
+    content: ''; 
+    display: inline-block; 
+    width: 8px; 
+    height: 8px;
+    background: var(--accent); 
+    margin-right: 10px; 
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--accent);
+}
+
+/* 右侧图标组 (设置/主题) */
+.top-right-group {
+    display: flex; 
+    align-items: center; 
+    gap: 15px;
+}
+
+/* 图标按钮通用样式 */
+.icon-btn {
+    cursor: pointer; 
+    opacity: 0.6; 
+    font-size: 16px; 
+    transition: 0.2s;
+    width: 32px; 
+    height: 32px; 
+    
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    
+    border-radius: 4px;
+    border: 1px solid transparent;
+}
+
+.icon-btn:hover { 
+    opacity: 1; 
+    background: var(--dial-bg); 
+    border-color: var(--dial-border);
+    color: var(--accent); 
+}
+
+
+/* --- 2. 主容器 (Main Container) --- */
+.main-container {
+    position: relative; 
+    display: flex; 
+    height: 100%; 
+    width: 100%;
+    z-index: 5; 
+    padding-top: 60px; /* 给顶部栏留出空间 */
+}
+
+
+/* --- 3. 右侧内容区布局 (Content Wrapper) --- */
+/* 注意：.content-list 的样式在 list.css 中，这里只处理外层布局 */
+
+.content-wrapper {
+    flex: 1; 
+    padding: 40px 40px 40px 60px;
+    display: flex; 
+    flex-direction: column; 
+    overflow: hidden;
+}
+
+/* [核心修改] 内容头部：Flex 布局，容纳标题和搜索栏 */
+.content-header {
+    display: flex; 
+    justify-content: space-between; /* 左右对齐 */
+    align-items: flex-end; /* 底部对齐 */
+    margin-bottom: 5px;
+}
+
+.header-left {
+    overflow: hidden; 
+    flex: 1; 
+    margin-right: 20px;
+}
+
+.content-header h2 {
+    font-size: 36px; 
+    font-weight: 300; 
+    letter-spacing: -1px; 
+    margin: 0;
+    color: var(--text-main);
+    
+    white-space: nowrap; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    line-height: 1;
+}
+
+/* 分割线动画 */
+.header-line {
+    width: 100%; 
+    height: 1px;
+    background: repeating-linear-gradient(to right, var(--accent) 0, var(--accent) 4px, transparent 4px, transparent 8px);
+    margin-top: 10px; 
+    opacity: 0.6;
+    
+    animation: expandLine 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform-origin: left;
+}
+
+@keyframes expandLine { 
+    from { transform: scaleX(0); } 
+    to { transform: scaleX(1); } 
+}
+
+
+/* --- 4. 底部装饰 (Footer) --- */
+
+/* 按键提示 */
+.footer-tips {
+    position: absolute; 
+    bottom: 20px; 
+    left: 40px;
+    
+    color: var(--text-sub); 
+    font-size: 11px; 
+    font-weight: 700; 
+    opacity: 0.6; 
+    z-index: 10;
+    font-family: var(--font-stack);
+}
+
+.footer-tips span { 
+    color: var(--accent); 
+    margin-right: 2px; 
+    margin-left: 10px;
+}
+.footer-tips span:first-child { margin-left: 0; }
+
+/* 右下角六边形装饰 */
+.hex-decoration {
+    position: absolute; 
+    bottom: 25px; 
+    right: 40px;
+    display: flex; 
+    gap: 6px; 
+    opacity: 0.3;
+}
+
+.hex { 
+    width: 30px; 
+    height: 5px; 
+    background: var(--text-sub); 
+    border-radius: 2px; 
+}
+
+.hex.pulse { 
+    background: var(--accent); 
+    width: 45px; 
+    opacity: 1; 
+    transition: 0.2s; 
+}

@@ -1,0 +1,191 @@
+/* 模态框背景 */
+.modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); 
+    backdrop-filter: blur(8px); /* 加重背景模糊 */
+    z-index: 1000;
+    display: flex; justify-content: center; align-items: center;
+    opacity: 1; transition: opacity 0.2s;
+    perspective: 1500px;
+}
+.modal.hidden { display: none; opacity: 0; pointer-events: none; }
+
+/* 核心面板：固定大卡片 */
+.rhine-panel {
+    background: var(--modal-bg);
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.05), 0 30px 80px rgba(0,0,0,0.4);
+    
+    /* [修改] 固定大尺寸 */
+    width: 900px;
+    height: 600px;
+    
+    border-radius: 4px;
+    display: flex; flex-direction: column; /* 垂直布局：头-身-脚 */
+    position: relative; overflow: hidden;
+    
+    animation: panelEnter 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    transform-style: preserve-3d;
+}
+
+@keyframes panelEnter {
+    from { opacity: 0; transform: scale(0.92) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* 头部 */
+.modal-header {
+    background: var(--dial-bg); /*稍微浅一点的背景*/
+    padding: 0 30px; height: 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--grid-line);
+    flex-shrink: 0; /* 防止被压缩 */
+}
+.header-title h3 { margin: 0; font-size: 18px; font-weight: 900; letter-spacing: 2px; color: var(--text-main); }
+.header-sub { font-size: 10px; font-weight: bold; color: var(--accent); letter-spacing: 1px; margin-left: 10px; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 2px; }
+
+.close-modal-btn {
+    font-size: 12px; font-weight: 800; color: var(--text-sub);
+    cursor: pointer; transition: 0.2s; letter-spacing: 1px;
+    display: flex; align-items: center; gap: 5px;
+}
+.close-modal-btn:hover { color: #ff4d4f; }
+.close-modal-btn::after { content: '✕'; font-size: 14px; }
+
+/* [核心] 内容区：双栏网格布局 */
+.modal-body {
+    flex: 1; /* 占满剩余高度 */
+    padding: 30px;
+    display: grid;
+    /* 左侧 55%，右侧剩余空间，中间 30px 间距 */
+    grid-template-columns: 1.2fr 1fr; 
+    grid-template-rows: auto auto; /* 自动高度 */
+    gap: 30px;
+    overflow-y: auto; /* 内容过多时内部滚动 */
+}
+
+/* 这里的 nth-child 是为了自动布局：
+   第1个 section (Key Mapping) 放在左边，跨两行（如果有需要）
+   第2、3个 section 放在右边
+*/
+.config-section:nth-child(1) {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3; /* 撑满左侧 */
+    border-right: 1px solid var(--grid-line); /* 中间加条分割线 */
+    padding-right: 30px;
+}
+.config-section:nth-child(2) { grid-column: 2 / 3; grid-row: 1 / 2; }
+.config-section:nth-child(3) { grid-column: 2 / 3; grid-row: 2 / 3; }
+
+/* 模块标题 */
+.section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.section-num { font-size: 32px; font-weight: 900; color: var(--grid-line); font-family: "Impact"; line-height: 1; }
+.section-title { font-size: 14px; font-weight: 800; letter-spacing: 1.5px; color: var(--text-main); }
+.section-line { flex: 1; height: 2px; background: var(--grid-line); }
+
+/* --- 设置项样式 (保持之前的 List Layout) --- */
+.keybind-list { display: flex; flex-direction: column; gap: 10px; }
+.key-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 15px; background: var(--dial-bg);
+    border: 1px solid transparent; border-radius: 4px; transition: 0.2s;
+}
+.key-row:hover { background: rgba(0,0,0,0.03); border-color: var(--accent-dim); }
+.key-label { font-size: 11px; font-weight: 700; color: var(--text-sub); letter-spacing: 0.5px; }
+
+.bind-group { display: flex; gap: 8px; width: 140px; }
+.key-bind-btn {
+    flex: 1; background: var(--bg-color); border: 1px solid var(--dial-border);
+    color: var(--text-main); padding: 6px 0; border-radius: 2px;
+    font-family: var(--font-stack); font-size: 11px; font-weight: bold;
+    cursor: pointer; transition: 0.2s;
+}
+.key-bind-btn:hover { border-color: var(--accent); color: var(--accent); }
+.key-bind-btn.recording { background: var(--accent); color: #000; border-color: var(--accent); animation: pulse 1s infinite; }
+
+/* 右侧开关样式优化 */
+.behavior-grid { display: flex; flex-direction: column; gap: 10px; }
+.switch-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px; border: 1px solid var(--grid-line); border-radius: 4px;
+    background: transparent;
+}
+
+.switch-label span { font-size: 13px; font-weight: 700; color: var(--text-main); display: block;}
+.switch-label small { font-size: 11px; color: var(--text-sub); margin-top: 4px; display: block; }
+
+/* 底部按钮区 */
+.modal-footer {
+    padding: 20px 30px; background: var(--dial-bg);
+    border-top: 1px solid var(--grid-line);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-shrink: 0;
+}
+.setting-info { font-size: 11px; color: var(--text-sub); font-family: var(--font-stack); }
+
+.modal-footer button {
+    padding: 10px 24px; font-size: 12px; font-weight: 800; letter-spacing: 1px;
+    border: none; cursor: pointer; border-radius: 2px; text-transform: uppercase;
+}
+#reset-settings { background: transparent; color: var(--text-sub); border: 1px solid var(--grid-line); margin-right: auto; }
+#reset-settings:hover { border-color: #ff4d4f; color: #ff4d4f; }
+
+#save-settings { background: var(--accent); color: #1A1C20; margin-left: 10px; }
+#save-settings:hover { filter: brightness(1.1); box-shadow: 0 5px 15px var(--accent-dim); }
+
+/* 角落装饰 */
+.corner { position: absolute; width: 15px; height: 15px; border: 3px solid var(--accent); pointer-events: none; z-index: 10; opacity: 1; }
+.tl { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+.tr { top: -1px; right: -1px; border-left: none; border-bottom: none; }
+.bl { bottom: -1px; left: -1px; border-right: none; border-top: none; }
+.br { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+
+/* 动画定义 */
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.6; } 100% { opacity: 1; } }
+
+/* --- Toggle Switch (开关样式) --- */
+.setting-switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 18px;
+}
+
+.setting-switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--dial-bg);
+    border: 1px solid var(--grid-line);
+    transition: .3s;
+    border-radius: 2px; /* 方形风格 */
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 12px;
+    width: 12px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--text-sub);
+    transition: .3s;
+    border-radius: 1px;
+}
+
+input:checked + .slider {
+    background-color: var(--accent-dim);
+    border-color: var(--accent);
+}
+
+input:checked + .slider:before {
+    transform: translateX(18px);
+    background-color: var(--accent);
+}
+

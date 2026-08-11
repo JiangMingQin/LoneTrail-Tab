@@ -1,0 +1,29 @@
+@import 'variables.css';
+@import 'base.css';
+@import 'layout.css';
+@import 'dial.css';
+@import 'list.css';
+@import 'modules/search.css';
+@import 'modules/modal.css';
+@import 'modules/clock.css'; /* 新增 */
+
+/* =========================================
+   Key Binding Recording State
+   ========================================= */
+
+/* 录制状态：强制红色背景 + 闪烁 */
+.key-bind-btn.recording {
+    background-color: #ff4c4c !important; /* 使用亮红色，防止变量未定义 */
+    color: #ffffff !important;            /* 强制白字 */
+    border-color: #ff4c4c !important;
+    box-shadow: 0 0 10px rgba(255, 76, 76, 0.5); /* 添加发光效果 */
+    animation: blink-recording 1s infinite ease-in-out;
+    cursor: wait; /* 鼠标变成等待状态 */
+}
+
+/* 定义闪烁动画 */
+@keyframes blink-recording {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(0.95); } /*稍微缩小一点产生呼吸感*/
+    100% { opacity: 1; transform: scale(1); }
+}

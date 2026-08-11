@@ -1,0 +1,39 @@
+.top-search-wrapper {
+    display: flex; align-items: center;
+    background: var(--dial-bg); /* 跟随主题的磨砂背景 */
+    border-bottom: 1px solid var(--dial-border); /* 只保留底边框，更像输入线 */
+    
+    height: 30px; /* 稍微矮一点 */
+    width: 180px; 
+    
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: right center;
+    position: relative;
+}
+
+/* 聚焦状态：向左展开 */
+.top-search-wrapper:focus-within {
+    width: 300px; 
+    background: var(--bg-color);
+    border-color: var(--accent);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.search-icon { 
+    font-size: 10px; font-weight: bold; color: var(--accent); margin-right: 8px; 
+    white-space: nowrap; opacity: 0.8; letter-spacing: 1px; padding-left: 5px;
+}
+
+#top-search-input {
+    background: transparent; border: none; outline: none;
+    font-family: var(--font-stack); 
+    font-size: 12px; font-weight: 500;
+    color: var(--text-main); width: 100%;
+    text-transform: uppercase; /* 输入内容自动大写，更像终端 */
+}
+#top-search-input::placeholder { color: var(--text-sub); opacity: 0.5; font-size: 10px; letter-spacing: 1px; }
+
+/* 聚焦时文字变大 */
+.top-search-wrapper:focus-within #top-search-input {
+    font-size: 18px; 
+}

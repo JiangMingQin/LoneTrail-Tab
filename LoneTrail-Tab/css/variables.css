@@ -1,0 +1,50 @@
+:root {
+    /* --- LIGHT MODE (DEFAULT) --- */
+    --bg-color: #F0F2F5;
+    
+    /* [修改] 加深了透明度 (0.06 -> 0.15)，让曲线在亮色下清晰可见 */
+    --grid-line: rgba(0, 0, 0, 0.06);
+    
+    --text-main: #2C3E50;
+    --text-sub: #607D8B;
+    --text-inverse: #FFFFFF;
+    
+    --accent: #95C900;              
+    --accent-dim: rgba(149, 201, 0, 0.15);
+    
+    --dial-idx-active: #95C900; 
+
+    --dial-bg: rgba(255, 255, 255, 0.15);
+    --dial-border: rgba(255, 255, 255, 0.6);
+    --dial-active-bg: #2C3E50;
+    
+    --modal-bg: rgba(240, 242, 245, 0.85);
+    --decoration-ring: rgba(44, 62, 80, 0.08); 
+    
+    --font-stack: "Roboto Mono", "Consolas", "Monaco", monospace;
+    --ui-font-size: 14px; 
+}
+
+[data-theme="dark"] {
+    /* --- DARK MODE --- */
+    --bg-color: #121417;
+    
+    /* [修改] 暗色模式稍微提亮一点点 (0.08 -> 0.10) */
+    --grid-line: rgba(255, 255, 255, 0.08);
+    
+    --text-main: #ECF0F1;
+    --text-sub: #94A3B8;
+    --text-inverse: #121417;
+    
+    --accent: #B8E986; 
+    --accent-dim: rgba(184, 233, 134, 0.1);
+    
+    --dial-idx-active: #486600; 
+    
+    --dial-bg: rgba(40, 44, 52, 0.25);
+    --dial-border: rgba(255, 255, 255, 0.12);
+    --dial-active-bg: #ECF0F1;
+    
+    --modal-bg: rgba(18, 20, 23, 0.9);
+    --decoration-ring: rgba(255, 255, 255, 0.12);
+}

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RHINE LAB TERMINAL</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="top-bar">
+        <div class="system-status">RHINE LAB. // OS</div>
+        
+        <div class="top-right-group">
+            <div class="icon-btn" id="settings-btn" title="CONFIG">⚙️</div>
+            <div class="icon-btn" id="theme-btn" title="THEME">◑</div>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="dial-wrapper" id="dial-wrapper-el">
+            <div class="dial-bg-decoration"></div>
+            
+            <div id="clock-module" class="clock-container hidden">
+                <div id="clock-time" class="clock-time">00:00</div>
+                <div class="clock-meta">
+                    <div id="clock-date" class="clock-date">YYYY-MM-DD</div>
+                    <div id="clock-week" class="clock-week">WEEKDAY</div>
+                </div>
+            </div>
+
+            <div class="dial-container" id="parent-list"></div>
+            <div class="pointer-indicator"></div>
+        </div>
+
+        <div class="content-wrapper">
+            <div class="content-header">
+                <div class="header-left">
+                    <h2 id="current-folder-title">ROOT</h2>
+                </div>
+                
+                <div class="top-search-wrapper">
+                    <span class="search-icon">SEARCH ::</span>
+                    <input type="text" id="top-search-input" placeholder="INPUT KEYWORD..." autocomplete="off">
+                </div>
+            </div>
+            
+            <div class="header-line"></div>
+            <div class="content-list" id="child-list"></div>
+        </div>
+    </div>
+
+    <div class="footer-tips">
+        <span id="key-hint-nav">[W/S]</span> NAVIGATE &nbsp; 
+        <span id="key-hint-enter">[D]</span> ENTER &nbsp; 
+        <span id="key-hint-back">[A]</span> BACK &nbsp; 
+        <span>[/]</span> SEARCH
+    </div>
+    
+    <div class="hex-decoration"><div class="hex"></div><div class="hex"></div><div class="hex"></div></div>
+
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content rhine-panel">
+            <div class="corner tl"></div><div class="corner tr"></div>
+            <div class="corner bl"></div><div class="corner br"></div>
+
+            <div class="modal-header">
+                <div class="header-title">
+                    <h3>TERMINAL_CONFIG</h3>
+                    <span class="header-sub">Ver. 1.0 // USER_PREFS</span>
+                </div>
+                <div class="close-modal-btn"></div>
+            </div>
+
+            <div class="modal-body">
+                
+                <div class="config-section">
+                    <div class="section-header">
+                        <span class="section-num">01</span>
+                        <span class="section-title">KEY_MAPPING</span>
+                        <div class="section-line"></div>
+                    </div>
+                    
+                    <div class="keybind-list">
+                        <div class="key-row">
+                            <span class="key-label">NAVIGATE_UP</span>
+                            <div class="bind-group">
+                                <button class="key-bind-btn" data-action="NAV_UP" data-slot="0">W</button>
+                                <button class="key-bind-btn" data-action="NAV_UP" data-slot="1">↑</button>
+                            </div>
+                        </div>
+                        <div class="key-row">
+                            <span class="key-label">NAVIGATE_DOWN</span>
+                            <div class="bind-group">
+                                <button class="key-bind-btn" data-action="NAV_DOWN" data-slot="0">S</button>
+                                <button class="key-bind-btn" data-action="NAV_DOWN" data-slot="1">↓</button>
+                            </div>
+                        </div>
+                        <div class="key-row">
+                            <span class="key-label">NAV_LEFT / BACK</span>
+                            <div class="bind-group">
+                                <button class="key-bind-btn" data-action="NAV_LEFT" data-slot="0">A</button>
+                                <button class="key-bind-btn" data-action="NAV_LEFT" data-slot="1">←</button>
+                            </div>
+                        </div>
+                        <div class="key-row">
+                            <span class="key-label">NAV_RIGHT / OPEN</span>
+                            <div class="bind-group">
+                                <button class="key-bind-btn" data-action="NAV_RIGHT" data-slot="0">D</button>
+                                <button class="key-bind-btn" data-action="NAV_RIGHT" data-slot="1">→</button>
+                            </div>
+                        </div>
+                        <div class="key-row">
+                            <span class="key-label">CONFIRM</span>
+                            <div class="bind-group">
+                                <button class="key-bind-btn" data-action="NAV_CONFIRM" data-slot="0">ENTER</button>
+                                <button class="key-bind-btn" data-action="NAV_CONFIRM" data-slot="1">SPACE</button>
+                            </div>
+                        </div>
+                        <div class="key-row">
+                            <span class="key-label">SEARCH</span>
+                            <div class="bind-group">
+                                <button class="key-bind-btn" data-action="SEARCH_ACTIVATE" data-slot="0">/</button>
+                                <button class="key-bind-btn" data-action="SEARCH_ACTIVATE" data-slot="1">F</button>
+                            </div>
+                        </div>
+                        <div class="setting-info" id="setting-msg">SYSTEM READY... WAITING FOR INPUT</div>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <div class="section-header">
+                        <span class="section-num">02</span>
+                        <span class="section-title">DISPLAY & HUD</span>
+                        <div class="section-line"></div>
+                    </div>
+
+                    <div class="behavior-grid">
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span>UI_FONT_SIZE</span>
+                                <small>Adjust text scale</small>
+                            </div>
+                            <div class="range-control">
+                                <input type="range" id="setting-font-size" min="12" max="24" step="1">
+                                <span id="font-size-val">14px</span>
+                            </div>
+                        </div>
+                        
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span>CLOCK_WIDGET</span>
+                                <small>Time display on left panel</small>
+                            </div>
+                            <label class="setting-switch">
+                                <input type="checkbox" id="setting-clock-enabled">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span>DATE_INFO</span>
+                                <small>Show date & weekday</small>
+                            </div>
+                            <label class="setting-switch">
+                                <input type="checkbox" id="setting-clock-details">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span>CLEAR_ON_ACTIVATE</span>
+                                <small>Clear input when pressing '/'</small>
+                            </div>
+                            <label class="setting-switch">
+                                <input type="checkbox" id="setting-clear-search">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-section">
+                    <div class="section-header">
+                        <span class="section-num">03</span>
+                        <span class="section-title">SYSTEM</span>
+                        <div class="section-line"></div>
+                    </div>
+
+                    <div class="behavior-grid">
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span>OPEN_NEW_TAB</span>
+                                <small>Open links in _blank</small>
+                            </div>
+                            <label class="setting-switch">
+                                <input type="checkbox" id="setting-open-newtab">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span>AUDIO_FEEDBACK</span>
+                                <small>Enable UI sound effects</small>
+                            </div>
+                            <label class="setting-switch">
+                                <input type="checkbox" id="setting-sound-fx">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="modal-footer">
+                <button id="reset-settings">RESET_DEFAULTS</button>
+                <button id="save-settings" class="primary-btn">APPLY</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

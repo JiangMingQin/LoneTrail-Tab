@@ -1,0 +1,204 @@
+/* =========================================
+   DIAL WRAPPER & CONTAINER
+   ========================================= */
+
+.dial-wrapper {
+    position: relative;
+    width: 42%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: auto;
+}
+
+/* 背景装饰圆环 */
+.dial-bg-decoration {
+    position: absolute;
+    right: -300px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    border: 2px solid var(--decoration-ring);
+    box-shadow: inset 0 0 0 1px var(--decoration-ring);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.dial-container {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 0;
+    height: 0;
+    overflow: visible;
+    z-index: 2;
+}
+
+/* =========================================
+   DIAL ITEM (卡片主体)
+   ========================================= */
+
+.dial-item {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform-origin: center right;
+    
+    width: 320px;
+    height: 50px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px 0 25px;
+    
+    background: var(--dial-bg);
+    border: 1px solid var(--dial-border);
+    
+    /* 右下角单切角形状 */
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 94% 100%, 0 100%);
+    
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    
+    color: var(--text-sub);
+    font-size: var(--ui-font-size);
+    font-weight: 600;
+    cursor: pointer;
+    overflow: hidden;
+    
+    /* 多属性平滑过渡 */
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.2s,
+                background 0.3s,
+                color 0.3s,
+                border-color 0.3s,
+                box-shadow 0.3s,
+                backdrop-filter 0.3s;
+}
+
+/* 序列号 */
+.dial-idx {
+    font-family: "Impact", "Roboto Mono", monospace;
+    font-size: 14px;
+    color: var(--accent);
+    opacity: 0.4;
+    letter-spacing: 1px;
+    
+    position: relative;
+    z-index: 1;
+    margin-right: 15px;
+    
+    transition: color 0.3s, opacity 0.3s;
+}
+
+/* 内容区 - Flex布局防止图标被挤压 */
+.dial-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+    z-index: 2;
+    min-width: 0;
+}
+
+/* 文本 - 溢出省略 */
+.dial-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 190px;
+}
+
+/* 图标 - flex-shrink: 0 防止被压缩 */
+.dial-icon,
+.dial-icon-folder {
+    width: 14px;
+    height: 14px;
+    margin-right: 10px;
+    opacity: 0.6;
+    transition: transform 0.3s;
+    flex-shrink: 0;
+}
+
+.dial-icon-folder {
+    font-weight: bold;
+    color: var(--accent);
+}
+
+/* 右侧装饰条 */
+.dial-decor {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--text-sub);
+    opacity: 0.2;
+    transition: 0.3s;
+}
+
+/* =========================================
+   ACTIVE STATE (选中状态)
+   ========================================= */
+
+.dial-item.active {
+    background: var(--dial-active-bg);
+    color: var(--text-inverse);
+    border-color: var(--accent);
+    clip-path: polygon(0 0, 100% 0, 100% 70%, 94% 100%, 0 100%);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: -5px 5px 30px rgba(0, 0, 0, 0.25);
+    z-index: 100;
+}
+
+/* 选中时序号 - 放大作为背景装饰 */
+.dial-item.active .dial-idx {
+    position: absolute;
+    top: -12px;
+    left: -2px;
+    margin: 0;
+    font-size: 80px;
+    font-style: normal;
+    line-height: 1;
+    color: var(--dial-idx-active);
+    opacity: 0.25;
+    transform: none;
+    pointer-events: none;
+}
+
+/* 选中时装饰条 */
+.dial-item.active .dial-decor {
+    background: var(--accent);
+    opacity: 1;
+    width: 6px;
+    box-shadow: 0 0 15px var(--accent);
+}
+
+/* 选中时图标 */
+.dial-item.active .dial-icon,
+.dial-item.active .dial-icon-folder {
+    opacity: 1;
+    transform: scale(1.2);
+    filter: none;
+}
+
+/* =========================================
+   POINTER INDICATOR
+   ========================================= */
+
+.pointer-indicator {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-right: 5px solid var(--accent);
+    z-index: 200;
+}
