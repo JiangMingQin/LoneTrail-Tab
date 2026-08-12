@@ -10,15 +10,15 @@
     --inset: rgba(0, 0, 0, 0.06);           /* 内部轻微填充 */
 
     /* 文字 */
-    --text-main: #111111;
+    --text-main: #1A1A1A;
     --text-sub: #666666;
     --text-inverse: #F7F7F5;
     --text-on-accent: #FFFFFF;              /* 黑底白字（尼尔式反相） */
     --text-on-danger: #FFFFFF;
 
     /* 单色强调（纯黑白） */
-    --accent: #111111;
-    --accent-text: #111111;
+    --accent: #1A1A1A;
+    --accent-text: #1A1A1A;
     --accent-dim: rgba(17, 17, 17, 0.08);
 
     /* 警示色 */
@@ -41,11 +41,11 @@
 
     /* 扁平行（右栏） */
     --row-sep: rgba(0, 0, 0, 0.10);
-    --row-active-bg: #111111;               /* 实色底（黑底白字） */
+    --row-active-bg: #1A1A1A;               /* 实色底（软近黑底白字） */
     --row-active-text: #F7F7F5;
 
     /* 磁带机装饰 */
-    --led: #111111;
+    --led: #1A1A1A;
     --led-glow: rgba(17, 17, 17, 0.5);
     --key-highlight: rgba(255, 255, 255, 0.9);
     --key-shadow: rgba(0, 0, 0, 0.20);

@@ -192,7 +192,6 @@
     background: var(--accent);
     opacity: 1;
     width: 6px;
-    box-shadow: 0 0 15px var(--accent);
 }
 
 /* 选中时图标 */
