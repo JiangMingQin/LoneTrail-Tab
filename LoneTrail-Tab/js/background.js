@@ -1,24 +1,26 @@
 /**
  * Background Module
- * - Light theme: terrain heightmap from multi-frequency value noise (fBm),
- *   contour lines extracted precisely with Marching Squares.
+ * - Light theme: topographic contour map. Height field = reference-style
+ *   multi-frequency sines + 3-4 random anchor hills (min-distance, may sit
+ *   slightly off-screen); contours extracted with Marching Squares and
+ *   stroked segment-by-segment on Canvas 2D.
  * - Dark theme: random starfield.
  */
 
 /** Heightmap sample spacing in px */
-const GRID_CELL = 24;
+const GRID_CELL = 16;
 
 /** Number of contour levels */
-const CONTOUR_LEVELS = 7;
+const CONTOUR_LEVELS = 12;
 
-/** fBm parameters */
-const OCTAVES = 4;
-const LACUNARITY = 2.2;
-const PERSISTENCE = 0.5;
-const BASE_FREQUENCY = 1 / 200;
-
-/** Endpoint matching tolerance when chaining segments (px) */
-const CHAIN_TOLERANCE = 1.5;
+/** Anchor parameters */
+const ANCHOR_MIN = 3;
+const ANCHOR_MAX = 4;
+const ANCHOR_MIN_DIST_RATIO = 0.28;   // min(w, h) * ratio
+const ANCHOR_OFFSCREEN = 0.10;        // allow 10% outside the screen
+const ANCHOR_SIGMA_MIN = 140;
+const ANCHOR_SIGMA_MAX = 280;
+const ANCHOR_PLACE_ATTEMPTS = 40;
 
 /**
  * Initializes the background SVG according to the current theme
@@ -39,8 +41,7 @@ export function initBackground() {
 }
 
 /**
- * Creates a terrain contour canvas: 3-4 anchor-defined height field
- * + procedural fBm noise, contours extracted with Marching Squares.
+ * Creates the terrain contour canvas (light theme)
  * @param {number} w - Viewport width
  * @param {number} h - Viewport height
  */
@@ -54,21 +55,22 @@ function createTerrainCanvas(w, h) {
 
     const ctx = canvas.getContext('2d');
     ctx.scale(dpr, dpr);
-    ctx.lineWidth = 1.5;
+    ctx.lineWidth = 1.0;
 
     const seed = Math.floor(Math.random() * 0xFFFFFFFF);
     const anchors = generateAnchors(w, h);
+    const phases = phaseOffsets(seed);
 
     const cols = Math.ceil(w / GRID_CELL) + 1;
     const rows = Math.ceil(h / GRID_CELL) + 1;
     const heightmap = new Float32Array(cols * rows);
 
-    // 1. Height field = anchor influence (peaks/valleys) + procedural fBm noise
+    // 1. Height field: reference-style sines + anchor hills + edge falloff
     let minH = Infinity;
     let maxH = -Infinity;
     for (let j = 0; j < rows; j++) {
         for (let i = 0; i < cols; i++) {
-            const hVal = terrainHeight(i * GRID_CELL, j * GRID_CELL, anchors, seed);
+            const hVal = terrainHeight(i * GRID_CELL, j * GRID_CELL, w, h, anchors, phases);
             heightmap[j * cols + i] = hVal;
             if (hVal < minH) minH = hVal;
             if (hVal > maxH) maxH = hVal;
@@ -76,23 +78,19 @@ function createTerrainCanvas(w, h) {
     }
     if (maxH - minH < 1e-6) return canvas;
 
-    // 2. Marching Squares isolines, stroked on Canvas 2D
-    const strokeStyle = resolveGridLineColor();
+    // 2. Marching Squares isolines, stroked segment-by-segment (reference style)
+    const strokeStyle = resolveContourColor();
     for (let levelIdx = 0; levelIdx < CONTOUR_LEVELS; levelIdx++) {
-        const level = minH + (levelIdx * (maxH - minH)) / (CONTOUR_LEVELS - 1);
+        const level = minH + ((levelIdx + 0.5) / CONTOUR_LEVELS) * (maxH - minH);
         const segments = marchingSquares(heightmap, cols, rows, level);
-        const polylines = chainSegments(segments, CHAIN_TOLERANCE);
 
-        ctx.globalAlpha = Math.min(1, 0.45 + levelIdx * 0.08);
+        ctx.globalAlpha = Math.min(1, 0.6 + levelIdx * 0.035);
         ctx.strokeStyle = strokeStyle;
         ctx.beginPath();
-        polylines.forEach((points) => {
-            points.forEach((p, idx) => {
-                if (idx > 0 && Math.hypot(p[0] - points[idx - 1][0], p[1] - points[idx - 1][1]) < 0.1) return;
-                if (idx === 0) ctx.moveTo(p[0], p[1]);
-                else ctx.lineTo(p[0], p[1]);
-            });
-        });
+        for (const seg of segments) {
+            ctx.moveTo(seg[0][0], seg[0][1]);
+            ctx.lineTo(seg[1][0], seg[1][1]);
+        }
         ctx.stroke();
     }
     ctx.globalAlpha = 1;
@@ -100,106 +98,117 @@ function createTerrainCanvas(w, h) {
     return canvas;
 }
 
-/** Generates 3-4 random anchor points (peaks/valleys) across the screen */
+/**
+ * Generates 3-4 random anchors. Anchors are placed with a minimum
+ * distance from each other and may sit slightly off-screen.
+ */
 function generateAnchors(w, h) {
-    const count = 3 + (Math.random() < 0.5 ? 1 : 0);
+    const count = ANCHOR_MIN + (Math.random() < 0.5 ? 1 : 0);
+    const minDist = Math.min(w, h) * ANCHOR_MIN_DIST_RATIO;
+    const lo = -ANCHOR_OFFSCREEN;
+    const hi = 1 + ANCHOR_OFFSCREEN;
     const anchors = [];
+
     for (let i = 0; i < count; i++) {
-        anchors.push({
-            x: w * (0.12 + Math.random() * 0.76),
-            y: h * (0.12 + Math.random() * 0.76),
-            strength: (Math.random() < 0.5 ? -1 : 1) * (0.55 + Math.random() * 0.45),
-            sigma: 140 + Math.random() * 140,
-        });
+        let placed = false;
+        for (let attempt = 0; attempt < ANCHOR_PLACE_ATTEMPTS; attempt++) {
+            const candidate = {
+                x: w * (lo + Math.random() * (hi - lo)),
+                y: h * (lo + Math.random() * (hi - lo)),
+                strength: (Math.random() < 0.5 ? -1 : 1) * (0.55 + Math.random() * 0.45),
+                sigma: ANCHOR_SIGMA_MIN + Math.random() * (ANCHOR_SIGMA_MAX - ANCHOR_SIGMA_MIN),
+            };
+            const ok = anchors.every((a) => (
+                Math.hypot(a.x - candidate.x, a.y - candidate.y) >= minDist
+            ));
+            if (ok) {
+                anchors.push(candidate);
+                placed = true;
+                break;
+            }
+        }
+
+        if (!placed) {
+            // Fallback: even angles on a circle around the screen center
+            const angle = (i / count) * Math.PI * 2 + Math.random() * 0.4;
+            anchors.push({
+                x: w / 2 + Math.cos(angle) * minDist * 1.3,
+                y: h / 2 + Math.sin(angle) * minDist * 1.3,
+                strength: (Math.random() < 0.5 ? -1 : 1) * (0.55 + Math.random() * 0.45),
+                sigma: ANCHOR_SIGMA_MIN + Math.random() * (ANCHOR_SIGMA_MAX - ANCHOR_SIGMA_MIN),
+            });
+        }
     }
+
     return anchors;
 }
 
 /**
- * Height at a point: sum of anchor gaussian fields + procedural fBm detail
+ * Height at a point: multi-frequency sines (reference-style, seeded phases)
+ * + anchor gaussian hills, scaled by a soft edge falloff.
  */
-function terrainHeight(x, y, anchors, seed) {
-    let h = 0;
+function terrainHeight(x, y, w, h, anchors, phases) {
+    const u = ((x / w) * 2 - 1) * 5;
+    const v = ((y / h) * 2 - 1) * 5;
+
+    const h1 = Math.sin(u * 0.35 + phases[0]) * Math.cos(v * 0.40 + phases[1]) * 0.6;
+    const h2 = Math.sin(u * 0.70 + v * 0.55 + phases[2]) * 0.4;
+    const h3 = Math.cos(u * 0.25 - v * 0.65 + phases[3]) * 0.5;
+    const h4 = Math.sin((u + v) * 1.2 + phases[4]) * 0.2;
+    let height = h1 + h2 + h3 + h4;
+
     for (let i = 0; i < anchors.length; i++) {
         const a = anchors[i];
         const dx = x - a.x;
         const dy = y - a.y;
-        h += a.strength * Math.exp(-(dx * dx + dy * dy) / (2 * a.sigma * a.sigma));
+        height += a.strength * Math.exp(-(dx * dx + dy * dy) / (2 * a.sigma * a.sigma));
     }
-    h += fbmValueNoise(x, y, seed) * 0.35;
-    return h;
+
+    const dist = Math.sqrt(u * u + v * v);
+    const edge = Math.max(0, 1 - ((dist / 5) ** 2) * 0.25);
+    return height * edge;
 }
 
-/** Resolves the CSS --grid-line color for canvas strokes */
-function resolveGridLineColor() {
-    const raw = getComputedStyle(document.documentElement).getPropertyValue('--grid-line').trim();
-    const m = raw.match(/rgba?\(([^)]+)\)/);
-    if (m) {
-        const parts = m[1].split(',').map((s) => parseFloat(s.trim()));
+/** Seeded PRNG (mulberry32) */
+function mulberry32(seed) {
+    let a = seed >>> 0;
+    return function () {
+        a |= 0;
+        a = (a + 0x6D2B79F5) | 0;
+        let t = Math.imul(a ^ (a >>> 15), 1 | a);
+        t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+}
+
+/** Draws 5 seeded phase offsets (radians) for the sine base */
+function phaseOffsets(seed) {
+    const rand = mulberry32(seed);
+    const phases = [];
+    for (let i = 0; i < 5; i++) {
+        phases.push(rand() * Math.PI * 2);
+    }
+    return phases;
+}
+
+/** Resolves the CSS --text-sub color for canvas contour strokes */
+function resolveContourColor() {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue('--text-sub').trim();
+    const hex = raw.match(/#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})/);
+    if (hex) {
+        let value = hex[1];
+        if (value.length === 3) value = value.split('').map((c) => c + c).join('');
+        return `#${value}`;
+    }
+    const rgba = raw.match(/rgba?\(([^)]+)\)/);
+    if (rgba) {
+        const parts = rgba[1].split(',').map((s) => parseFloat(s.trim()));
         if (parts.length >= 3) {
             const alpha = parts.length === 4 ? parts[3] : 1;
             return `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${alpha})`;
         }
     }
-    return 'rgba(0, 0, 0, 0.05)';
-}
-
-/**
- * fBm: sum of value-noise octaves, normalized to [0, 1]
- * @param {number} x - world x (px)
- * @param {number} y - world y (px)
- * @param {number} seed - per-render random seed
- */
-function fbmValueNoise(x, y, seed) {
-    let total = 0;
-    let amplitude = 1;
-    let maxValue = 0;
-    let frequency = BASE_FREQUENCY;
-
-    for (let octave = 0; octave < OCTAVES; octave++) {
-        total += valueNoise(x * frequency, y * frequency, seed) * amplitude;
-        maxValue += amplitude;
-        amplitude *= PERSISTENCE;
-        frequency *= LACUNARITY;
-    }
-
-    return total / maxValue;
-}
-
-/**
- * Value noise: bilinear + smoothstep interpolation over a hashed lattice
- */
-function valueNoise(x, y, seed) {
-    const x0 = Math.floor(x);
-    const y0 = Math.floor(y);
-    const fx = smoothstep(x - x0);
-    const fy = smoothstep(y - y0);
-
-    const v00 = hashNoise(x0, y0, seed);
-    const v10 = hashNoise(x0 + 1, y0, seed);
-    const v01 = hashNoise(x0, y0 + 1, seed);
-    const v11 = hashNoise(x0 + 1, y0 + 1, seed);
-
-    const a = v00 + (v10 - v00) * fx;
-    const b = v01 + (v11 - v01) * fx;
-    return a + (b - a) * fy;
-}
-
-/** Smoothstep easing for lattice interpolation */
-function smoothstep(t) {
-    return t * t * (3 - 2 * t);
-}
-
-/**
- * Deterministic pseudo-random value in [0, 1] for a lattice point.
- * Same (x, y, seed) always yields the same value.
- */
-function hashNoise(x, y, seed) {
-    let h = Math.imul(x | 0, 374761393) + Math.imul(y | 0, 668265263) + (seed | 0);
-    h = (h ^ (h >>> 13)) | 0;
-    h = Math.imul(h, 1274126177);
-    h = (h ^ (h >>> 16)) >>> 0;
-    return h / 4294967296;
+    return '#666666';
 }
 
 /**
@@ -259,53 +268,6 @@ function marchingSquares(heightmap, cols, rows, level) {
     }
 
     return segments;
-}
-
-/**
- * Chains line segments into polylines by matching endpoints
- * @returns {Array<Array<[number, number]>>}
- */
-function chainSegments(segments, tolerance) {
-    const lines = [];
-    const used = new Array(segments.length).fill(false);
-    const dist = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1]);
-
-    for (let i = 0; i < segments.length; i++) {
-        if (used[i]) continue;
-        used[i] = true;
-        const poly = [segments[i][0], segments[i][1]];
-
-        let grew = true;
-        while (grew) {
-            grew = false;
-            for (let j = 0; j < segments.length; j++) {
-                if (used[j]) continue;
-                const a = segments[j][0];
-                const b = segments[j][1];
-                if (dist(a, poly[0]) <= tolerance) {
-                    poly.unshift(b);
-                    used[j] = true;
-                    grew = true;
-                } else if (dist(b, poly[0]) <= tolerance) {
-                    poly.unshift(a);
-                    used[j] = true;
-                    grew = true;
-                } else if (dist(a, poly[poly.length - 1]) <= tolerance) {
-                    poly.push(b);
-                    used[j] = true;
-                    grew = true;
-                } else if (dist(b, poly[poly.length - 1]) <= tolerance) {
-                    poly.push(a);
-                    used[j] = true;
-                    grew = true;
-                }
-            }
-        }
-
-        lines.push(poly);
-    }
-
-    return lines;
 }
 
 /**
