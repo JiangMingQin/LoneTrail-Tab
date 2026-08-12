@@ -1,9 +1,9 @@
 # LoneTrail-Tab
 
-**LoneTrail-Tab** 是一个以《明日方舟》莱茵生命（Rhine Lab）为灵感的浏览器新标签页扩展。
+**LoneTrail-Tab** 是一个复古终端风格的浏览器新标签页扩展。
 可以通过**键盘操作**快速检索收藏夹内容，并进行网页跳转
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-0.9.0-green.svg) ![Style](https://img.shields.io/badge/style-Rhine_Lab-white)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-0.9.0-green.svg) ![Style](https://img.shields.io/badge/style-Retro_Terminal-white)
 
 ## ✨ 特性 (Features)
 
@@ -15,10 +15,10 @@
 * **⚡ 轻量级**: 基于原生 JavaScript (ES Modules) 构建，无任何第三方重型框架依赖。
 
 ## 🎬 界面演示 (Demo)
-LoneTrail-Tab 提供了两种主题模式，还原莱茵生命的科技感体验：
+LoneTrail-Tab 提供了两种主题模式，还原复古终端的科技感体验：
 
 ### 🌑 暗色模式
-经典的莱茵实验室终端风格，适配夜间使用场景：
+经典的复古实验室终端风格，适配夜间使用场景：
 ![LoneTrail-Tab 暗色模式演示](assets/dark.png)
 
 ### 🌕 亮色模式
@@ -74,7 +74,7 @@ LoneTrail-Tab 提供了两种主题模式，还原莱茵生命的科技感体验
 
 ---
 
-*Design inspired by Arknights & Rhine Lab. This is a fan-made project.*
+*Design inspired by retro terminals and laboratory aesthetics.*
 
 
 

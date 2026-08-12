@@ -165,7 +165,7 @@ export function renderChildrenDOM() {
     if (els.folderTitle) els.folderTitle.textContent = (titleText || 'ROOT').toUpperCase();
     els.childList.innerHTML = '';
 
-    // [修改] 如果列表为空，渲染莱茵生命风格的空状态
+    // [修改] 如果列表为空，渲染复古终端风格的空状态
     if (itemsToRender.length === 0) {
         let type = 'empty';
         let mainText = 'NO DATA';
@@ -196,7 +196,7 @@ export function renderChildrenDOM() {
     updateChildrenSelection();
 }
 
-/** [新增] 生成空状态的装饰性 HTML (Rhine Lab 风格) */
+/** [新增] 生成空状态的装饰性 HTML (复古终端风格) */
 function generateEmptyStateHTML(type, title, sub) {
     return `
     <div class="empty-state-wrapper" data-type="${type}">

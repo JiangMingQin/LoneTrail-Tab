@@ -86,7 +86,7 @@ async function loadBookmarks() {
         }
         throw new Error('Chrome bookmarks API unavailable');
     } catch (err) {
-        console.warn('Rhine Terminal: Running in Demo Mode');
+        console.warn('LoneTrail: Running in Demo Mode');
         // [统一协议] Demo 模式下也保持一致
         state.rootParents = [quickFolder, ...DEMO_BOOKMARKS];
         state.parents = [...state.rootParents];

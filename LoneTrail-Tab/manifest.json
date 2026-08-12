@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Rhine Lab Terminal",
+  "name": "LoneTrail-Tab",
   "version": "0.9.2",
-  "description": "Rhine Lab style bookmark navigation with keyboard control.",
+  "description": "Retro terminal style bookmark navigation with keyboard control.",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },
