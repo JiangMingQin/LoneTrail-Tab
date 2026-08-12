@@ -78,9 +78,6 @@
 /* --- 设置项样式 (保持之前的 List Layout) --- */
 .keybind-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px; }
 .keybind-col { display: flex; flex-direction: column; gap: 10px; }
-/* WASD + ENTER 固定左列，其余键位按序排右列 */
-.keybind-list > .key-row:nth-child(-n+5) { grid-column: 1; }
-.keybind-list > .key-row:nth-child(n+6) { grid-column: 2; }
 .key-row {
     display: flex; align-items: center; justify-content: space-between;
     padding: 12px 15px; background: transparent;
