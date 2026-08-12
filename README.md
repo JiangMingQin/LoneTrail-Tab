@@ -1,8 +1,8 @@
 # LoneTrail-Tab
 
-LoneTrail-Tab 是一个以《明日方舟》为灵感的浏览器新标签页扩展。可以完全通过键盘操作快速检索收藏夹内容，并进行网页跳转。
+LoneTrail-Tab 是一个以《明日方舟》风格为初始灵感的浏览器新标签页扩展。可以完全通过键盘操作快速检索收藏夹内容，并进行网页跳转。
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.0.0_alpha-green.svg) ![Style](https://img.shields.io/badge/style-Retro_Terminal-white)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.0.0--alpha-green.svg) ![Style](https://img.shields.io/badge/style-Brutalist_Sci--Fi_Terminal-white)
 
 
 ## ✨ 特性 (Features)
