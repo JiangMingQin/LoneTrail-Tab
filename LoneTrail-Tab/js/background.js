@@ -198,7 +198,16 @@ function resolveContourColor() {
     if (hex) {
         let value = hex[1];
         if (value.length === 3) value = value.split('').map((c) => c + c).join('');
-        return `#${value}`;
+        const num = parseInt(value, 16);
+        const r = (num >> 16) & 255;
+        const g = (num >> 8) & 255;
+        const b = num & 255;
+        // 向白色混 40%，让线条更灰更柔和
+        const mix = 0.4;
+        const lr = Math.round(r + (255 - r) * mix);
+        const lg = Math.round(g + (255 - g) * mix);
+        const lb = Math.round(b + (255 - b) * mix);
+        return `rgb(${lr}, ${lg}, ${lb})`;
     }
     const rgba = raw.match(/rgba?\(([^)]+)\)/);
     if (rgba) {
