@@ -76,6 +76,32 @@ body {
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none;
+    }
+}
+
+/* =========================================
+   THEME SWITCH TRANSITION（主题左推/右推入）
+   ========================================= */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.45s;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+::view-transition-old(root) {
+    animation-name: theme-slide-out;
+}
+::view-transition-new(root) {
+    animation-name: theme-slide-in;
+}
+@keyframes theme-slide-out {
+    to { transform: translateX(-100%); }
+}
+@keyframes theme-slide-in {
+    from { transform: translateX(100%); }
 }
 
 

@@ -401,11 +401,21 @@ function initThemeSwitcher() {
     themeBtn.onclick = () => {
         const currentTheme = state.config.preferences.theme || 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        state.config.preferences.theme = newTheme;
-        applyTheme(newTheme);
-        saveConfig();
-        updateThemeLabel();
-        initBackground();
+
+        const applyThemeChange = () => {
+            state.config.preferences.theme = newTheme;
+            applyTheme(newTheme);
+            saveConfig();
+            updateThemeLabel();
+            initBackground();
+        };
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (document.startViewTransition && !prefersReducedMotion) {
+            document.startViewTransition(applyThemeChange);
+        } else {
+            applyThemeChange();
+        }
     };
 
     updateThemeLabel();
