@@ -7,6 +7,8 @@
     --bg-color: #F7F7F5;                    /* 近白机身 */
     --surface: #FFFFFF;                     /* 纯白键面 */
     --well: #E8E8E6;                        /* 灰阶嵌槽 */
+    --frost-bg: rgba(255, 255, 255, 0.78);  /* 磨砂面板底 */
+    --frost-blur: 24px;                     /* 磨砂模糊 */
     --inset: rgba(0, 0, 0, 0.06);           /* 内部轻微填充 */
 
     /* 文字 */
@@ -67,6 +69,8 @@
     --bg-color: #0A0F22;
     --surface: #131A33;
     --well: #070B18;
+    --frost-bg: rgba(15, 21, 40, 0.72);     /* 磨砂面板底 */
+    --frost-blur: 24px;                     /* 磨砂模糊 */
     --inset: rgba(200, 215, 245, 0.06);
 
     --text-main: #E8ECF5;
