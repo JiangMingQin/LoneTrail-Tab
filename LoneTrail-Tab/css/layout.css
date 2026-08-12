@@ -51,10 +51,12 @@
 .icon-btn {
     cursor: pointer; 
     opacity: 0.75; 
-    font-size: 15px; 
+    font-size: 11px; 
+    letter-spacing: 1px;
     transition: 0.15s;
-    width: 32px; 
-    height: 32px; 
+    width: auto; 
+    height: 30px;
+    padding: 0 10px;
     
     display: flex; 
     justify-content: center; 
