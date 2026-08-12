@@ -18,6 +18,8 @@ const DEFAULT_KEYS = {
     SEARCH_ACTIVATE: ['/'],
     SEARCH_EXIT: ['escape'],
     SEARCH_FOCUS_LIST: [],
+    TOGGLE_THEME: ['t'],
+    OPEN_SETTINGS: ['o'],
 };
 
 /** Default application configuration */

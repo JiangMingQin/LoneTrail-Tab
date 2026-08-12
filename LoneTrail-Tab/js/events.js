@@ -85,7 +85,17 @@ function handleGlobalKey(key, e) {
     if (matchedActions.length === 0) return;
 
     e.preventDefault();
-    matchedActions.forEach(actionId => Actions.dispatch(actionId));
+    matchedActions.forEach((actionId) => {
+        if (actionId === 'TOGGLE_THEME') {
+            toggleTheme();
+            return;
+        }
+        if (actionId === 'OPEN_SETTINGS') {
+            openSettings();
+            return;
+        }
+        Actions.dispatch(actionId);
+    });
 }
 
 /** Initializes search input events */
@@ -449,49 +459,59 @@ function initThemeSwitcher() {
     const themeBtn = document.getElementById('theme-btn');
     if (!themeBtn) return;
 
-    themeBtn.onclick = (e) => {
-        const currentTheme = state.config.preferences.theme || 'light';
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-        const applyThemeChange = () => {
-            state.config.preferences.theme = newTheme;
-            applyTheme(newTheme);
-            saveConfig();
-            updateThemeButtonLabel();
-            initBackground();
-        };
-
-        // 保证主题只应用一次（过渡回调与兜底共用）
-        let applied = false;
-        const guardedApply = () => {
-            if (applied) return;
-            applied = true;
-            applyThemeChange();
-        };
-
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (document.startViewTransition && !prefersReducedMotion) {
-            try {
-                const x = e.clientX;
-                const y = e.clientY;
-                const endRadius = Math.hypot(
-                    Math.max(x, window.innerWidth - x),
-                    Math.max(y, window.innerHeight - y)
-                );
-                const rootEl = document.documentElement;
-                rootEl.style.setProperty('--vt-x', `${x}px`);
-                rootEl.style.setProperty('--vt-y', `${y}px`);
-                rootEl.style.setProperty('--vt-r', `${endRadius}px`);
-                document.startViewTransition(guardedApply);
-                // 兜底：过渡回调未执行时强制切换
-                setTimeout(guardedApply, 1000);
-                return;
-            } catch (err) {
-                // 过渡 API 不可用/抛错时降级为直接切换
-            }
-        }
-        guardedApply();
-    };
+    themeBtn.onclick = (e) => toggleTheme(e.clientX, e.clientY);
 
     updateThemeButtonLabel();
+}
+
+/** Toggles the theme with a circular reveal transition (optional click coords) */
+function toggleTheme(x, y) {
+    const currentTheme = state.config.preferences.theme || 'light';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+    const applyThemeChange = () => {
+        state.config.preferences.theme = newTheme;
+        applyTheme(newTheme);
+        saveConfig();
+        updateThemeButtonLabel();
+        initBackground();
+    };
+
+    // 保证主题只应用一次（过渡回调与兜底共用）
+    let applied = false;
+    const guardedApply = () => {
+        if (applied) return;
+        applied = true;
+        applyThemeChange();
+    };
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (document.startViewTransition && !prefersReducedMotion) {
+        try {
+            const px = typeof x === 'number' ? x : window.innerWidth / 2;
+            const py = typeof y === 'number' ? y : window.innerHeight / 2;
+            const endRadius = Math.hypot(
+                Math.max(px, window.innerWidth - px),
+                Math.max(py, window.innerHeight - py)
+            );
+            const rootEl = document.documentElement;
+            rootEl.style.setProperty('--vt-x', `${px}px`);
+            rootEl.style.setProperty('--vt-y', `${py}px`);
+            rootEl.style.setProperty('--vt-r', `${endRadius}px`);
+            document.startViewTransition(guardedApply);
+            // 兜底：过渡回调未执行时强制切换
+            setTimeout(guardedApply, 1000);
+            return;
+        } catch (err) {
+            // 过渡 API 不可用/抛错时降级为直接切换
+        }
+    }
+    guardedApply();
+}
+
+/** Opens the settings modal */
+function openSettings() {
+    const modal = document.getElementById('settings-modal');
+    const msgEl = document.getElementById('setting-msg');
+    if (modal) openSettingsModal(modal, msgEl);
 }
