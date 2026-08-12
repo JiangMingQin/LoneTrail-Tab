@@ -27,7 +27,6 @@ const DEFAULT_CONFIG = {
         showClock: true,
         showDate: true,
         openNewTab: false,
-        soundFx: false,
         theme: 'light',
         clearSearchOnActivate: false,
         // --- Frecency 算法相关配置 ---

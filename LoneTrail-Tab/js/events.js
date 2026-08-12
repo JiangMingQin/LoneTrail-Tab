@@ -211,6 +211,22 @@ function formatKeyDisplay(key) {
 }
 
 /** Initializes settings modal and its controls */
+/** Syncs the settings theme segmented control with the current theme */
+function syncThemeOptions() {
+    const current = state.config.preferences.theme || 'light';
+    document.querySelectorAll('.theme-option').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.themeValue === current);
+    });
+}
+
+/** Updates the top-bar theme button label to the current theme */
+function updateThemeButtonLabel() {
+    const themeBtn = document.getElementById('theme-btn');
+    if (!themeBtn) return;
+    const currentTheme = state.config.preferences.theme || 'light';
+    themeBtn.textContent = currentTheme === 'dark' ? 'DARK' : 'LIGHT';
+}
+
 function initSettingsModal() {
     const modal = document.getElementById('settings-modal');
     const settingsBtn = document.getElementById('settings-btn');
@@ -238,6 +254,28 @@ function initSettingsModal() {
             if (valSpan) valSpan.textContent = e.target.value;
         };
     }
+
+    const halfLifeRange = document.getElementById('setting-half-life');
+    if (halfLifeRange) {
+        halfLifeRange.oninput = (e) => {
+            const valSpan = document.getElementById('half-life-val');
+            if (valSpan) valSpan.textContent = e.target.value + 'd';
+        };
+    }
+
+    // 主题分段控件
+    document.querySelectorAll('.theme-option').forEach((btn) => {
+        btn.onclick = () => {
+            const value = btn.dataset.themeValue;
+            if (value !== 'light' && value !== 'dark') return;
+            state.config.preferences.theme = value;
+            applyTheme(value);
+            saveConfig();
+            updateThemeButtonLabel();
+            initBackground();
+            syncThemeOptions();
+        };
+    });
 
     if (saveBtn) saveBtn.onclick = () => saveSettings(modal);
     if (resetBtn) {
@@ -267,10 +305,11 @@ function openSettingsModal(modal, msgEl) {
         clockCheck: document.getElementById('setting-clock-enabled'),
         dateCheck: document.getElementById('setting-clock-details'),
         newTabCheck: document.getElementById('setting-open-newtab'),
-        soundCheck: document.getElementById('setting-sound-fx'),
         clearSearchCheck: document.getElementById('setting-clear-search'),
         quickLaunchRange: document.getElementById('setting-quick-launch'),
         quickLaunchVal: document.getElementById('quick-launch-val'),
+        halfLifeRange: document.getElementById('setting-half-life'),
+        halfLifeVal: document.getElementById('half-life-val'),
     };
 
     if (controls.fontRange) {
@@ -284,8 +323,14 @@ function openSettingsModal(modal, msgEl) {
     if (controls.clockCheck) controls.clockCheck.checked = prefs.showClock !== false;
     if (controls.dateCheck) controls.dateCheck.checked = prefs.showDate !== false;
     if (controls.newTabCheck) controls.newTabCheck.checked = prefs.openNewTab === true;
-    if (controls.soundCheck) controls.soundCheck.checked = prefs.soundFx === true;
     if (controls.clearSearchCheck) controls.clearSearchCheck.checked = prefs.clearSearchOnActivate === true;
+    if (controls.halfLifeRange) {
+        controls.halfLifeRange.value = prefs.frecencyHalfLifeDays || 7;
+        if (controls.halfLifeVal) controls.halfLifeVal.textContent = controls.halfLifeRange.value + 'd';
+    }
+
+    // Sync theme segmented control
+    syncThemeOptions();
 
     // Load key binding buttons
     document.querySelectorAll('.key-bind-btn').forEach(btn => {
@@ -331,9 +376,9 @@ function saveSettings(modal) {
         clockCheck: document.getElementById('setting-clock-enabled'),
         dateCheck: document.getElementById('setting-clock-details'),
         newTabCheck: document.getElementById('setting-open-newtab'),
-        soundCheck: document.getElementById('setting-sound-fx'),
         clearSearchCheck: document.getElementById('setting-clear-search'),
         quickLaunchRange: document.getElementById('setting-quick-launch'),
+        halfLifeRange: document.getElementById('setting-half-life'),
     };
 
     if (controls.fontRange) prefs.uiFontSize = parseInt(controls.fontRange.value);
@@ -341,8 +386,8 @@ function saveSettings(modal) {
     if (controls.clockCheck) prefs.showClock = controls.clockCheck.checked;
     if (controls.dateCheck) prefs.showDate = controls.dateCheck.checked;
     if (controls.newTabCheck) prefs.openNewTab = controls.newTabCheck.checked;
-    if (controls.soundCheck) prefs.soundFx = controls.soundCheck.checked;
     if (controls.clearSearchCheck) prefs.clearSearchOnActivate = controls.clearSearchCheck.checked;
+    if (controls.halfLifeRange) prefs.frecencyHalfLifeDays = parseInt(controls.halfLifeRange.value);
 
     // Collect key bindings
     const newKeys = {};
@@ -404,11 +449,6 @@ function initThemeSwitcher() {
     const themeBtn = document.getElementById('theme-btn');
     if (!themeBtn) return;
 
-    const updateThemeLabel = () => {
-        const currentTheme = state.config.preferences.theme || 'light';
-        themeBtn.textContent = currentTheme === 'dark' ? 'DARK' : 'LIGHT';
-    };
-
     themeBtn.onclick = (e) => {
         const currentTheme = state.config.preferences.theme || 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
@@ -417,7 +457,7 @@ function initThemeSwitcher() {
             state.config.preferences.theme = newTheme;
             applyTheme(newTheme);
             saveConfig();
-            updateThemeLabel();
+            updateThemeButtonLabel();
             initBackground();
         };
 
@@ -453,5 +493,5 @@ function initThemeSwitcher() {
         guardedApply();
     };
 
-    updateThemeLabel();
+    updateThemeButtonLabel();
 }

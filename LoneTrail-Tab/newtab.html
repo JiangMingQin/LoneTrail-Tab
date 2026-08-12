@@ -133,11 +133,22 @@
                 <div class="config-section">
                     <div class="section-header">
                         <span class="section-num">02</span>
-                        <span class="section-title">DISPLAY & HUD</span>
+                        <span class="section-title">DISPLAY & LAUNCH</span>
                         <div class="section-line"></div>
                     </div>
 
                     <div class="behavior-grid">
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span>THEME</span>
+                                <small>Light / Dark interface</small>
+                            </div>
+                            <div class="theme-group">
+                                <button type="button" class="theme-option active" data-theme-value="light">LIGHT</button>
+                                <button type="button" class="theme-option" data-theme-value="dark">DARK</button>
+                            </div>
+                        </div>
+
                         <div class="switch-row">
                             <div class="switch-label">
                                 <span>UI_FONT_SIZE</span>
@@ -215,13 +226,13 @@
                         </div>
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>AUDIO_FEEDBACK</span>
-                                <small>Enable UI sound effects</small>
+                                <span>FRECENCY_HALF_LIFE</span>
+                                <small>Score decay half-life (days)</small>
                             </div>
-                            <label class="setting-switch">
-                                <input type="checkbox" id="setting-sound-fx">
-                                <span class="slider"></span>
-                            </label>
+                            <div class="range-control">
+                                <input type="range" id="setting-half-life" min="3" max="30" step="1">
+                                <span id="half-life-val">7d</span>
+                            </div>
                         </div>
                     </div>
                 </div>
