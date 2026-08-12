@@ -222,6 +222,21 @@
     box-shadow: 0 0 4px var(--led-glow);
 }
 
+/* 暗色：拨盘去除内部阴影/发光，保持与亮色一致的简洁观感 */
+[data-theme="dark"] .dial-item {
+    box-shadow: 0 8px 24px var(--shadow-soft);
+}
+[data-theme="dark"] .dial-item::after,
+[data-theme="dark"] .dial-item.active::after {
+    box-shadow: none;
+}
+[data-theme="dark"] .dial-item.active {
+    box-shadow: -5px 5px 30px var(--shadow);
+}
+[data-theme="dark"] .dial-item.active.focus-dimmed {
+    box-shadow: 0 0 0 1px var(--accent);
+}
+
 /* =========================================
    POINTER INDICATOR
    ========================================= */
