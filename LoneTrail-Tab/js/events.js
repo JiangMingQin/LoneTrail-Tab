@@ -392,11 +392,19 @@ function initThemeSwitcher() {
     const themeBtn = document.getElementById('theme-btn');
     if (!themeBtn) return;
 
+    const updateThemeLabel = () => {
+        const currentTheme = state.config.preferences.theme || 'light';
+        themeBtn.textContent = currentTheme === 'dark' ? 'DARK' : 'LIGHT';
+    };
+
     themeBtn.onclick = () => {
         const currentTheme = state.config.preferences.theme || 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
         state.config.preferences.theme = newTheme;
         applyTheme(newTheme);
         saveConfig();
+        updateThemeLabel();
     };
+
+    updateThemeLabel();
 }

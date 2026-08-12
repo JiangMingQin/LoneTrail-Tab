@@ -14,8 +14,15 @@
     
     /* 视觉风格 */
     border-top: 4px solid var(--accent);
-    border-bottom: 1px solid var(--border);
     background: transparent;
+}
+
+/* 中段连线：连接左侧状态与右侧按钮组 */
+.top-bar-line {
+    flex: 1;
+    height: 1px;
+    margin: 0 24px;
+    background: var(--border);
 }
 
 /* 左侧系统标识 */
@@ -50,22 +57,21 @@
 /* 图标按钮通用样式 */
 .icon-btn {
     cursor: pointer; 
-    opacity: 0.75; 
+    opacity: 0.8; 
     font-size: 11px; 
     letter-spacing: 1px;
     transition: 0.15s;
     width: auto; 
-    height: 30px;
-    padding: 0 10px;
+    height: auto;
+    padding: 4px 8px;
     
     display: flex; 
     justify-content: center; 
     align-items: center;
     
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    box-shadow: 0 2px 0 var(--key-shadow), inset 0 1px 0 var(--key-highlight);
+    border: none;
+    background: transparent;
+    box-shadow: none;
     font-family: var(--font-stack);
     color: var(--text-main);
 }
@@ -73,11 +79,6 @@
 .icon-btn:hover { 
     opacity: 1; 
     color: var(--accent); 
-}
-
-.icon-btn:active {
-    box-shadow: inset 0 2px 4px var(--key-shadow);
-    transform: translateY(1px);
 }
 
 
