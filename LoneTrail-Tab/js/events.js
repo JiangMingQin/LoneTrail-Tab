@@ -19,6 +19,7 @@ export function initEventListeners() {
     initSearchEvents();
     initDialEvents();
     initContentEvents();
+    initBackButton();
     initSettingsModal();
     initThemeSwitcher();
 }
@@ -138,6 +139,15 @@ function initContentEvents() {
         if (state.focusColumn !== 'right' && !state.searchMode) {
             Actions.dispatch('SET_FOCUS', { col: 'right', index: state.childIndex });
         }
+    });
+}
+
+/** Initializes the back-to-parent button */
+function initBackButton() {
+    const backBtn = document.getElementById('back-btn');
+    if (!backBtn) return;
+    backBtn.addEventListener('click', () => {
+        Actions.dispatch('NAV_LEFT');
     });
 }
 

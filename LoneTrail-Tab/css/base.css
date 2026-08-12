@@ -14,11 +14,11 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    
+
     font-family: var(--font-ui);
     background-color: var(--bg-color);
     color: var(--text-main);
-    
+
     /* 主题切换平滑过渡 */
     transition: background-color 0.3s, color 0.3s;
 }
@@ -55,18 +55,18 @@ body {
    BACKGROUND LINES (SVG Path Styles)
    ========================================= */
 
-.bg-line {
-    fill: none;
-    stroke: var(--grid-line);
-    stroke-width: 1.5px;
-    /* 缩放时保持线宽一致 */
-    vector-effect: non-scaling-stroke;
-    transform-origin: center;
-}
-
 /* 星点（暗色星空背景） */
 .bg-star {
     fill: var(--star-color);
+}
+
+/* 统一的交互鼠标样式 */
+button,
+.icon-btn,
+.dial-item,
+.list-item,
+.close-modal-btn {
+    cursor: pointer;
 }
 
 /* 动效克制：尊重系统减弱动态偏好 */

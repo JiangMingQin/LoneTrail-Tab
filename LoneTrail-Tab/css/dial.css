@@ -44,30 +44,29 @@
     right: 0;
     top: 0;
     transform-origin: center right;
-    
+
     width: 320px;
     height: 50px;
-    
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px 0 25px;
-    
+
     background: var(--surface);
     border: 1px solid var(--border);
-    
+
     /* 右下角单切角形状 */
     clip-path: polygon(0 0, 100% 0, 100% 70%, 94% 100%, 0 100%);
-    
+
     box-shadow: 0 3px 0 var(--key-shadow), inset 0 1px 0 var(--key-highlight), 0 8px 24px var(--shadow-soft);
-    
+
     color: var(--text-sub);
     font-size: var(--ui-font-size);
     font-weight: 600;
     font-family: var(--font-ui);
-    cursor: pointer;
     overflow: hidden;
-    
+
     /* 多属性平滑过渡 */
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                 opacity 0.2s,
@@ -84,11 +83,11 @@
     color: var(--accent-text);
     opacity: 0.55;
     letter-spacing: 1px;
-    
+
     position: relative;
     z-index: 1;
     margin-right: 15px;
-    
+
     transition: color 0.3s, opacity 0.3s;
 }
 
