@@ -32,11 +32,24 @@ LoneTrail-Tab 是一个以《明日方舟》风格为初始灵感的浏览器新
 
 ## 🚀 安装指南 (Installation)
 
-Chrome / Edge 等 Chromium 浏览器：
+Chrome / Edge 等 Chromium 浏览器，任选一种方式获取扩展：
 
-1. 下载本仓库，解压出 `LoneTrail-Tab` 文件夹
-2. 打开 `chrome://extensions/`，开启右上角「开发者模式」
-3. 点击「加载已解压的扩展程序」，选中 `LoneTrail-Tab` 文件夹
+**方式一：下载 Release 包（推荐）**
+
+前往 [Releases 页面](https://github.com/JiangMingQin/LoneTrail-Tab/releases) 下载
+[`LoneTrail-Tab-v1.0.0-alpha.zip`](https://github.com/JiangMingQin/LoneTrail-Tab/releases/download/v1.0.0-alpha/LoneTrail-Tab-v1.0.0-alpha.zip)，
+解压出 `LoneTrail-Tab` 文件夹。
+
+**方式二：克隆仓库（适合开发 / 贡献）**
+
+```bash
+git clone https://github.com/JiangMingQin/LoneTrail-Tab.git
+```
+
+获取到 `LoneTrail-Tab` 文件夹后：
+
+1. 打开 `chrome://extensions/`（Edge 为 `edge://extensions/`），开启右上角「开发者模式」
+2. 点击「加载已解压的扩展程序」，选中 `LoneTrail-Tab` 文件夹
 
 打开新标签页（`Ctrl+T`）即可使用。没有书签权限时会自动加载演示数据。
 
