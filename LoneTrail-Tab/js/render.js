@@ -44,11 +44,6 @@ export function updateCursor() {
     updateKeyHints();
 }
 
-/** Re-renders after search */
-export function renderSearchResults() {
-    fullRender();
-}
-
 /** Renders the circular dial (parent bookmarks) */
 export function renderDialDOM() {
     if (!els.parentList) return;

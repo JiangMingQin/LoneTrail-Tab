@@ -27,14 +27,14 @@ body {
    BACKGROUND LAYERS
    ========================================= */
 
-/* SVG 地形背景容器 (由 JS 生成内容) */
+/* 背景层元素（由 JS 生成：亮色地形 canvas / 暗色星空 svg） */
 .bg-topography {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -2;
+    z-index: -1;
     pointer-events: none;
     overflow: visible;
 }

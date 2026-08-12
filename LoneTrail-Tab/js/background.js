@@ -340,13 +340,6 @@ function createSvgElement() {
     svg.setAttribute('height', '100%');
     svg.classList.add('bg-topography');
 
-    // Fixed positioning behind content
-    svg.style.position = 'fixed';
-    svg.style.top = '0';
-    svg.style.left = '0';
-    svg.style.zIndex = '-1';
-    svg.style.pointerEvents = 'none';
-
     return svg;
 }
 
@@ -354,12 +347,6 @@ function createSvgElement() {
 function createCanvasElement() {
     const canvas = document.createElement('canvas');
     canvas.classList.add('bg-topography');
-
-    canvas.style.position = 'fixed';
-    canvas.style.top = '0';
-    canvas.style.left = '0';
-    canvas.style.zIndex = '-1';
-    canvas.style.pointerEvents = 'none';
 
     return canvas;
 }

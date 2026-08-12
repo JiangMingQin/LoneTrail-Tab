@@ -13,12 +13,6 @@ export function escapeHtml(unsafe) {
         .replace(/'/g, '&#039;');
 }
 
-/** Truncates text to max length with ellipsis */
-export function truncateText(text, maxLength) {
-    if (!text) return '';
-    return text.length <= maxLength ? text : text.slice(0, maxLength) + '...';
-}
-
 /**
  * Debounces function execution
  * Use case: scroll, resize, input events
