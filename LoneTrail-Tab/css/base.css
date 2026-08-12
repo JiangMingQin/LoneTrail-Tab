@@ -64,6 +64,11 @@ body {
     transform-origin: center;
 }
 
+/* 星点（暗色星空背景） */
+.bg-star {
+    fill: var(--star-color);
+}
+
 /* 动效克制：尊重系统减弱动态偏好 */
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {

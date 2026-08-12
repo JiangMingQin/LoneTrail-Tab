@@ -61,49 +61,50 @@
 
 [data-theme="dark"] {
     /* =========================================
-       DARK MODE — CRT 黑屏绿字终端
+       DARK MODE — 星空之夜（夜蓝银白）
        ========================================= */
 
-    --bg-color: #0B0F0B;
-    --surface: #141B14;
-    --well: #080C08;
-    --inset: rgba(51, 255, 102, 0.05);
+    --bg-color: #0A0F22;
+    --surface: #131A33;
+    --well: #070B18;
+    --inset: rgba(200, 215, 245, 0.06);
 
-    --text-main: #5CFF7A;                   /* 亮荧光绿 */
-    --text-sub: #2F9E4A;                    /* 暗荧光绿 */
-    --text-inverse: #0B0F0B;
-    --text-on-accent: #0B0F0B;              /* 绿底黑字（方块光标） */
+    --text-main: #E8ECF5;
+    --text-sub: #9AA8C8;
+    --text-inverse: #0A0F22;
+    --text-on-accent: #0A0F22;
     --text-on-danger: #FFFFFF;
 
-    --accent: #33FF66;
-    --accent-text: #46E867;
-    --accent-dim: rgba(51, 255, 102, 0.12);
+    --accent: #A9BEE8;
+    --accent-text: #A9BEE8;
+    --accent-dim: rgba(169, 190, 232, 0.14);
 
-    --danger: #FF5555;
-    --danger-glow: rgba(255, 85, 85, 0.5);
+    --danger: #FF6B7A;
+    --danger-glow: rgba(255, 107, 122, 0.5);
 
-    --border: rgba(51, 255, 102, 0.18);
-    --grid-line: rgba(51, 255, 102, 0.05);
+    --border: rgba(200, 215, 245, 0.14);
+    --grid-line: rgba(200, 215, 245, 0.05);
 
-    --shadow: rgba(0, 0, 0, 0.45);
-    --shadow-soft: rgba(0, 0, 0, 0.25);
-    --overlay: rgba(0, 0, 0, 0.70);
+    --shadow: rgba(0, 0, 10, 0.5);
+    --shadow-soft: rgba(0, 0, 10, 0.3);
+    --overlay: rgba(2, 4, 12, 0.70);
 
     --dial-active-bg: var(--text-main);
-    --dial-idx-active: rgba(51, 255, 102, 0.30);
-    --decoration-ring: rgba(51, 255, 102, 0.10);
+    --dial-idx-active: rgba(10, 15, 34, 0.30);
+    --decoration-ring: rgba(200, 215, 245, 0.08);
 
-    --row-sep: rgba(51, 255, 102, 0.12);
-    --row-active-bg: var(--accent);         /* 方块光标 */
-    --row-active-text: var(--text-on-accent);
+    --row-sep: rgba(200, 215, 245, 0.10);
+    --row-active-bg: var(--accent);
+    --row-active-text: #0A0F22;
 
     /* 磁带机装饰 */
-    --led: #33FF66;
-    --led-glow: rgba(51, 255, 102, 0.8);
+    --led: #C9D7F2;
+    --led-glow: rgba(201, 215, 242, 0.7);
     --key-highlight: rgba(255, 255, 255, 0.10);
-    --key-shadow: rgba(0, 0, 0, 0.55);
-    --phosphor-glow: rgba(51, 255, 102, 0.55);
-    --vu-1: #33FF66;
-    --vu-2: #E9B949;
-    --vu-3: #FF5555;
+    --key-shadow: rgba(0, 0, 10, 0.5);
+    --phosphor-glow: rgba(169, 190, 232, 0.40);
+    --vu-1: #A9BEE8;
+    --vu-2: #7F93C4;
+    --vu-3: #56679A;
+    --star-color: #E8ECF5;
 }

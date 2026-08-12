@@ -2,6 +2,7 @@ import { state, saveConfig } from './state.js';
 import { Actions } from './actions.js';
 import { applyTheme } from './utils.js';
 import { fullRender, updateKeyHints } from './render.js';
+import { initBackground } from './background.js';
 
 /** Currently recording key binding button */
 let recordingBtn = null;
@@ -404,6 +405,7 @@ function initThemeSwitcher() {
         applyTheme(newTheme);
         saveConfig();
         updateThemeLabel();
+        initBackground();
     };
 
     updateThemeLabel();

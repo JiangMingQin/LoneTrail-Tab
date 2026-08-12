@@ -23,15 +23,63 @@ const BG_GROUPS = [
  */
 export function initBackground() {
     const container = getContainer();
-    const svg = createSvgElement();
     const { innerWidth: w, innerHeight: h } = window;
+    const theme = document.documentElement.getAttribute('data-theme');
 
-    BG_GROUPS.forEach((config) => {
-        const groupEl = createRingGroup(config, w, h);
-        svg.appendChild(groupEl);
-    });
+    let svg;
+    if (theme === 'dark') {
+        svg = createStarSvg(w, h);
+    } else {
+        svg = createSvgElement();
+        BG_GROUPS.forEach((config) => {
+            const groupEl = createRingGroup(config, w, h);
+            svg.appendChild(groupEl);
+        });
+    }
 
     mountSvg(svg, container);
+}
+
+/**
+ * Creates a random starfield SVG for the dark night theme
+ * @param {number} w - Viewport width
+ * @param {number} h - Viewport height
+ */
+function createStarSvg(w, h) {
+    const svgNS = 'http://www.w3.org/2000/svg';
+    const svg = createSvgElement();
+    const group = document.createElementNS(svgNS, 'g');
+
+    // ~130 stars at 1920x1080
+    const starCount = Math.round((w * h) / 16000);
+
+    for (let i = 0; i < starCount; i++) {
+        const cx = (Math.random() * w).toFixed(1);
+        const cy = (Math.random() * h).toFixed(1);
+        const radius = 0.4 + Math.random() * 1.2;
+
+        const circle = document.createElementNS(svgNS, 'circle');
+        circle.setAttribute('cx', cx);
+        circle.setAttribute('cy', cy);
+        circle.setAttribute('r', radius.toFixed(2));
+        circle.setAttribute('opacity', (0.25 + Math.random() * 0.6).toFixed(2));
+        circle.classList.add('bg-star');
+        group.appendChild(circle);
+
+        // Bright stars get a soft halo
+        if (radius > 1.35) {
+            const halo = document.createElementNS(svgNS, 'circle');
+            halo.setAttribute('cx', cx);
+            halo.setAttribute('cy', cy);
+            halo.setAttribute('r', (radius * 2.6).toFixed(2));
+            halo.setAttribute('opacity', '0.10');
+            halo.classList.add('bg-star');
+            group.appendChild(halo);
+        }
+    }
+
+    svg.appendChild(group);
+    return svg;
 }
 
 /** Gets or creates the background container */
