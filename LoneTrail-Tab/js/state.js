@@ -3,7 +3,9 @@
  * Manages application state, configuration, and localStorage persistence.
  */
 
-const STORAGE_KEY = 'rhine_config';
+const STORAGE_KEY = 'lonetrail_config';
+/** 旧存储键（迁移用） */
+const LEGACY_STORAGE_KEY = 'rhine_config';
 
 /** Default key bindings: Action ID -> Key Codes Array */
 const DEFAULT_KEYS = {
@@ -69,7 +71,18 @@ export const state = {
  * 同时也负责恢复算法的运行状态。
  */
 export async function loadConfig() {
-    const json = localStorage.getItem(STORAGE_KEY);
+    let json = localStorage.getItem(STORAGE_KEY);
+
+    // 迁移：旧键存在时复制到新键并删除旧键（不丢用户设置）
+    if (!json) {
+        const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+        if (legacy) {
+            localStorage.setItem(STORAGE_KEY, legacy);
+            localStorage.removeItem(LEGACY_STORAGE_KEY);
+            json = legacy;
+        }
+    }
+
     if (!json) return;
 
     try {

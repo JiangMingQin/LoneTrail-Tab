@@ -234,6 +234,7 @@ function initSettingsModal() {
         resetBtn.onclick = () => {
             if (confirm('Reset all settings to default?')) {
                 localStorage.removeItem('rhine_config');
+                localStorage.removeItem('lonetrail_config');
                 location.reload();
             }
         };
