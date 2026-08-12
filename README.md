@@ -3,7 +3,7 @@
 **LoneTrail-Tab** 是一个复古终端风格的浏览器新标签页扩展。
 可以通过**键盘操作**快速检索收藏夹内容，并进行网页跳转
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-0.9.0-green.svg) ![Style](https://img.shields.io/badge/style-Retro_Terminal-white)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.0.0_beta-green.svg) ![Style](https://img.shields.io/badge/style-Retro_Terminal-white)
 
 ## ✨ 特性 (Features)
 
@@ -62,6 +62,7 @@ LoneTrail-Tab 提供了两种主题模式，还原复古终端的科技感体验
 * `js/background.js`: 动态 SVG 背景生成算法
 
 详细的架构说明请参阅 [PROJECT_DOCS.md](PROJECT_DOCS.md)。
+完整的版本变更记录请参阅 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 🤝 贡献 (Contributing)
 
