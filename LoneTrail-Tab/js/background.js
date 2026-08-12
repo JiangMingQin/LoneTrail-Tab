@@ -28,72 +28,120 @@ export function initBackground() {
     const { innerWidth: w, innerHeight: h } = window;
     const theme = document.documentElement.getAttribute('data-theme');
 
-    let svg;
+    let bgElement;
     if (theme === 'dark') {
-        svg = createStarSvg(w, h);
+        bgElement = createStarSvg(w, h);
     } else {
-        svg = createTerrainSvg(w, h);
+        bgElement = createTerrainCanvas(w, h);
     }
 
-    mountSvg(svg, container);
+    mountBackground(bgElement, container);
 }
 
 /**
- * Creates a terrain contour SVG: fBm heightmap + Marching Squares isolines
+ * Creates a terrain contour canvas: 3-4 anchor-defined height field
+ * + procedural fBm noise, contours extracted with Marching Squares.
  * @param {number} w - Viewport width
  * @param {number} h - Viewport height
  */
-function createTerrainSvg(w, h) {
-    const svgNS = 'http://www.w3.org/2000/svg';
-    const svg = createSvgElement();
-    const group = document.createElementNS(svgNS, 'g');
+function createTerrainCanvas(w, h) {
+    const canvas = createCanvasElement();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    canvas.style.width = `${w}px`;
+    canvas.style.height = `${h}px`;
+
+    const ctx = canvas.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.lineWidth = 1.5;
+
     const seed = Math.floor(Math.random() * 0xFFFFFFFF);
+    const anchors = generateAnchors(w, h);
 
     const cols = Math.ceil(w / GRID_CELL) + 1;
     const rows = Math.ceil(h / GRID_CELL) + 1;
+    const heightmap = new Float32Array(cols * rows);
 
-    // 1. Heightmap via multi-frequency value noise (fBm)
-    const heightmap = [];
+    // 1. Height field = anchor influence (peaks/valleys) + procedural fBm noise
+    let minH = Infinity;
+    let maxH = -Infinity;
     for (let j = 0; j < rows; j++) {
-        const row = [];
         for (let i = 0; i < cols; i++) {
-            row.push(fbmValueNoise(i * GRID_CELL, j * GRID_CELL, seed));
+            const hVal = terrainHeight(i * GRID_CELL, j * GRID_CELL, anchors, seed);
+            heightmap[j * cols + i] = hVal;
+            if (hVal < minH) minH = hVal;
+            if (hVal > maxH) maxH = hVal;
         }
-        heightmap.push(row);
     }
+    if (maxH - minH < 1e-6) return canvas;
 
-    // 2. Extract contour lines per level with Marching Squares
+    // 2. Marching Squares isolines, stroked on Canvas 2D
+    const strokeStyle = resolveGridLineColor();
     for (let levelIdx = 0; levelIdx < CONTOUR_LEVELS; levelIdx++) {
-        const level = 0.18 + (levelIdx * (0.85 - 0.18)) / (CONTOUR_LEVELS - 1);
+        const level = minH + (levelIdx * (maxH - minH)) / (CONTOUR_LEVELS - 1);
         const segments = marchingSquares(heightmap, cols, rows, level);
         const polylines = chainSegments(segments, CHAIN_TOLERANCE);
-        const opacity = Math.min(1, 0.45 + levelIdx * 0.08);
 
+        ctx.globalAlpha = Math.min(1, 0.45 + levelIdx * 0.08);
+        ctx.strokeStyle = strokeStyle;
+        ctx.beginPath();
         polylines.forEach((points) => {
-            const path = document.createElementNS(svgNS, 'path');
-            const d = [];
             points.forEach((p, idx) => {
-                if (idx > 0 && Math.hypot(p[0] - points[idx - 1][0], p[1] - points[idx - 1][1]) < 0.1) {
-                    return;
-                }
-                d.push(
-                    idx === 0
-                        ? `M ${p[0].toFixed(1)} ${p[1].toFixed(1)}`
-                        : `L ${p[0].toFixed(1)} ${p[1].toFixed(1)}`
-                );
+                if (idx > 0 && Math.hypot(p[0] - points[idx - 1][0], p[1] - points[idx - 1][1]) < 0.1) return;
+                if (idx === 0) ctx.moveTo(p[0], p[1]);
+                else ctx.lineTo(p[0], p[1]);
             });
-            path.setAttribute(
-                'd',
-                d.join(' ')
-            );
-            path.setAttribute('opacity', opacity.toFixed(2));
-            path.classList.add('bg-line');
-            group.appendChild(path);
+        });
+        ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    return canvas;
+}
+
+/** Generates 3-4 random anchor points (peaks/valleys) across the screen */
+function generateAnchors(w, h) {
+    const count = 3 + (Math.random() < 0.5 ? 1 : 0);
+    const anchors = [];
+    for (let i = 0; i < count; i++) {
+        anchors.push({
+            x: w * (0.12 + Math.random() * 0.76),
+            y: h * (0.12 + Math.random() * 0.76),
+            strength: (Math.random() < 0.5 ? -1 : 1) * (0.55 + Math.random() * 0.45),
+            sigma: 140 + Math.random() * 140,
         });
     }
+    return anchors;
+}
 
-    svg.appendChild(group);
-    return svg;
+/**
+ * Height at a point: sum of anchor gaussian fields + procedural fBm detail
+ */
+function terrainHeight(x, y, anchors, seed) {
+    let h = 0;
+    for (let i = 0; i < anchors.length; i++) {
+        const a = anchors[i];
+        const dx = x - a.x;
+        const dy = y - a.y;
+        h += a.strength * Math.exp(-(dx * dx + dy * dy) / (2 * a.sigma * a.sigma));
+    }
+    h += fbmValueNoise(x, y, seed) * 0.35;
+    return h;
+}
+
+/** Resolves the CSS --grid-line color for canvas strokes */
+function resolveGridLineColor() {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue('--grid-line').trim();
+    const m = raw.match(/rgba?\(([^)]+)\)/);
+    if (m) {
+        const parts = m[1].split(',').map((s) => parseFloat(s.trim()));
+        if (parts.length >= 3) {
+            const alpha = parts.length === 4 ? parts[3] : 1;
+            return `rgba(${parts[0]}, ${parts[1]}, ${parts[2]}, ${alpha})`;
+        }
+    }
+    return 'rgba(0, 0, 0, 0.05)';
 }
 
 /**
@@ -167,10 +215,11 @@ function marchingSquares(heightmap, cols, rows, level) {
         for (let i = 0; i < cols - 1; i++) {
             const x0 = i * GRID_CELL;
             const y0 = j * GRID_CELL;
-            const hA = heightmap[j][i];
-            const hB = heightmap[j][i + 1];
-            const hC = heightmap[j + 1][i + 1];
-            const hD = heightmap[j + 1][i];
+            const idx = j * cols + i;
+            const hA = heightmap[idx];
+            const hB = heightmap[idx + 1];
+            const hC = heightmap[idx + cols + 1];
+            const hD = heightmap[idx + cols];
 
             const bA = hA >= level ? 1 : 0;
             const bB = hB >= level ? 1 : 0;
@@ -330,14 +379,28 @@ function createSvgElement() {
     return svg;
 }
 
-/** Mounts SVG to DOM, handling container type */
-function mountSvg(svg, container) {
+/** Creates the base canvas element with default styles */
+function createCanvasElement() {
+    const canvas = document.createElement('canvas');
+    canvas.classList.add('bg-topography');
+
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.zIndex = '-1';
+    canvas.style.pointerEvents = 'none';
+
+    return canvas;
+}
+
+/** Mounts the background element to DOM, handling container type */
+function mountBackground(el, container) {
     if (container.id === 'bg-layer') {
-        container.appendChild(svg);
+        container.appendChild(el);
     } else {
         // Body fallback: remove existing and prepend
         const existing = document.querySelector('.bg-topography');
         if (existing) existing.remove();
-        document.body.prepend(svg);
+        document.body.prepend(el);
     }
 }
