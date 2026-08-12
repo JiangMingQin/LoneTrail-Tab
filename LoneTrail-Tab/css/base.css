@@ -78,30 +78,26 @@ body {
     }
     ::view-transition-old(root),
     ::view-transition-new(root) {
-        animation: none;
+        animation: none !important;
     }
 }
 
 /* =========================================
-   THEME SWITCH TRANSITION（主题左推/右推入）
+   THEME SWITCH TRANSITION（点击处圆形扩散）
    ========================================= */
 
+::view-transition-group(root),
 ::view-transition-old(root),
 ::view-transition-new(root) {
-    animation-duration: 0.45s;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-}
-::view-transition-old(root) {
-    animation-name: theme-slide-out;
+    animation: none;
+    mix-blend-mode: normal;
 }
 ::view-transition-new(root) {
-    animation-name: theme-slide-in;
+    animation: theme-reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-@keyframes theme-slide-out {
-    to { transform: translateX(-100%); }
-}
-@keyframes theme-slide-in {
-    from { transform: translateX(100%); }
+@keyframes theme-reveal {
+    from { clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%)); }
+    to { clip-path: circle(var(--vt-r, 150%) at var(--vt-x, 50%) var(--vt-y, 50%)); }
 }
 
 

@@ -398,7 +398,7 @@ function initThemeSwitcher() {
         themeBtn.textContent = currentTheme === 'dark' ? 'DARK' : 'LIGHT';
     };
 
-    themeBtn.onclick = () => {
+    themeBtn.onclick = (e) => {
         const currentTheme = state.config.preferences.theme || 'light';
         const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
@@ -410,12 +410,36 @@ function initThemeSwitcher() {
             initBackground();
         };
 
+        // 保证主题只应用一次（过渡回调与兜底共用）
+        let applied = false;
+        const guardedApply = () => {
+            if (applied) return;
+            applied = true;
+            applyThemeChange();
+        };
+
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         if (document.startViewTransition && !prefersReducedMotion) {
-            document.startViewTransition(applyThemeChange);
-        } else {
-            applyThemeChange();
+            try {
+                const x = e.clientX;
+                const y = e.clientY;
+                const endRadius = Math.hypot(
+                    Math.max(x, window.innerWidth - x),
+                    Math.max(y, window.innerHeight - y)
+                );
+                const rootEl = document.documentElement;
+                rootEl.style.setProperty('--vt-x', `${x}px`);
+                rootEl.style.setProperty('--vt-y', `${y}px`);
+                rootEl.style.setProperty('--vt-r', `${endRadius}px`);
+                document.startViewTransition(guardedApply);
+                // 兜底：过渡回调未执行时强制切换
+                setTimeout(guardedApply, 1000);
+                return;
+            } catch (err) {
+                // 过渡 API 不可用/抛错时降级为直接切换
+            }
         }
+        guardedApply();
     };
 
     updateThemeLabel();
