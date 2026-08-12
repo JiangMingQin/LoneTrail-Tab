@@ -203,7 +203,7 @@ function resolveContourColor() {
         const g = (num >> 8) & 255;
         const b = num & 255;
         // 向白色混 40%，让线条更灰更柔和
-        const mix = 0.4;
+        const mix = 0.7;
         const lr = Math.round(r + (255 - r) * mix);
         const lg = Math.round(g + (255 - g) * mix);
         const lb = Math.round(b + (255 - b) * mix);
