@@ -1,73 +1,87 @@
 # LoneTrail-Tab
 
-**LoneTrail-Tab** 是一个复古终端风格的浏览器新标签页扩展。
-可以通过**键盘操作**快速检索收藏夹内容，并进行网页跳转
+LoneTrail-Tab 是一个以《明日方舟》为灵感的浏览器新标签页扩展。可以完全通过键盘操作快速检索收藏夹内容，并进行网页跳转。
 
 ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.0.0_alpha-green.svg) ![Style](https://img.shields.io/badge/style-Retro_Terminal-white)
 
+
 ## ✨ 特性 (Features)
 
-* **⌨️ 全键盘操控**: 使用的 WASD / 方向键导航逻辑，双手无需离开键盘（保留鼠标操作支持）。
-* **🧬 随机背景生成**: 动态生成 SVG 等高线背景。
-* **🌗 昼夜切换**: 内置 Light/Dark 双色主题，支持一键切换。
-* **📂 层级导航**: 像在终端中浏览文件系统一样浏览你的书签文件夹（支持无限层级）。
-* **🔍 模糊搜索**: 实时递归搜索所有书签，支持一键跳转。
-* **⚡ 轻量级**: 基于原生 JavaScript (ES Modules) 构建，无任何第三方重型框架依赖。
+| 功能 | 说明 |
+|:---|:---|
+| **📂 层级浏览书签** | 使用的 WASD / 方向键导航逻辑，双手无需离开键盘（保留鼠标操作支持） |
+| **⚡ 智能快捷栏** | 自动把最常用的书签排在最前，越常用的越顺手 |
+| **🔍 实时搜索** | 按 `/` 直接搜，实时递归搜索所有书签，支持一键跳转 |
+| **🌗 双主题** | 暗色星空 / 亮色等高线，按 `T` 一键切换 |
+| **⚡ 轻量级** | 基于原生 JavaScript (ES Modules) 构建，无任何第三方重型框架依赖 |
+
 
 ## 🎬 界面演示 (Demo)
-LoneTrail-Tab 提供了两种主题模式，还原复古终端的科技感体验：
 
-### 🌑 暗色模式
-经典的复古实验室终端风格，适配夜间使用场景：
+### 🌑 暗色主题（Dark Theme）
+
+提供随机星空的生成，适配夜间使用场景：
+
 ![LoneTrail-Tab 暗色模式演示](assets/dark.png)
 
-### 🌕 亮色模式
-更柔和的高对比度配色，适配日间使用场景：
+### 🌕 亮色主题（Light Theme）
+
+提供随机等高线地形图生成，适配日间使用场景：
+
 ![LoneTrail-Tab 亮色模式演示](assets/light.png)
 
 ## 🚀 安装指南 (Installation)
 
-由于本项目目前处于开发阶段，请通过开发者模式安装：
+Chrome / Edge 等 Chromium 浏览器：
 
-1.  克隆或下载本项目到本地：
-    ```bash
-    git clone [https://github.com/JiangMingQin/LoneTrail-Tab.git](https://github.com/JiangMingQin/LoneTrail-Tab.git)
-    ```
-2.  打开 Chrome 浏览器，访问 `chrome://extensions/`。
-3.  开启右上角的 **"开发者模式" (Developer mode)**。
-4.  点击左上角的 **"加载已解压的扩展程序" (Load unpacked)**。
-5.  选择本项目的根目录。
-6.  打开新标签页 (Ctrl+T)，即可体验。
+1. 下载本仓库，解压出 `LoneTrail-Tab` 文件夹
+2. 打开 `chrome://extensions/`，开启右上角「开发者模式」
+3. 点击「加载已解压的扩展程序」，选中 `LoneTrail-Tab` 文件夹
+
+打开新标签页（`Ctrl+T`）即可使用。没有书签权限时会自动加载演示数据。
 
 ## 🎮 操作手册 (Controls)
 
 | 按键 | 功能 |
-| :--- | :--- |
-| **W / S** (↑ / ↓) | 上下移动光标 |
-| **A** (←) | 返回上一级 / 退出搜索 / 焦点回到左侧 |
-| **D** (→) | 进入文件夹 / 焦点进入右侧 / 打开链接 |
-| **Enter** | 打开选中的链接或文件夹 |
-| **/** | 激活顶部搜索框 |
-| **Esc** | 退出搜索 / 关闭设置弹窗 |
+|:---|:---|
+| `W` `S` / `↑` `↓` | 上下移动 |
+| `A` / `←` | 返回上一级 / 退出搜索 |
+| `D` / `→` | 进入文件夹 / 打开链接 |
+| `Enter` | 打开选中项 |
+| `Backspace` | 返回上一级 |
+| `/` | 激活搜索 |
+| `Esc` | 退出搜索 / 关闭设置 |
+| `T` | 切换明暗主题 |
+| `O` | 打开设置 |
 
-## 🛠️ 项目结构
+按 `O` 或点击右上角 `SETTING` 按钮打开设置弹窗，可调整主题、时钟显示、快捷栏数量（3–12 条）、按键映射等；界面会自动尊重系统「减弱动态效果」偏好（`prefers-reduced-motion`）。
 
-本项目保持极简的扁平化结构，便于学习和二次开发：
+## 🛠️ 项目结构 (Structure)
 
-* `js/main.js`: 核心入口与初始化
-* `js/state.js`: 状态管理与配置持久化
-* `js/events.js`: 键盘与鼠标事件监听
-* `js/actions.js`: 业务逻辑与导航计算
-* `js/render.js`: DOM 渲染引擎
-* `js/background.js`: 动态 SVG 背景生成算法
+扩展本体位于 `LoneTrail-Tab/`，保持极简扁平结构，便于学习与二次开发：
 
-详细的架构说明请参阅 [PROJECT_DOCS.md](PROJECT_DOCS.md)。
-完整的版本变更记录请参阅 [CHANGELOG.md](CHANGELOG.md)。
+```text
+LoneTrail-Tab/
+├── manifest.json      # Chrome 扩展配置（Manifest V3）
+├── newtab.html        # 新标签页入口
+├── css/               # 样式层（主题变量、布局、拨盘、列表 + modules/ 组件样式）
+└── js/                # 逻辑层（原生 ES Modules，无构建）
+    ├── features/      # navigation（导航）、search（搜索）、algorithm（Frecency）
+    ├── actions.js     # 动作分发（命令模式）
+    ├── background.js  # 动态背景生成（等高线 / 星场）
+    ├── clock.js       # 时钟 HUD
+    ├── events.js      # 键盘、鼠标与设置事件
+    ├── main.js        # 程序入口与书签数据加载
+    ├── render.js      # 增量渲染引擎
+    ├── state.js       # 集中状态管理与配置持久化
+    └── utils.js       # 工具函数（XSS 转义、防抖、主题应用等）
+```
+
+详细架构说明见 [PROJECT_DOCS.md](PROJECT_DOCS.md)。
 
 ## 🤝 贡献 (Contributing)
 
-欢迎提交 Issue 或 Pull Request！
-在提交代码前，请确保遵循项目现有的 Airbnb 代码规范
+欢迎提交 Issue 或 Pull Request！提交前请遵循项目现有的代码风格：ES Modules 模块化结构、集中状态管理、增量渲染与清晰的命名约定。
 
 ## 📄 协议 (License)
 
@@ -76,6 +90,3 @@ LoneTrail-Tab 提供了两种主题模式，还原复古终端的科技感体验
 ---
 
 *Design inspired by retro terminals and laboratory aesthetics.*
-
-
-
