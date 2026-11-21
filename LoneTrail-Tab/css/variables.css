@@ -9,6 +9,18 @@
     --well: #E8E8E6;                        /* 灰阶嵌槽 */
     --frost-bg: rgba(255, 255, 255, 0.78);  /* 磨砂面板底 */
     --frost-blur: 24px;                     /* 磨砂模糊 */
+    --frost-list-blur: 2px;                /* 列表区模糊：半径偏小，否则 1px 等高线会被抹平 */
+    /* 列表倾斜参数：磨砂带与浮起卡片共用，卡片才能从"已被透视压过的行"起始 */
+    --frost-list-tilt: -7deg;
+    --frost-list-perspective: 1000px;
+    /* 抵消透视形心右偏的左移量：磨砂带与浮起卡片必须共用，否则两者会错位 */
+    --frost-list-shift: clamp(-60px, 25px - 3vw, 0px);
+
+    /* 选中动效的统一时长与曲线：填充扫描、抬升位移、投影、文字反色共用这一套。
+       200ms 取"轻微缓入 + 中段快 + 末端收束"：前 10% 时间只走约 6%，避免起手发滞；
+       又不至于像 0.2,0,0,1 那样头 40ms 就冲掉一半，200ms 下显得过于急躁 */
+    --select-duration: 200ms;
+    --select-easing: cubic-bezier(0.3, 0, 0.15, 1);
     --inset: rgba(0, 0, 0, 0.06);           /* 内部轻微填充 */
 
     /* 文字 */
@@ -47,7 +59,6 @@
     --row-active-text: #F7F7F5;
 
     /* 磁带机装饰 */
-    --led: #1A1A1A;
     --led-glow: rgba(17, 17, 17, 0.5);
     --key-highlight: rgba(255, 255, 255, 0.9);
     --key-shadow: rgba(0, 0, 0, 0.20);
@@ -102,7 +113,6 @@
     --row-active-text: #0A0F22;
 
     /* 磁带机装饰 */
-    --led: #C9D7F2;
     --led-glow: rgba(201, 215, 242, 0.7);
     --key-highlight: rgba(255, 255, 255, 0.10);
     --key-shadow: rgba(0, 0, 10, 0.5);

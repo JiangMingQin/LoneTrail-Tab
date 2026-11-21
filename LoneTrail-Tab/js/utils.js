@@ -36,6 +36,14 @@ export function applyTheme(themeName) {
 }
 
 /**
+ * Toggles the shared 3D tilt plane. When disabled the right-side panels are
+ * rendered completely flat (no rotateY, no perspective, no shift compensation).
+ */
+export function applyPerspective(enabled) {
+    document.documentElement.setAttribute('data-perspective', enabled ? 'on' : 'off');
+}
+
+/**
  * Recursively searches bookmark tree for matching nodes
  * TODO: Exclude root containers (id: '0', 'root') from results
  * @param {Array} nodes - Bookmark nodes to search
@@ -46,15 +54,29 @@ export function filterBookmarks(nodes, query) {
     if (!nodes?.length) return [];
 
     const results = [];
+    const seen = new Set();
     const lowerQuery = query.toLowerCase();
 
     const search = (nodeList) => {
         for (const node of nodeList) {
+            // 虚拟文件夹（如 QUICK_START）只是真实书签的派生视图，其子项在书签树中
+            // 已有对应节点。继续遍历会让同一书签命中两次，故整棵子树跳过
+            if (node.isVirtual) continue;
+
             const titleMatch = node.title?.toLowerCase().includes(lowerQuery);
             const urlMatch = node.url?.toLowerCase().includes(lowerQuery);
 
             if (titleMatch || urlMatch) {
-                results.push(node);
+                // 同一站点可能被重复收藏（同标题同 URL），结果里合并为一条；
+                // 标题不同则保留，用户仍可区分
+                const dedupeKey = node.url ? `${node.title || ''}|${node.url}` : null;
+
+                if (!dedupeKey) {
+                    results.push(node);
+                } else if (!seen.has(dedupeKey)) {
+                    seen.add(dedupeKey);
+                    results.push(node);
+                }
             }
 
             if (node.children?.length) {

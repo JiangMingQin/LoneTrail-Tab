@@ -1,6 +1,8 @@
 import { state, saveConfig } from './state.js';
 import { Actions } from './actions.js';
-import { applyTheme } from './utils.js';
+import { applyTheme, applyPerspective } from './utils.js';
+import { applyI18n, t } from './i18n.js';
+import { refreshClock } from './clock.js';
 import { fullRender, updateKeyHints } from './render.js';
 import { initBackground } from './background.js';
 
@@ -179,10 +181,10 @@ function handleKeyBinding(e) {
     const msg = document.getElementById('setting-msg');
     if (msg) {
         if (conflictAction) {
-            msg.textContent = `KEY REASSIGNED (STOLEN FROM ${conflictAction})`;
+            msg.textContent = t('settings.keyReassigned', { action: conflictAction });
             msg.style.color = 'var(--accent-color)';
         } else {
-            msg.textContent = 'KEY SET. REMEMBER TO APPLY.';
+            msg.textContent = t('settings.keySet');
             msg.style.color = 'inherit';
         }
     }
@@ -229,12 +231,20 @@ function syncThemeOptions() {
     });
 }
 
+/** Syncs the settings language segmented control with the current preference */
+function syncLangOptions() {
+    const current = state.config.preferences.language === 'zh' ? 'zh' : 'en';
+    document.querySelectorAll('.lang-option').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.langValue === current);
+    });
+}
+
 /** Updates the top-bar theme button label to the current theme */
 function updateThemeButtonLabel() {
     const themeBtn = document.getElementById('theme-btn');
     if (!themeBtn) return;
     const currentTheme = state.config.preferences.theme || 'light';
-    themeBtn.textContent = currentTheme === 'dark' ? 'DARK' : 'LIGHT';
+    themeBtn.textContent = currentTheme === 'dark' ? t('theme.dark') : t('theme.light');
 }
 
 function initSettingsModal() {
@@ -269,7 +279,7 @@ function initSettingsModal() {
     if (halfLifeRange) {
         halfLifeRange.oninput = (e) => {
             const valSpan = document.getElementById('half-life-val');
-            if (valSpan) valSpan.textContent = e.target.value + 'd';
+            if (valSpan) valSpan.textContent = e.target.value + t('unit.days');
         };
     }
 
@@ -287,10 +297,24 @@ function initSettingsModal() {
         };
     });
 
+    // 语言分段控件：与主题一样即时生效并保存
+    document.querySelectorAll('.lang-option').forEach((btn) => {
+        btn.onclick = () => {
+            const value = btn.dataset.langValue === 'zh' ? 'zh' : 'en';
+            state.config.preferences.language = value;
+            applyI18n(value);
+            saveConfig();
+            refreshClock();
+            updateThemeButtonLabel();
+            syncLangOptions();
+            fullRender();
+        };
+    });
+
     if (saveBtn) saveBtn.onclick = () => saveSettings(modal);
     if (resetBtn) {
         resetBtn.onclick = () => {
-            if (confirm('Reset all settings to default?')) {
+            if (confirm(t('settings.resetConfirm'))) {
                 localStorage.removeItem('rhine_config');
                 localStorage.removeItem('lonetrail_config');
                 location.reload();
@@ -299,6 +323,10 @@ function initSettingsModal() {
     }
     if (closeBtn) closeBtn.onclick = () => modal.classList.add('hidden');
     window.onclick = (e) => { if (e.target === modal) modal.classList.add('hidden'); };
+
+    // 初始化时也同步分段控件，避免持久化偏好与默认高亮不一致
+    syncThemeOptions();
+    syncLangOptions();
 }
 
 /** Opens settings modal and loads current values */
@@ -312,6 +340,7 @@ function openSettingsModal(modal, msgEl) {
     const controls = {
         fontRange: document.getElementById('setting-font-size'),
         fontVal: document.getElementById('font-size-val'),
+        perspectiveCheck: document.getElementById('setting-perspective'),
         clockCheck: document.getElementById('setting-clock-enabled'),
         dateCheck: document.getElementById('setting-clock-details'),
         newTabCheck: document.getElementById('setting-open-newtab'),
@@ -326,6 +355,9 @@ function openSettingsModal(modal, msgEl) {
         controls.fontRange.value = prefs.uiFontSize || 14;
         if (controls.fontVal) controls.fontVal.textContent = controls.fontRange.value + 'px';
     }
+    if (controls.perspectiveCheck) {
+        controls.perspectiveCheck.checked = prefs.perspectiveEnabled === true;
+    }
     if (controls.quickLaunchRange) {
         controls.quickLaunchRange.value = prefs.quickLaunchMax || 7;
         if (controls.quickLaunchVal) controls.quickLaunchVal.textContent = controls.quickLaunchRange.value;
@@ -336,11 +368,12 @@ function openSettingsModal(modal, msgEl) {
     if (controls.clearSearchCheck) controls.clearSearchCheck.checked = prefs.clearSearchOnActivate === true;
     if (controls.halfLifeRange) {
         controls.halfLifeRange.value = prefs.frecencyHalfLifeDays || 7;
-        if (controls.halfLifeVal) controls.halfLifeVal.textContent = controls.halfLifeRange.value + 'd';
+        if (controls.halfLifeVal) controls.halfLifeVal.textContent = controls.halfLifeRange.value + t('unit.days');
     }
 
-    // Sync theme segmented control
+    // Sync segmented controls
     syncThemeOptions();
+    syncLangOptions();
 
     // Load key binding buttons
     document.querySelectorAll('.key-bind-btn').forEach(btn => {
@@ -371,7 +404,7 @@ function startKeyRecording(btn, msgEl) {
     btn.textContent = '...';
 
     if (msgEl) {
-        msgEl.textContent = 'PRESS KEY TO BIND...';
+        msgEl.textContent = t('settings.keyRecording');
         msgEl.style.color = 'inherit';
     }
 }
@@ -383,6 +416,7 @@ function saveSettings(modal) {
     // Collect preference values
     const controls = {
         fontRange: document.getElementById('setting-font-size'),
+        perspectiveCheck: document.getElementById('setting-perspective'),
         clockCheck: document.getElementById('setting-clock-enabled'),
         dateCheck: document.getElementById('setting-clock-details'),
         newTabCheck: document.getElementById('setting-open-newtab'),
@@ -392,12 +426,16 @@ function saveSettings(modal) {
     };
 
     if (controls.fontRange) prefs.uiFontSize = parseInt(controls.fontRange.value);
+    if (controls.perspectiveCheck) prefs.perspectiveEnabled = controls.perspectiveCheck.checked;
     if (controls.quickLaunchRange) prefs.quickLaunchMax = parseInt(controls.quickLaunchRange.value);
     if (controls.clockCheck) prefs.showClock = controls.clockCheck.checked;
     if (controls.dateCheck) prefs.showDate = controls.dateCheck.checked;
     if (controls.newTabCheck) prefs.openNewTab = controls.newTabCheck.checked;
     if (controls.clearSearchCheck) prefs.clearSearchOnActivate = controls.clearSearchCheck.checked;
     if (controls.halfLifeRange) prefs.frecencyHalfLifeDays = parseInt(controls.halfLifeRange.value);
+
+    const activeLang = document.querySelector('.lang-option.active');
+    if (activeLang) prefs.language = activeLang.dataset.langValue === 'zh' ? 'zh' : 'en';
 
     // Collect key bindings
     const newKeys = {};
@@ -433,6 +471,15 @@ function saveSettings(modal) {
 function applyVisualChanges(prefs) {
     // Font size
     document.documentElement.style.setProperty('--ui-font-size', `${prefs.uiFontSize}px`);
+
+    // Shared tilt plane: off means completely flat rendering
+    applyPerspective(prefs.perspectiveEnabled === true);
+
+    // Language changes must refresh static DOM, dynamic lists and clock labels.
+    applyI18n(prefs.language);
+    refreshClock();
+    updateThemeButtonLabel();
+    syncLangOptions();
 
     // Clock visibility
     const clockModule = document.getElementById('clock-module');

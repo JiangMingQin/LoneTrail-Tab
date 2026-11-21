@@ -1,6 +1,7 @@
 import { state } from '../state.js';
 import { fullRender, updateCursor } from '../render.js';
 import { Frecency } from './algorithm.js';
+import { SearchFeature } from './search.js';
 
 /**
  * Navigation feature - handles focus movement, drill-down, and back navigation
@@ -44,42 +45,6 @@ export const NavigationFeature = {
         }
 
         updateCursor();
-    },
-
-    /**
-     * Handles back navigation
-     * - Right column: move to left column
-     * - Left column: pop from navStack (with search mode protection)
-     */
-    navigateBack() {
-        // From right column: just move focus to left
-        if (state.focusColumn === 'right') {
-            this.setFocus('left', state.parentIndex);
-            return;
-        }
-
-        // From left column: restore previous state from stack
-        if (state.navStack.length === 0) return;
-
-        const lastState = state.navStack[state.navStack.length - 1];
-
-        // In search mode, prevent exiting search via back key at root
-        // Must use SEARCH_EXIT action instead
-        if (state.searchMode && !lastState.searchMode) {
-            return;
-        }
-
-        const s = state.navStack.pop();
-        Object.assign(state, {
-            parents: s.parents,
-            parentIndex: s.parentIndex,
-            currentChildren: s.currentChildren,
-            childIndex: s.childIndex,
-            focusColumn: 'left',
-            searchMode: s.searchMode,
-        });
-
-        fullRender();
     },
 
     /**
@@ -180,11 +145,24 @@ export const NavigationFeature = {
     },
 
     /**
-     * Navigates back to the previous level
+     * 统一返回逻辑（NAV_LEFT / NAV_BACK 共用）
+     * - 搜索态且已退到搜索根：交给 SearchFeature.exit() 收尾（恢复基线 + 清空输入框）
+     * - 栈内有数据：出栈回到上一层级
+     * - 根层拨盘且焦点在右列：仅把焦点移回左列，不 pop
      */
-    // navigation.js 
     navigateBack() {
-        // 情况 A：如果在子文件夹内部（栈内有数据），执行正常的出栈回退
+        // 情况 A：搜索态。栈顶是搜索前的基线帧时，说明已经退到搜索根，
+        // 此时必须走 SearchFeature.exit()，否则只出栈不清输入，
+        // 会留下「searchMode 已关闭、输入框仍有关键词」的不同步状态
+        if (state.searchMode) {
+            const topFrame = state.navStack[state.navStack.length - 1];
+            if (!topFrame || !topFrame.searchMode) {
+                SearchFeature.exit();
+                return;
+            }
+        }
+
+        // 情况 B：栈内有数据，执行正常的出栈回退
         if (state.navStack.length > 0) {
             const prevState = state.navStack.pop();
             Object.assign(state, prevState);
@@ -192,12 +170,42 @@ export const NavigationFeature = {
             return;
         }
 
-        // 情况 B：如果在根目录（拨盘层），且焦点在右侧
+        // 情况 C：根目录（拨盘层）且焦点在右侧 —— 仅切换焦点，不执行任何 pop
         if (state.focusColumn === 'right') {
-            // [修复点]：仅仅切换焦点到左侧，不执行任何 pop 操作
             state.focusColumn = 'left';
             state.childIndex = 0; // 重置子项索引，确保下次进入从头开始
             updateCursor(); // 触发 render.js 刷新，移除右侧 selected 高亮
+        }
+    },
+
+    /**
+     * A 键（NAV_LEFT）的两阶段回退 —— 与 NAV_BACK 的一次性返回区分开：
+     *   阶段 1：焦点在右列 → 只把焦点移回左列，不弹栈、目录不变；
+     *   阶段 2：焦点已在左列 → 出栈回到上级，并把焦点落在上级目录本身。
+     * 下钻时 parentIndex 记录的是"刚进入的目录在上级列表中的位置"，出栈恢复后
+     * 它天然指向上级目录节点，因此只需把 focusColumn 置回 left 即可聚焦到该目录。
+     * 搜索态不走两阶段，仍交给 navigateBack 处理，保留一次退出搜索的手感。
+     */
+    retreat() {
+        if (state.searchMode) {
+            this.navigateBack();
+            return;
+        }
+
+        // 阶段 1：右列 → 左列，仅切换焦点
+        if (state.focusColumn === 'right') {
+            state.focusColumn = 'left';
+            state.childIndex = 0;
+            updateCursor();
+            return;
+        }
+
+        // 阶段 2：焦点已在左列，才真正出栈回上级
+        if (state.navStack.length > 0) {
+            const prevState = state.navStack.pop();
+            Object.assign(state, prevState);
+            state.focusColumn = 'left'; // 恢复的 parentIndex 即上级目录本身
+            fullRender();
         }
     }
 };

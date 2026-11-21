@@ -6,9 +6,16 @@
     height: 30px; /* 稍微矮一点 */
     width: 180px;
 
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    transform-origin: right center;
-    position: relative;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s ease,
+                border-color 0.4s ease,
+                box-shadow 0.4s ease;
+
+    /* 倾斜由父级 .tilt-plane 统一提供；这里只做屏幕空间内的定位与抬升，
+       不再把 translateY 塞进 3D 链里（那会产生剪切项，让搜索栏斜率与列表不同）。 */
+    position: absolute;
+    right: 0;
+    top: var(--search-top, -35px);
 }
 
 /* 暗色：CRT 井底搜索 */

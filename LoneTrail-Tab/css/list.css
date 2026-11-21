@@ -1,6 +1,18 @@
 .content-list {
     flex: 1; overflow-y: auto; padding: 0;
     scrollbar-width: none;
+
+    /* 磨砂只做模糊、不叠任何底色：等高线/星场原色透出，只被揉散 */
+    margin-top: 30px;
+    background: none;
+    backdrop-filter: blur(var(--frost-list-blur));
+    -webkit-backdrop-filter: blur(var(--frost-list-blur));
+    /* 只保留上下两条边：左右不再描边，靠"模糊"与"清晰"的分界自然过渡 */
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-radius: 2px;
+
+    /* 倾斜与左移由父级 .tilt-plane 统一提供，这里只负责磨砂、边框和滚动 */
 }
 .content-list::-webkit-scrollbar { display: none; }
 
@@ -37,18 +49,38 @@
     width: 0;
     background: var(--row-active-bg);
     z-index: 1;
-    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: width var(--select-duration) var(--select-easing);
+}
+
+/* 原位线框：常驻但默认透明，选中时反向平移回原槽位并显色，
+   两个状态都是 translate，可以平滑插值 */
+.list-item::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translate(0, 0);
+    border: 1px solid transparent;
+    pointer-events: none;
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 0.28s ease;
 }
 
 .list-item .title, .list-item .url, .list-item .list-favicon, .list-item .folder-indicator {
-    position: relative; z-index: 2; transition: color 0.2s;
+    position: relative; z-index: 2;
+    /* 只过渡颜色；opacity 不做过渡，取消选中后行内容直接恢复（无淡入） */
+    transition: color var(--select-duration) var(--select-easing);
 }
 
 .list-item.selected {
-    transform: translateX(15px) scale(1.02);
+    /* 行本身不再位移：抬升由 .lift-card 浮层承担，原位只保留线框 */
+    transform: none;
+    z-index: 3;
     background: transparent;
     color: var(--row-active-text);
     opacity: 1;
+}
+.list-item.selected::after {
+    border-color: var(--row-active-bg);
 }
 .list-item.selected::before { width: 100%; }
 
@@ -206,4 +238,63 @@
 }
 .empty-state-wrapper[data-type="no-result"] .es-center-box::before {
     background-color: var(--text-on-danger);
+}
+
+/* =========================================================
+   Selection lift：选中项浮起卡片
+   ========================================================= */
+
+/* 浮层容器：与列表同级，不受列表 overflow 裁剪，卡片才能压出磨砂带 */
+.selection-lift {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 40;
+}
+
+/* 被抬走的原行只留线框：内容用子元素 opacity 隐藏、实色底清零。
+   不要给原行设 color:transparent —— 那会让 color 在 is-lifted 期间被过渡成透明，
+   等浮层卡离场结束、删除 is-lifted 时，文字还要再花 0.25s 从透明回补到 text-sub；
+   而浮层卡此刻已消失，于是出现"文字先清晰→突然透明→再慢慢浮现"的闪一下。
+   让 color 跟着 .selected 的移除同步过渡到 text-sub，交接瞬间颜色才对得上。 */
+.list-item.is-lifted .title,
+.list-item.is-lifted .url,
+.list-item.is-lifted .list-favicon,
+.list-item.is-lifted .folder-indicator { opacity: 0; }
+.list-item.is-lifted::before { width: 0 !important; transition: none; }
+
+/* 浮层平面：与磨砂带同尺寸，但不裁剪；倾斜由父级 .tilt-plane 统一提供。
+   卡片只在平面内做 2D 平移，透视原点恒定，切换行时不会因原点变化而重新投影 */
+.lift-plane {
+    position: absolute;
+    pointer-events: none;
+}
+
+/* 浮起卡片：底色由 ::before 的宽度过渡填充，位置用平面内的 translate 驱动 */
+.lift-card {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    background: transparent;
+    border-bottom: none;      /* 浮起的卡片不要再带行分隔线 */
+    opacity: 0;
+    /* 位移由 JS 用 Web Animations 驱动；opacity 不做过渡（离场直接移除，不淡出） */
+    transition: box-shadow var(--select-duration) var(--select-easing);
+    will-change: transform;
+}
+/* 抬起后才加投影，落回时一起收回 */
+.lift-card.is-up {
+    /* 只留投影；原来那条 0 0 0 1px 的实色描边会沿着浮起的卡边缘画一圈黑边 */
+    box-shadow: 0 18px 36px -12px var(--shadow);
+}
+.lift-card::after { display: none; }
+
+/* 同行旧卡的应急清零：WS 同帧 / 长按绕回让同一行被快速重新选中时，该行此前的
+   离场卡会被 startSelect 打上此类，立即清零满宽黑底，避免与同行新卡错位叠加
+   溢出边框。普通离场卡（离场行 ≠ 新选中行）不打此类，照常播 width 收色动画 */
+.lift-card.is-exiting::before {
+    width: 0 !important;
+    transition: none;
 }

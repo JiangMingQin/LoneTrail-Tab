@@ -105,7 +105,7 @@ LoneTrail-Tab/
 |------|------|
 | `moveFocus(direction)` | 在当前列上下移动焦点 |
 | `setFocus(col, index)` | 设置焦点到指定列和索引 |
-| `navigateBack()` | 智能返回（右列→左列，左列→出栈） |
+| `navigateBack()` | 统一返回（搜索根→退出搜索 / 栈内有数据→出栈 / 根层右列→切回左列） |
 | `enterFolderOnly()` | 仅进入文件夹（不打开链接） |
 | `executeItem()` | 执行选中项（链接打开/文件夹进入） |
 | `_drillDown(folder)` | 下钻到文件夹（保存状态到栈） |
@@ -123,6 +123,79 @@ LoneTrail-Tab/
 | **焦点管理** | 搜索后焦点保留在输入框，不自动跳到结果。用户需按 `Enter`/`↓` 显式转移焦点，避免打断输入 |
 | **navStack 处理** | 首次搜索保存基线状态，后续搜索截断栈，退出时恢复到基线 |
 | **空查询处理** | 清空搜索框时显示 "SEARCHING..." 占位，而非退出搜索模式 |
+
+#### 3.3 快捷栏算法 (features/algorithm.js)
+
+**核心职责**: 维护自适应快捷栏 `QUICK_START` 的条目与排序，采用 **Frecency**（频率 × 时间衰减）模型，兼顾"常用"与"近期"，替代了早期的 SASA 算法。
+
+##### 虚拟节点协议
+
+`QUICK_START` 不是真实书签，而是 `main.js` 在 `chrome.bookmarks.getTree()` 结果**之前**注入的虚拟节点：
+
+| 字段 | 值 | 说明 |
+|------|-----|------|
+| `id` | `'QUICK_START'` | 虚拟节点专用标识，也是各模块识别它的唯一依据 |
+| `title` | `'QUICK_START'` | 直接作为拨盘项文案 |
+| `isVirtual` | `true` | 下钻时跳过 `chrome.bookmarks.getSubTree()` 请求 |
+| `children` | `[]` | 启动时为空，**实际内容每次由 `Frecency.getShortcuts()` 实时计算** |
+
+因此它固定占据拨盘首位，内容随点击行为自动更新，且不写入用户书签树。
+
+##### 数据结构
+
+运行状态存在 `state.frecency`，随 `saveConfig()` 一起写入 `lonetrail_config`：
+
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `version` | Number | 结构版本号（当前 `1`），用于未来迁移 |
+| `scores` | Object | 分数池 `{ bookmarkId: score }`，容量上限 `POOL_LIMIT = 50` |
+| `lastVisit` | Object | 最近点击时间戳 `{ bookmarkId: timestamp }`，仅用于同分排序 |
+
+##### 评分模型
+
+`update(clickedId)` 中完成一次结算：
+
+```
+score = score × 2^(−Δt / halfLife) + 1
+```
+
+| 符号 | 含义 |
+|------|------|
+| `Δt` | 距上次点击的天数，即 `(now − lastVisit) / 86400000` |
+| `halfLife` | 半衰期（天），取 `preferences.frecencyHalfLifeDays`，默认 7，设置面板可调 3–30 |
+
+**四个关键约定**：
+
+1. **惰性衰减 (lazy decay)**：没有定时器，衰减只在"下一次点击该条目"时一次性结算。长期未点击的条目分数停在旧值，但因为不会被加分，相对排序依然成立。
+2. **半衰期语义**：闲置一个半衰期，旧分数减半。`halfLife` 越长越"念旧"，越短越"追新"。
+3. **容量淘汰**：新 ID 入池且池已满（50）时，`_ensurePoolSpace()` 删除当前最低分条目，保证内存与持久化体积有界。
+4. **仅统计真实书签**：`executeItem()` 中只有 `id` 存在且不以 `search-` 开头的节点才计分，避免搜索结果伪节点污染数据池。
+
+##### 排序与取数
+
+`getShortcuts()` 返回可直接渲染的完整书签对象数组：
+
+| 步骤 | 说明 |
+|------|------|
+| 排序 | `score` 降序；同分时按 `lastVisit` 降序（更近者优先） |
+| 截断 | 取前 `preferences.quickLaunchMax` 条，默认 7，设置面板可调 3–12 |
+| 还原 | `_findBookmarkById()` 从 `rootParents` 递归找回完整节点；已删除书签返回 `null`，由 `filter(Boolean)` 剔除 |
+
+复杂度 `O(n × k)`（`n` 为书签总数，`k` 为快捷栏条数 ≤ 12），每次渲染现算，不做额外缓存。
+
+##### 同步约定
+
+`QUICK_START.children` 是派生数据，目前在三处按需刷新。新增渲染路径时应沿用同一模式，不要把它当静态数据缓存：
+
+| 位置 | 时机 |
+|------|------|
+| `render.js` → `renderChildrenDOM()` | 渲染前，若当前父项是 `QUICK_START` |
+| `navigation.js` → `_drillDown()` | 下钻进入 `QUICK_START` 之前 |
+| `search.js` → `_refreshQuickStart()` | 执行搜索前，保证快捷栏条目能被搜索命中 |
+
+##### 历史与迁移
+
+早期 SASA 算法的运行数据（`algorithm` 字段）与配置项（`deathThreshold` / `halfLife` / `anchorCount`）会在 `loadConfig()` 时被识别并丢弃，避免两套模型混算；`rhine_config` 存储键也会自动迁移到 `lonetrail_config`。
 
 ---
 
@@ -203,6 +276,8 @@ LoneTrail-Tab/
 | `filterBookmarks()` | 递归搜索书签树，支持标题和 URL 匹配 |
 
 **搜索匹配规则**: 标题包含 或 URL 包含（不区分大小写），返回扁平化结果数组。
+
+**遍历与去重**: 遇到 `isVirtual` 节点（如 `QUICK_START`）整棵子树跳过——它只是真实书签的派生视图，遍历它会让同一书签命中两次；命中项再按「标题 + URL」去重，同一站点被重复收藏时只保留首条，标题不同则各自保留。
 
 ---
 

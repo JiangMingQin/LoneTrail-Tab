@@ -1,8 +1,9 @@
 import { loadConfig, state } from './state.js';
-import { fullRender } from './render.js';
+import { fullRender, initTiltPlane } from './render.js';
 import { initEventListeners } from './events.js';
 import { initClock } from './clock.js';
-import { applyTheme } from './utils.js';
+import { applyTheme, applyPerspective } from './utils.js';
+import { applyI18n, t } from './i18n.js';
 import { initBackground } from './background.js';
 
 /** Default theme if not configured */
@@ -36,12 +37,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     await loadConfig();
     const prefs = state.config.preferences || {};
     applyTheme(prefs.theme || DEFAULT_THEME);
+    applyI18n(prefs.language || 'en');
+    applyPerspective(prefs.perspectiveEnabled === true);
     document.documentElement.style.setProperty('--ui-font-size', `${prefs.uiFontSize || DEFAULT_FONT_SIZE}px`);
 
     // Initialize modules
     initClock();
     initEventListeners();
     initBackground();
+    initTiltPlane();
 
     // Re-render background on resize (debounced)
     let resizeTimer;
@@ -100,7 +104,7 @@ async function loadBookmarks() {
 function initializeNavigationState() {
     // Ensure non-empty parent array
     if (!state.parents?.length) {
-        state.parents = [{ title: 'EMPTY', children: [] }];
+        state.parents = [{ title: t('common.empty'), children: [] }];
         state.rootParents = state.parents;
     }
 
