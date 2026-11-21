@@ -37,7 +37,7 @@ Chrome / Edge 等 Chromium 浏览器，任选一种方式获取扩展：
 **方式一：下载 Release 包（推荐）**
 
 前往 [Releases 页面](https://github.com/JiangMingQin/LoneTrail-Tab/releases) 下载
-[`LoneTrail-Tab-v1.0.0-alpha.zip`](https://github.com/JiangMingQin/LoneTrail-Tab/releases/download/v1.0.0-alpha/LoneTrail-Tab-v1.0.0-alpha.zip)，
+[`LoneTrail-Tab-v1.1.0-alpha.zip`](https://github.com/JiangMingQin/LoneTrail-Tab/releases/download/v1.1.0-alpha/LoneTrail-Tab-v1.1.0-alpha.zip)，
 解压出 `LoneTrail-Tab` 文件夹。
 
 **方式二：克隆仓库（适合开发 / 贡献）**
