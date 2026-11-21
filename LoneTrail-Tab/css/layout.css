@@ -13,7 +13,6 @@
     z-index: 20;
 
     /* 视觉风格 */
-    border-top: 4px solid var(--accent);
     background: transparent;
 }
 
@@ -154,7 +153,7 @@
     color: var(--accent);
 }
 
-/* 分割线动画 */
+/* 分割线：与磨砂带同款倾斜与左移补偿，读作带子顶边的延伸 */
 .header-line {
     width: 100%;
     height: 1px;
@@ -162,13 +161,20 @@
     margin-top: 10px;
     opacity: 0.6;
 
+    /* 透视原点要对准磨砂带的中心，斜率才与带子顶边平行：
+       约等于"带高一半 + 30px 间距"，随窗口高度会有几像素偏差 */
+    transform-origin: 50% var(--frost-list-pivot);
+    transform: translateX(var(--frost-list-shift))
+               perspective(var(--frost-list-perspective))
+               rotateY(var(--frost-list-tilt));
+
     animation: expandLine 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    transform-origin: left;
 }
 
+/* 展开动画改用 clip-path，把 transform 让给倾斜（transform 动画会覆盖上面的倾斜） */
 @keyframes expandLine {
-    from { transform: scaleX(0); }
-    to { transform: scaleX(1); }
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0 0 0 0); }
 }
 
 

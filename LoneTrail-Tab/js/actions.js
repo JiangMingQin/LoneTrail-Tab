@@ -25,8 +25,8 @@ export const Actions = {
             // Navigation
             case 'NAV_UP':      return NavigationFeature.moveFocus('up');
             case 'NAV_DOWN':    return NavigationFeature.moveFocus('down');
-            case 'NAV_LEFT':
-            case 'NAV_BACK':    return NavigationFeature.navigateBack();
+            case 'NAV_LEFT':   return NavigationFeature.retreat();  // A：两阶段回退（先收焦点到左列，再按才回上级）
+            case 'NAV_BACK':   return NavigationFeature.navigateBack(); // Backspace：一次性返回上级
             case 'NAV_RIGHT':   return NavigationFeature.enterFolderOnly();
             case 'NAV_CONFIRM': return NavigationFeature.executeItem();
 
@@ -49,8 +49,8 @@ export const Actions = {
             case 'NAV_CONFIRM': return NavigationFeature.executeItem();
 
             // Back navigation exits search or goes back in history
-            case 'NAV_LEFT':
-            case 'NAV_BACK':    return NavigationFeature.navigateBack();
+            case 'NAV_LEFT':   return NavigationFeature.retreat();  // A：两阶段回退（先收焦点到左列，再按才回上级）
+            case 'NAV_BACK':   return NavigationFeature.navigateBack(); // Backspace：一次性返回上级
 
             // Search controls
             case 'SEARCH_ACTIVATE':   return SearchFeature.activate(); // Re-focus search input

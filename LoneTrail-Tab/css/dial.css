@@ -71,10 +71,27 @@
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
                 opacity 0.2s,
                 background 0.3s,
-                color 0.3s,
+                color var(--select-duration) var(--select-easing),
                 border-color 0.3s,
                 box-shadow 0.3s;
 }
+
+/* 选中填充：锚在右缘，宽度 0 → 100% 就是"从右向左换色"；
+   移除 .active 后宽度回到 0，即反向收回。与列表共用同一套时长/曲线 */
+.dial-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 0;
+    background: var(--dial-active-bg);
+    pointer-events: none;
+    transition: width var(--select-duration) var(--select-easing);
+}
+.dial-item.active::before { width: 100%; }
+/* 焦点不在左栏时只留描边：填充收回 */
+.dial-item.active.focus-dimmed::before { width: 0; }
 
 /* 序列号 */
 .dial-idx {
@@ -163,7 +180,7 @@
    ========================================= */
 
 .dial-item.active {
-    background: var(--dial-active-bg);
+    /* 实色由 ::before 从右向左扫入，这里不直接改 background */
     color: var(--text-inverse);
     border-color: var(--accent);
     clip-path: polygon(0 0, 100% 0, 100% 70%, 94% 100%, 0 100%);

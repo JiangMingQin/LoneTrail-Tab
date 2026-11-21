@@ -7,8 +7,17 @@
     width: 180px;
 
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    transform-origin: right center;
+    /* 与磨砂带/虚线共用远端透视原点：rotateY 的倾斜量正比于元素到透视中心的
+       y 距离，原点贴在自身中线(center)时该距离≈0、倾斜不可见；需落在下方 pivot */
+    transform-origin: right var(--frost-list-pivot);
     position: relative;
+
+    /* 与磨砂带 / 分割线同款倾斜与左移补偿，读作同一块斜置平面上的元素。
+       translateY 放在最前（作用于 pivot 之外），纯屏幕空间上移、不改变倾斜 */
+    transform: translateY(var(--search-lift))
+               translateX(var(--frost-list-shift))
+               perspective(var(--frost-list-perspective))
+               rotateY(var(--frost-list-tilt));
 }
 
 /* 暗色：CRT 井底搜索 */

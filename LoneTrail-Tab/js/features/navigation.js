@@ -176,5 +176,36 @@ export const NavigationFeature = {
             state.childIndex = 0; // 重置子项索引，确保下次进入从头开始
             updateCursor(); // 触发 render.js 刷新，移除右侧 selected 高亮
         }
+    },
+
+    /**
+     * A 键（NAV_LEFT）的两阶段回退 —— 与 NAV_BACK 的一次性返回区分开：
+     *   阶段 1：焦点在右列 → 只把焦点移回左列，不弹栈、目录不变；
+     *   阶段 2：焦点已在左列 → 出栈回到上级，并把焦点落在上级目录本身。
+     * 下钻时 parentIndex 记录的是"刚进入的目录在上级列表中的位置"，出栈恢复后
+     * 它天然指向上级目录节点，因此只需把 focusColumn 置回 left 即可聚焦到该目录。
+     * 搜索态不走两阶段，仍交给 navigateBack 处理，保留一次退出搜索的手感。
+     */
+    retreat() {
+        if (state.searchMode) {
+            this.navigateBack();
+            return;
+        }
+
+        // 阶段 1：右列 → 左列，仅切换焦点
+        if (state.focusColumn === 'right') {
+            state.focusColumn = 'left';
+            state.childIndex = 0;
+            updateCursor();
+            return;
+        }
+
+        // 阶段 2：焦点已在左列，才真正出栈回上级
+        if (state.navStack.length > 0) {
+            const prevState = state.navStack.pop();
+            Object.assign(state, prevState);
+            state.focusColumn = 'left'; // 恢复的 parentIndex 即上级目录本身
+            fullRender();
+        }
     }
 };
