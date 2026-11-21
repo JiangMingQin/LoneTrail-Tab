@@ -1,7 +1,6 @@
 import { state } from '../state.js';
 import { fullRender, updateCursor } from '../render.js';
 import { filterBookmarks } from '../utils.js';
-import { Frecency } from './algorithm.js';
 
 /**
  * Search feature - handles search activation, execution, and result navigation
@@ -144,8 +143,6 @@ export const SearchFeature = {
     /** Executes bookmark filtering and updates view state */
     _executeSearch(query) {
         state.searchQuery = query;
-        // 搜索前同步 QUICK_START 虚拟文件夹的子项，保证快捷栏条目可被搜索命中
-        this._refreshQuickStart();
         const results = filterBookmarks(state.rootParents || [], query);
         state.searchResults = results;
 
@@ -162,14 +159,6 @@ export const SearchFeature = {
         // User must explicitly press down/enter to move to list
         state.childIndex = -1;
         state.focusColumn = 'search-input';
-    },
-
-    /** 同步 QUICK_START 虚拟文件夹的实时子项 */
-    _refreshQuickStart() {
-        const quickStart = (state.rootParents || []).find(node => node.id === 'QUICK_START');
-        if (quickStart) {
-            quickStart.children = Frecency.getShortcuts();
-        }
     },
 
     /**
