@@ -36,6 +36,14 @@ export function applyTheme(themeName) {
 }
 
 /**
+ * Toggles the shared 3D tilt plane. When disabled the right-side panels are
+ * rendered completely flat (no rotateY, no perspective, no shift compensation).
+ */
+export function applyPerspective(enabled) {
+    document.documentElement.setAttribute('data-perspective', enabled ? 'on' : 'off');
+}
+
+/**
  * Recursively searches bookmark tree for matching nodes
  * TODO: Exclude root containers (id: '0', 'root') from results
  * @param {Array} nodes - Bookmark nodes to search

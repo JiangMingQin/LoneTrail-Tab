@@ -6,18 +6,16 @@
     height: 30px; /* 稍微矮一点 */
     width: 180px;
 
-    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-    /* 与磨砂带/虚线共用远端透视原点：rotateY 的倾斜量正比于元素到透视中心的
-       y 距离，原点贴在自身中线(center)时该距离≈0、倾斜不可见；需落在下方 pivot */
-    transform-origin: right var(--frost-list-pivot);
-    position: relative;
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s ease,
+                border-color 0.4s ease,
+                box-shadow 0.4s ease;
 
-    /* 与磨砂带 / 分割线同款倾斜与左移补偿，读作同一块斜置平面上的元素。
-       translateY 放在最前（作用于 pivot 之外），纯屏幕空间上移、不改变倾斜 */
-    transform: translateY(var(--search-lift))
-               translateX(var(--frost-list-shift))
-               perspective(var(--frost-list-perspective))
-               rotateY(var(--frost-list-tilt));
+    /* 倾斜由父级 .tilt-plane 统一提供；这里只做屏幕空间内的定位与抬升，
+       不再把 translateY 塞进 3D 链里（那会产生剪切项，让搜索栏斜率与列表不同）。 */
+    position: absolute;
+    right: 0;
+    top: var(--search-top, -35px);
 }
 
 /* 暗色：CRT 井底搜索 */

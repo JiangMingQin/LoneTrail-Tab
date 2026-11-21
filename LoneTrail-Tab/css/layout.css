@@ -102,6 +102,30 @@
     overflow: hidden;
 }
 
+/* 统一倾斜平面：右侧需要斜置的部分只在这里变换一次。
+   子元素不再各自 perspective/rotateY，斜率与左移量天然一致。 */
+.tilt-plane {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    transform-origin: center center;
+    transform: translateX(var(--frost-list-shift))
+               perspective(var(--frost-list-perspective))
+               rotateY(var(--frost-list-tilt));
+}
+
+/* 设置里关闭透视后：完全平面渲染，既不旋转也不做形心左移补偿 */
+[data-perspective="off"] .tilt-plane { transform: none; }
+
+/* 搜索栏移入平面后，头部用一个等宽空槽占位，保持 flex 布局不变 */
+.search-slot {
+    flex: 0 0 var(--search-slot-width, 180px);
+    width: var(--search-slot-width, 180px);
+}
+
 /* [核心修改] 内容头部：Flex 布局，容纳标题和搜索栏 */
 .content-header {
     display: flex;
@@ -153,20 +177,13 @@
     color: var(--accent);
 }
 
-/* 分割线：与磨砂带同款倾斜与左移补偿，读作带子顶边的延伸 */
+/* 分割线：倾斜由父级 .tilt-plane 统一提供，这里只管自身外观 */
 .header-line {
     width: 100%;
     height: 1px;
     background: repeating-linear-gradient(to right, var(--accent) 0, var(--accent) 4px, transparent 4px, transparent 8px);
     margin-top: 10px;
     opacity: 0.6;
-
-    /* 透视原点要对准磨砂带的中心，斜率才与带子顶边平行：
-       约等于"带高一半 + 30px 间距"，随窗口高度会有几像素偏差 */
-    transform-origin: 50% var(--frost-list-pivot);
-    transform: translateX(var(--frost-list-shift))
-               perspective(var(--frost-list-perspective))
-               rotateY(var(--frost-list-tilt));
 
     animation: expandLine 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

@@ -12,18 +12,7 @@
     border-bottom: 1px solid var(--border);
     border-radius: 2px;
 
-    /* 透视：绕 Y 轴以面板中心为轴微旋（rotateY 负值 = 左缘后退、右缘前移），
-       近端放大、远端收缩，形成斜置屏幕的纵深感。
-       角度压在小范围内，否则文字会被栅格化得发虚 */
-    transform-origin: center center;
-    /* 近端放大会把投影形心推向右侧，需要整体左移补回来：
-       偏移量随面板宽度超线性增长，固定 px 只能在单一窗口宽度下对齐，
-       这里用 vw 线性近似 + clamp 兜底（1440 / 1920 两档实测与标题左缘、
-       搜索框右缘偏差 ≤1px；窗口再宽时止步于 -60px）。
-       若改 rotateY 角度或 perspective，这两个系数要重算 */
-    transform: translateX(var(--frost-list-shift))
-               perspective(var(--frost-list-perspective))
-               rotateY(var(--frost-list-tilt));
+    /* 倾斜与左移由父级 .tilt-plane 统一提供，这里只负责磨砂、边框和滚动 */
 }
 .content-list::-webkit-scrollbar { display: none; }
 
@@ -274,11 +263,10 @@
 .list-item.is-lifted .folder-indicator { opacity: 0; }
 .list-item.is-lifted::before { width: 0 !important; transition: none; }
 
-/* 倾斜平面：与磨砂带同尺寸、同 transform、同原点，但不受列表 overflow 裁剪。
+/* 浮层平面：与磨砂带同尺寸，但不裁剪；倾斜由父级 .tilt-plane 统一提供。
    卡片只在平面内做 2D 平移，透视原点恒定，切换行时不会因原点变化而重新投影 */
 .lift-plane {
     position: absolute;
-    transform-origin: center center;
     pointer-events: none;
 }
 
@@ -307,12 +295,6 @@
    离场卡会被 startSelect 打上此类，立即清零满宽黑底，避免与同行新卡错位叠加
    溢出边框。普通离场卡（离场行 ≠ 新选中行）不打此类，照常播 width 收色动画 */
 .lift-card.is-exiting::before {
-    width: 0 !important;
-    transition: none;
-}
-/* 切换行时重放"从左到右填充"：这一帧把实色瞬时清零，去掉后宽度过渡会重新扫一遍，
-   同时 .selected 不动，文字颜色不会闪 */
-.lift-card.is-resetting::before {
     width: 0 !important;
     transition: none;
 }

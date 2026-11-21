@@ -43,7 +43,7 @@
 
 /* 装饰标签 SYS_TIME */
 .clock-time::before {
-    content: "SYS_LOCAL_TIME //";
+    content: var(--i18n-sys-local-time, "SYS_LOCAL_TIME //");
     position: absolute;
     top: -14px;
     left: 2px;

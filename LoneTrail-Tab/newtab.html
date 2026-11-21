@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-perspective="off">
 <head>
     <meta charset="UTF-8">
     <title>LONETRAIL TERMINAL</title>
@@ -9,12 +9,12 @@
 <body>
     <div id="bg-layer"></div>
     <div class="top-bar">
-        <div class="system-status">LONETRAIL // OS</div>
+        <div class="system-status" data-i18n="brand.system">LONETRAIL // OS</div>
         <div class="top-bar-line"></div>
         
         <div class="top-right-group">
-            <div class="icon-btn" id="settings-btn" title="CONFIG" aria-label="Open settings">SETTING</div>
-            <div class="icon-btn" id="theme-btn" title="THEME" aria-label="Toggle theme">LIGHT</div>
+            <div class="icon-btn" id="settings-btn" title="CONFIG" aria-label="Open settings" data-i18n="top.settings" data-i18n-title="top.settingsTitle" data-i18n-aria="top.settingsAria">SETTING</div>
+            <div class="icon-btn" id="theme-btn" title="THEME" aria-label="Toggle theme" data-i18n="theme.light" data-i18n-title="top.themeTitle" data-i18n-aria="top.themeAria">LIGHT</div>
         </div>
     </div>
 
@@ -37,28 +37,34 @@
         <div class="content-wrapper">
             <div class="content-header">
                 <div class="header-left">
-                    <button id="back-btn" class="back-btn" aria-label="Back to parent" title="BACK">&lt;&lt;</button>
+                    <button id="back-btn" class="back-btn" aria-label="Back to parent" title="BACK" data-i18n-aria="common.backAria" data-i18n-title="common.back">&lt;&lt;</button>
                     <h2 id="current-folder-title">ROOT</h2>
                 </div>
                 
-                <div class="top-search-wrapper">
-                    <span class="search-icon">SEARCH ::</span>
-                    <input type="text" id="top-search-input" placeholder="INPUT KEYWORD..." autocomplete="off" aria-label="Search bookmarks">
-                </div>
+                <div class="search-slot" aria-hidden="true"></div>
             </div>
-            
-            <div class="header-line"></div>
-            <div class="content-list" id="child-list"></div>
-            <!-- 选中项抬升层：脱离列表的裁剪，浮起的卡片可以压过磨砂带边缘 -->
-            <div class="selection-lift" id="selection-lift" aria-hidden="true"></div>
+
+            <!-- 统一倾斜平面：搜索栏、虚线、列表和浮层共用一个 3D 变换，
+                 标题与返回按钮留在外层，避免被一起栅格化而发虚 -->
+            <div class="tilt-plane" id="tilt-plane">
+                <div class="top-search-wrapper">
+                    <span class="search-icon" data-i18n="search.icon">SEARCH ::</span>
+                    <input type="text" id="top-search-input" placeholder="INPUT KEYWORD..." autocomplete="off" aria-label="Search bookmarks" data-i18n-placeholder="search.placeholder" data-i18n-aria="search.aria">
+                </div>
+
+                <div class="header-line"></div>
+                <div class="content-list" id="child-list"></div>
+                <!-- 选中项抬升层：脱离列表的裁剪，浮起的卡片可以压过磨砂带边缘 -->
+                <div class="selection-lift" id="selection-lift" aria-hidden="true"></div>
+            </div>
         </div>
     </div>
 
     <div class="footer-tips">
-        <span id="key-hint-nav">[W/S]</span> NAVIGATE &nbsp; 
-        <span id="key-hint-enter">[D]</span> ENTER &nbsp; 
-        <span id="key-hint-back">[A]</span> BACK &nbsp; 
-        <span>[/]</span> SEARCH
+        <span id="key-hint-nav">[W/S]</span> <span data-i18n="hint.navigate">NAVIGATE</span>&nbsp; 
+        <span id="key-hint-enter">[D]</span> <span data-i18n="hint.enter">ENTER</span>&nbsp; 
+        <span id="key-hint-back">[A]</span> <span data-i18n="hint.back">BACK</span>&nbsp; 
+        <span>[/]</span> <span data-i18n="hint.search">SEARCH</span>
     </div>
     
     <div class="hex-decoration"><div class="hex"></div><div class="hex"></div><div class="hex"></div></div>
@@ -70,8 +76,8 @@
 
             <div class="modal-header">
                 <div class="header-title">
-                    <h3 id="modal-title">TERMINAL_CONFIG</h3>
-                    <span class="header-sub">Ver. 1.0 // USER_PREFS</span>
+                    <h3 id="modal-title" data-i18n="modal.title">TERMINAL_CONFIG</h3>
+                    <span class="header-sub" data-i18n="modal.subtitle">Ver. 1.0 // USER_PREFS</span>
                 </div>
                 <div class="close-modal-btn"></div>
             </div>
@@ -81,42 +87,42 @@
                 <div class="config-section">
                     <div class="section-header">
                         <span class="section-num">02</span>
-                        <span class="section-title">KEY_MAPPING</span>
+                        <span class="section-title" data-i18n="modal.section.keys">KEY_MAPPING</span>
                         <div class="section-line"></div>
                     </div>
                     
                     <div class="keybind-list">
                         <div class="keybind-col">
                         <div class="key-row">
-                            <span class="key-label">NAVIGATE_UP</span>
+                            <span class="key-label" data-i18n="key.navigateUp">NAVIGATE_UP</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="NAV_UP" data-slot="0">W</button>
                                 <button class="key-bind-btn" data-action="NAV_UP" data-slot="1">↑</button>
                             </div>
                         </div>
                         <div class="key-row">
-                            <span class="key-label">NAVIGATE_DOWN</span>
+                            <span class="key-label" data-i18n="key.navigateDown">NAVIGATE_DOWN</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="NAV_DOWN" data-slot="0">S</button>
                                 <button class="key-bind-btn" data-action="NAV_DOWN" data-slot="1">↓</button>
                             </div>
                         </div>
                         <div class="key-row">
-                            <span class="key-label">NAV_LEFT / BACK</span>
+                            <span class="key-label" data-i18n="key.navLeftBack">NAV_LEFT / BACK</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="NAV_LEFT" data-slot="0">A</button>
                                 <button class="key-bind-btn" data-action="NAV_LEFT" data-slot="1">←</button>
                             </div>
                         </div>
                         <div class="key-row">
-                            <span class="key-label">NAV_RIGHT / OPEN</span>
+                            <span class="key-label" data-i18n="key.navRightOpen">NAV_RIGHT / OPEN</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="NAV_RIGHT" data-slot="0">D</button>
                                 <button class="key-bind-btn" data-action="NAV_RIGHT" data-slot="1">→</button>
                             </div>
                         </div>
                         <div class="key-row">
-                            <span class="key-label">CONFIRM</span>
+                            <span class="key-label" data-i18n="key.confirm">CONFIRM</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="NAV_CONFIRM" data-slot="0">ENTER</button>
                                 <button class="key-bind-btn" data-action="NAV_CONFIRM" data-slot="1">SPACE</button>
@@ -125,68 +131,79 @@
                         </div>
                         <div class="keybind-col">
                         <div class="key-row">
-                            <span class="key-label">SEARCH</span>
+                            <span class="key-label" data-i18n="key.search">SEARCH</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="SEARCH_ACTIVATE" data-slot="0">/</button>
                                 <button class="key-bind-btn" data-action="SEARCH_ACTIVATE" data-slot="1">F</button>
                             </div>
                         </div>
                         <div class="key-row">
-                            <span class="key-label">NAV_BACK</span>
+                            <span class="key-label" data-i18n="key.navBack">NAV_BACK</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="NAV_BACK" data-slot="0">BACKSPACE</button>
                                 <button class="key-bind-btn" data-action="NAV_BACK" data-slot="1">---</button>
                             </div>
                         </div>
                         <div class="key-row">
-                            <span class="key-label">SEARCH_EXIT</span>
+                            <span class="key-label" data-i18n="key.searchExit">SEARCH_EXIT</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="SEARCH_EXIT" data-slot="0">ESC</button>
                                 <button class="key-bind-btn" data-action="SEARCH_EXIT" data-slot="1">---</button>
                             </div>
                         </div>
                         <div class="key-row">
-                            <span class="key-label">TOGGLE_THEME</span>
+                            <span class="key-label" data-i18n="key.toggleTheme">TOGGLE_THEME</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="TOGGLE_THEME" data-slot="0">T</button>
                                 <button class="key-bind-btn" data-action="TOGGLE_THEME" data-slot="1">---</button>
                             </div>
                         </div>
                         <div class="key-row">
-                            <span class="key-label">OPEN_SETTINGS</span>
+                            <span class="key-label" data-i18n="key.openSettings">OPEN_SETTINGS</span>
                             <div class="bind-group">
                                 <button class="key-bind-btn" data-action="OPEN_SETTINGS" data-slot="0">O</button>
                                 <button class="key-bind-btn" data-action="OPEN_SETTINGS" data-slot="1">---</button>
                             </div>
                         </div>
                         </div>
-                        <div class="setting-info" id="setting-msg">SYSTEM READY... WAITING FOR INPUT</div>
+                        <div class="setting-info" id="setting-msg" data-i18n="settings.ready">SYSTEM READY... WAITING FOR INPUT</div>
                     </div>
                 </div>
 
                 <div class="config-section">
                     <div class="section-header">
                         <span class="section-num">01</span>
-                        <span class="section-title">DISPLAY & LAUNCH</span>
+                        <span class="section-title" data-i18n="modal.section.display">DISPLAY & LAUNCH</span>
                         <div class="section-line"></div>
                     </div>
 
                     <div class="behavior-grid">
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>THEME</span>
-                                <small>Light / Dark interface</small>
+                                <span data-i18n="settings.language">LANGUAGE</span>
+                                <small data-i18n="settings.languageHint">Interface language</small>
                             </div>
-                            <div class="theme-group">
-                                <button type="button" class="theme-option active" data-theme-value="light">LIGHT</button>
-                                <button type="button" class="theme-option" data-theme-value="dark">DARK</button>
+                            <div class="lang-group">
+                                <button type="button" class="lang-option active" data-lang-value="en">EN</button>
+                                <button type="button" class="lang-option" data-lang-value="zh">中文</button>
                             </div>
                         </div>
 
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>UI_FONT_SIZE</span>
-                                <small>Adjust text scale</small>
+                                <span data-i18n="settings.theme">THEME</span>
+                                <small data-i18n="settings.themeHint">Light / Dark interface</small>
+                            </div>
+                            <div class="theme-group">
+                                <button type="button" class="theme-option active" data-theme-value="light" data-i18n="theme.light">LIGHT</button>
+                                <button type="button" class="theme-option" data-theme-value="dark" data-i18n="theme.dark">DARK</button>
+                            </div>
+                        </div>
+
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span data-i18n="settings.font">UI_FONT_SIZE</span>
+                                <small data-i18n="settings.fontHint">Adjust text scale</small>
                             </div>
                             <div class="range-control">
                                 <input type="range" id="setting-font-size" min="12" max="24" step="1">
@@ -196,8 +213,19 @@
 
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>QUICK_LAUNCH_SIZE</span>
-                                <small>Number of quick launch shortcuts</small>
+                                <span data-i18n="settings.perspective">PERSPECTIVE</span>
+                                <small data-i18n="settings.perspectiveHint">3D tilt on the right panels (rasterization may cause blur)</small>
+                            </div>
+                            <label class="setting-switch">
+                                <input type="checkbox" id="setting-perspective">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="switch-row">
+                            <div class="switch-label">
+                                <span data-i18n="settings.quickLaunch">QUICK_LAUNCH_SIZE</span>
+                                <small data-i18n="settings.quickLaunchHint">Number of quick launch shortcuts</small>
                             </div>
                             <div class="range-control">
                                 <input type="range" id="setting-quick-launch" min="3" max="12" step="1">
@@ -207,8 +235,8 @@
                         
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>CLOCK_WIDGET</span>
-                                <small>Time display on left panel</small>
+                                <span data-i18n="settings.clock">CLOCK_WIDGET</span>
+                                <small data-i18n="settings.clockHint">Time display on left panel</small>
                             </div>
                             <label class="setting-switch">
                                 <input type="checkbox" id="setting-clock-enabled">
@@ -218,8 +246,8 @@
                         
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>DATE_INFO</span>
-                                <small>Show date & weekday</small>
+                                <span data-i18n="settings.date">DATE_INFO</span>
+                                <small data-i18n="settings.dateHint">Show date & weekday</small>
                             </div>
                             <label class="setting-switch">
                                 <input type="checkbox" id="setting-clock-details">
@@ -229,8 +257,8 @@
 
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>CLEAR_ON_ACTIVATE</span>
-                                <small>Clear input when pressing '/'</small>
+                                <span data-i18n="settings.clearSearch">CLEAR_ON_ACTIVATE</span>
+                                <small data-i18n="settings.clearSearchHint">Clear input when pressing '/'</small>
                             </div>
                             <label class="setting-switch">
                                 <input type="checkbox" id="setting-clear-search">
@@ -243,15 +271,15 @@
                 <div class="config-section">
                     <div class="section-header">
                         <span class="section-num">03</span>
-                        <span class="section-title">SYSTEM</span>
+                        <span class="section-title" data-i18n="modal.section.system">SYSTEM</span>
                         <div class="section-line"></div>
                     </div>
 
                     <div class="behavior-grid">
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>OPEN_NEW_TAB</span>
-                                <small>Open links in _blank</small>
+                                <span data-i18n="settings.openNewTab">OPEN_NEW_TAB</span>
+                                <small data-i18n="settings.openNewTabHint">Open links in _blank</small>
                             </div>
                             <label class="setting-switch">
                                 <input type="checkbox" id="setting-open-newtab">
@@ -260,8 +288,8 @@
                         </div>
                         <div class="switch-row">
                             <div class="switch-label">
-                                <span>FRECENCY_HALF_LIFE</span>
-                                <small>Score decay half-life (days)</small>
+                                <span data-i18n="settings.halfLife">FRECENCY_HALF_LIFE</span>
+                                <small data-i18n="settings.halfLifeHint">Score decay half-life (days)</small>
                             </div>
                             <div class="range-control">
                                 <input type="range" id="setting-half-life" min="3" max="30" step="1">
@@ -274,8 +302,8 @@
             </div>
 
             <div class="modal-footer">
-                <button id="reset-settings">RESET_DEFAULTS</button>
-                <button id="save-settings" class="primary-btn">APPLY</button>
+                <button id="reset-settings" data-i18n="settings.reset">RESET_DEFAULTS</button>
+                <button id="save-settings" class="primary-btn" data-i18n="settings.apply">APPLY</button>
             </div>
         </div>
     </div>

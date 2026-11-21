@@ -31,6 +31,8 @@ const DEFAULT_CONFIG = {
         openNewTab: false,
         theme: 'light',
         clearSearchOnActivate: false,
+        language: 'en',          // 界面语言：en / zh
+        perspectiveEnabled: false, // 右侧面板透视倾斜；默认关闭，开启后启用 3D 效果
         // --- Frecency 算法相关配置 ---
         quickLaunchMax: 7,       // 快捷栏默认显示数量 (3-12)
         frecencyHalfLifeDays: 7, // 分数半衰期 (天)

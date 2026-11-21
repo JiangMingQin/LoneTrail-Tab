@@ -1,10 +1,11 @@
 import { state } from './state.js';
+import { t } from './i18n.js';
 
 /** Clock update interval in milliseconds */
 const UPDATE_INTERVAL_MS = 1000;
 
-/** Week day abbreviations */
-const WEEK_DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+/** Week day translation keys */
+const WEEK_DAYS = ['week.sun', 'week.mon', 'week.tue', 'week.wed', 'week.thu', 'week.fri', 'week.sat'];
 
 /**
  * Initializes the clock module
@@ -13,6 +14,11 @@ const WEEK_DAYS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 export function initClock() {
     updateClock();
     setInterval(updateClock, UPDATE_INTERVAL_MS);
+}
+
+/** Immediately re-renders clock text, e.g. after a language change. */
+export function refreshClock() {
+    updateClock();
 }
 
 /**
@@ -38,7 +44,7 @@ function updateClock() {
     }
 
     if (weekEl) {
-        weekEl.textContent = WEEK_DAYS[now.getDay()];
+        weekEl.textContent = t(WEEK_DAYS[now.getDay()]);
     }
 
     updateClockVisibility();

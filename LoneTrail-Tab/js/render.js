@@ -2,6 +2,7 @@ import { state } from './state.js';
 import { escapeHtml } from './utils.js';
 import { Actions } from './actions.js';
 import { Frecency } from './features/algorithm.js';
+import { t } from './i18n.js';
 
 /** DOM element references */
 const els = {
@@ -51,11 +52,16 @@ export function renderDialDOM() {
     els.parentList.style.opacity = '1';
 
     state.parents.forEach((node, index) => {
+        const label = node.id === 'QUICK_START'
+            ? t('folder.quickStart')
+            : node.id === 'search-root'
+                ? (state.searchQuery ? t('folder.searchResults') : t('search.searching'))
+                : (node.title || t('common.untitled'));
         const div = document.createElement('div');
         div.className = 'dial-item';
         div.dataset.index = index;
         div.setAttribute('role', 'button');
-        div.setAttribute('aria-label', node.title || 'Untitled');
+        div.setAttribute('aria-label', label);
 
         const indexStr = String(index).padStart(2, '0');
         let iconHtml = '<span class="dial-icon-folder">/</span>';
@@ -72,7 +78,7 @@ export function renderDialDOM() {
             <span class="dial-idx">${indexStr}</span>
             <span class="dial-content">
                 ${iconHtml}
-                <span class="dial-text">${escapeHtml(node.title || 'Untitled')}</span>
+                <span class="dial-text">${escapeHtml(label)}</span>
             </span>
             <div class="dial-decor"></div>
         `;
@@ -144,39 +150,43 @@ export function renderChildrenDOM() {
 
     if (activeParent) {
         if (activeParent.id === 'search-root') {
-            titleText = state.searchQuery ? `SEARCH: "${state.searchQuery}"` : 'SEARCHING...';
+            titleText = state.searchQuery
+                ? t('search.title', { query: state.searchQuery })
+                : t('search.searching');
+        } else if (activeParent.id === 'QUICK_START') {
+            titleText = t('folder.quickStart');
         } else {
-            titleText = activeParent.title;
+            titleText = activeParent.title || t('common.untitled');
         }
 
         // URL nodes have no children
         itemsToRender = activeParent.url ? [] : (activeParent.children || []);
     } else {
-        titleText = 'ROOT';
+        titleText = t('common.root');
     }
 
     state.currentChildren = itemsToRender;
 
-    if (els.folderTitle) els.folderTitle.textContent = (titleText || 'ROOT').toUpperCase();
+    if (els.folderTitle) els.folderTitle.textContent = (titleText || t('common.root')).toUpperCase();
     els.childList.innerHTML = '';
 
     // [修改] 如果列表为空，渲染复古终端风格的空状态
     if (itemsToRender.length === 0) {
         let type = 'empty';
-        let mainText = 'NO DATA';
-        let subText = 'DIRECTORY IS EMPTY';
+        let mainText = t('empty.noData');
+        let subText = t('empty.dirEmpty');
 
         // 情况1：这是一个 URL 节点 (Endpoint)
         if (activeParent && activeParent.url) {
             type = 'endpoint';
-            mainText = 'ENDPOINT: URL';
-            subText = 'CONFIRM TO OPEN';
+            mainText = t('empty.endpoint');
+            subText = t('empty.confirmOpen');
         } 
         // 情况2：这是搜索结果，且为空
         else if (activeParent && activeParent.id === 'search-root') {
             type = 'no-result';
-            mainText = 'NO MATCHES';
-            subText = `QUERY: "${state.searchQuery}"`;
+            mainText = t('empty.noMatches');
+            subText = t('empty.query', { query: state.searchQuery });
         }
 
         els.childList.innerHTML = generateEmptyStateHTML(type, mainText, subText);
@@ -205,8 +215,8 @@ function generateEmptyStateHTML(type, title, sub) {
         </div>
         
         <div class="es-center-box">
-            <div class="es-title">${title}</div>
-            <div class="es-sub">${sub}</div>
+            <div class="es-title">${escapeHtml(title)}</div>
+            <div class="es-sub">${escapeHtml(sub)}</div>
         </div>
     </div>
     `;
@@ -218,7 +228,7 @@ function createChildItem(node, index) {
     div.className = 'list-item animate-enter';
     div.style.setProperty('--i', index);
     div.setAttribute('role', 'button');
-    div.setAttribute('aria-label', node.title || 'Untitled');
+    div.setAttribute('aria-label', node.title || t('common.untitled'));
 
     const titleSpan = document.createElement('span');
     titleSpan.className = 'title';
@@ -246,7 +256,7 @@ function createChildItem(node, index) {
 /** Generates favicon HTML for a node */
 function getFaviconHtml(node) {
     if (!node.url) {
-        return '<span class="folder-indicator">DIR</span> ';
+        return `<span class="folder-indicator">${escapeHtml(t('common.dir'))}</span> `;
     }
     if (typeof chrome !== 'undefined' && chrome.runtime?.id) {
         const src = `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(node.url)}&size=16`;
@@ -293,7 +303,7 @@ let renderToken = 0;
 /** 抬升量（px） */
 const LIFT_OFFSET = 14;
 
-/** 浮层容器里的倾斜平面（与磨砂带同尺寸同 transform，但不裁剪） */
+/** 浮层容器里的平面：3D 由父级 .tilt-plane 提供，这里只做平面内 2D 位移 */
 let liftPlane = null;
 
 /** 当前选中项的卡片与对应行 */
@@ -315,27 +325,44 @@ function selectTiming() {
     return { dur: Number.isFinite(dur) ? dur : 380, ease };
 }
 
-/** 磨砂带的左移补偿：clamp(-60px, 25px - 3vw, 0px) */
-function frostShift() {
-    return Math.min(0, Math.max(-60, 25 - 0.03 * window.innerWidth));
+/**
+ * 统一倾斜平面的尺寸同步。
+ * 头部用空槽给搜索栏占位，搜索栏本身绝对定位在平面里；这里把头部实际高度和
+ * 搜索栏当前宽度写成 CSS 变量，供 .top-search-wrapper 定位与 .search-slot 占位。
+ */
+export function initTiltPlane() {
+    const wrapper = document.querySelector('.content-wrapper');
+    const header = document.querySelector('.content-header');
+    const search = document.querySelector('.top-search-wrapper');
+    if (!wrapper || !header || !search) return;
+
+    const sync = () => {
+        const mb = parseFloat(getComputedStyle(header).marginBottom) || 0;
+        // 搜索栏原本在头部内底部对齐：相对平面顶部的偏移 = -(头部 margin) - 自身高度。
+        wrapper.style.setProperty('--search-top', `${-mb - search.offsetHeight}px`);
+        wrapper.style.setProperty('--search-slot-width', `${search.offsetWidth}px`);
+    };
+    sync();
+
+    if (typeof ResizeObserver !== 'undefined') {
+        new ResizeObserver(sync).observe(header);
+        new ResizeObserver(sync).observe(search);
+    } else {
+        window.addEventListener('resize', sync);
+    }
 }
 
-/** 让倾斜平面与磨砂带严格同尺寸、同 transform */
+/** 让浮层平面贴合列表几何；倾斜由父级 .tilt-plane 统一提供，不要在这里重复变换 */
 function syncLiftPlane(list, layer) {
     if (!liftPlane) {
         liftPlane = document.createElement('div');
         liftPlane.className = 'lift-plane';
         layer.appendChild(liftPlane);
     }
-    const cs = getComputedStyle(document.documentElement);
-    const tilt = cs.getPropertyValue('--frost-list-tilt').trim() || '-7deg';
-    const perspective = cs.getPropertyValue('--frost-list-perspective').trim() || '1000px';
-
     liftPlane.style.left = `${list.offsetLeft}px`;
     liftPlane.style.top = `${list.offsetTop}px`;
     liftPlane.style.width = `${list.offsetWidth}px`;
     liftPlane.style.height = `${list.offsetHeight}px`;
-    liftPlane.style.transform = `translateX(${frostShift()}px) perspective(${perspective}) rotateY(${tilt})`;
     return liftPlane;
 }
 
@@ -343,7 +370,6 @@ function syncLiftPlane(list, layer) {
 function cardGeometry(row, list) {
     const relTop = row.offsetTop - list.scrollTop;
     return {
-        relTop,
         height: row.offsetHeight,
         rest: `translate3d(0px, ${relTop}px, 0)`,
         lifted: `translate3d(${-LIFT_OFFSET}px, ${relTop - LIFT_OFFSET}px, 0)`,
@@ -546,19 +572,19 @@ function updateSearchModeHints(getChar) {
 
     if (hasDrilledDown) {
         // User has navigated into a folder from search results
-        els.keyHints.nav.textContent = '[NAV] BROWSE';
-        els.keyHints.enter.textContent = `[${getChar('NAV_CONFIRM')}] OPEN`;
-        els.keyHints.back.textContent = '[ESC] BACK';
+        els.keyHints.nav.textContent = `[NAV] ${t('hint.browse')}`;
+        els.keyHints.enter.textContent = `[${getChar('NAV_CONFIRM')}] ${t('hint.open')}`;
+        els.keyHints.back.textContent = `[ESC] ${t('hint.back')}`;
     } else {
         // At search root
         els.keyHints.nav.textContent = '[NAV] --';
 
         if (state.focusColumn === 'right') {
-            els.keyHints.enter.textContent = `[${getChar('NAV_CONFIRM')}] OPEN`;
+            els.keyHints.enter.textContent = `[${getChar('NAV_CONFIRM')}] ${t('hint.open')}`;
         } else {
-            els.keyHints.enter.textContent = '[ENTER] SELECT';
+            els.keyHints.enter.textContent = `[ENTER] ${t('hint.select')}`;
         }
 
-        els.keyHints.back.textContent = '[ESC] EXIT';
+        els.keyHints.back.textContent = `[ESC] ${t('hint.exit')}`;
     }
 }
