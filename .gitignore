@@ -1,4 +1,4 @@
-仿尼尔机械纪元.xd
+*.xd
 .impeccable/
-# 目录改名后遗留的旧工作记录目录（内容已随项目迁移，文件按规则保留不删）
-LoneTrail-Tab/.workbuddy/
+.workbuddy/
+demo/
