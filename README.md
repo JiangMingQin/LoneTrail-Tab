@@ -1,8 +1,8 @@
+# CH3-Orange Tab
+
 <p align="center">
   <img src="CH3-Orange-Tab/icons/icon.svg" width="88" height="88" alt="CH3-Orange Tab icon">
 </p>
-
-# CH3-Orange Tab
 
 CH3-Orange Tab 是一个粗野主义科幻终端风格的浏览器新标签页扩展。可以完全通过键盘操作快速检索收藏夹内容，并进行网页跳转。
 
