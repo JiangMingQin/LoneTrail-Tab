@@ -3,6 +3,7 @@ import { escapeHtml } from './utils.js';
 import { Actions } from './actions.js';
 import { Frecency } from './features/algorithm.js';
 import { t } from './i18n.js';
+import { icon } from './icons.js';
 
 /** DOM element references */
 const els = {
@@ -64,14 +65,18 @@ export function renderDialDOM() {
         div.setAttribute('aria-label', label);
 
         const indexStr = String(index).padStart(2, '0');
-        let iconHtml = '<span class="dial-icon-folder">/</span>';
+        let iconHtml = '';
 
         if (node.id === 'search-root') {
-            iconHtml = '<span class="dial-icon-folder">🔍</span>';
+            iconHtml = icon('search', 'dial-icon');
         } else if (node.url && typeof chrome !== 'undefined' && chrome.runtime?.id) {
             // Chrome extension favicon API
             const src = `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(node.url)}&size=16`;
             iconHtml = `<img src="${src}" class="dial-icon">`;
+        } else if (node.id && !node.url && !state.rootParents?.includes(node)) {
+            // 只给下钻出来的真实书签文件夹加图标。
+            // QUICK_START / 收藏夹栏等根级入口原本就没有 DIR 标识，不额外加 SVG。
+            iconHtml = icon('folder', 'dial-icon');
         }
 
         div.innerHTML = `
@@ -256,7 +261,9 @@ function createChildItem(node, index) {
 /** Generates favicon HTML for a node */
 function getFaviconHtml(node) {
     if (!node.url) {
-        return `<span class="folder-indicator">${escapeHtml(t('common.dir'))}</span> `;
+        // 文件夹不再显示 DIR 文案；图标沿用 favicon 的尺寸/间距/选中态规则，
+        // 保证与链接行左对齐，且交接动画与选中反色完全一致。
+        return icon('folder', 'list-favicon folder-icon');
     }
     if (typeof chrome !== 'undefined' && chrome.runtime?.id) {
         const src = `chrome-extension://${chrome.runtime.id}/_favicon/?pageUrl=${encodeURIComponent(node.url)}&size=16`;
@@ -384,11 +391,25 @@ function animateCard(card, from, to) {
         card.__liftAnim = null;
     }
     card.style.transform = to;
-    if (!from || from === to) return;
+    if (!from || from === to) return null;
     card.__liftAnim = card.animate(
         [{ transform: from }, { transform: to }],
         { duration: timing.dur, easing: timing.ease }
     );
+    return card.__liftAnim;
+}
+
+/**
+ * 等离场动画真正跑完再回收卡片。
+ * 不能只靠 setTimeout(timing.dur)：CSS transition 要等下一次样式重算才起算，
+ * 定时器会早到近一帧，卡片在收色/投影尚未结束时就被移除，露出一次突变闪烁。
+ * WAAPI 位移与 CSS 过渡同帧起算，所以以动画 finished 为锚点，再多等一帧合成。
+ */
+function whenExitDone(anim) {
+    const motion = anim
+        ? anim.finished.catch(() => {})   // 被后续 cancel 时按"已结束"处理
+        : Promise.resolve();
+    return motion.then(() => new Promise((resolve) => requestAnimationFrame(resolve)));
 }
 
 /** 选中一张卡：落位 → 从左到右填充 + 抬起（同一时刻开始） */
@@ -421,7 +442,6 @@ function startSelect(row, list, plane) {
 
 /** 取消一张卡：落回槽位 + 收色 + 收投影，随后淡出并移除；结束后恢复该行内容 */
 function startDeselect(card, row) {
-    const timing = selectTiming();
     const from = getComputedStyle(card).transform;
     const rest = card.__rest || from;
 
@@ -433,18 +453,18 @@ function startDeselect(card, row) {
     // 满宽黑底错位叠加的问题，改由 startSelect 在重新选中该行时，
     // 单独给那张旧卡补 .is-exiting 立即清零（见 startSelect）。
     card.classList.remove('selected', 'is-up');
-    animateCard(card, from, rest);
+    const anim = animateCard(card, from, rest);
 
-    // 定时器到期只删卡片节点；is-lifted 的回收交给下一次 syncSelectionLift 的批量清除，
-    // 避免旧定时器误删"期间被重新选中"行的遮罩 → 底层 ::before width:100% 暴露成全黑。
-    // (生成机制:每行被选中时 __liftGen 递增,定时器只认启动时的代次)
+    // 动画真正结束后再回收；is-lifted 的回收认启动时的代次，
+    // 避免旧卡片误删"期间被重新选中"行的遮罩 → 底层 ::before width:100% 暴露成全黑。
     const gen = row ? row.__liftGen : 0;
-    setTimeout(() => {
-        card.remove();
+    whenExitDone(anim).then(() => {
+        // 先恢复原位行内容，再摘掉离场卡：同一帧内完成交接，不留空槽
         if (row && row.__liftGen === gen) {
             row.classList.remove('is-lifted');
         }
-    }, timing.dur);
+        card.remove();
+    });
 }
 
 /** 收起当前选中项的动画（离场），并清空活动卡片 */

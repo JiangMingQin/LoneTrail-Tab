@@ -1,15 +1,15 @@
-# LoneTrail-Tab 项目架构文档
+# CH3-Orange Tab 项目架构文档
 
 ## 项目概述
 
-LoneTrail-Tab 是一个 Chrome 扩展新标签页应用，采用**双栏导航架构**：左侧圆形拨盘（Dial）展示书签层级，右侧列表展示子项。支持键盘导航、实时搜索、主题切换和自定义快捷键。
+CH3-Orange Tab 是一个 Chrome 扩展新标签页应用，采用**双栏导航架构**：左侧圆形拨盘（Dial）展示书签层级，右侧列表展示子项。支持键盘导航、实时搜索、主题切换和自定义快捷键。
 
 ---
 
 ## 目录结构
 
 ```
-LoneTrail-Tab/
+CH3-Orange-Tab/
 ├── manifest.json         # Chrome 扩展核心配置 (V3)
 ├── newtab.html           # 新标签页入口文件
 ├── PROJECT_DOCS.md       # 项目架构文档
@@ -143,7 +143,7 @@ LoneTrail-Tab/
 
 ##### 数据结构
 
-运行状态存在 `state.frecency`，随 `saveConfig()` 一起写入 `lonetrail_config`：
+运行状态存在 `state.frecency`，随 `saveConfig()` 一起写入 `ch3orange_config`：
 
 | 字段 | 类型 | 说明 |
 |------|------|------|
@@ -195,7 +195,7 @@ score = score × 2^(−Δt / halfLife) + 1
 
 ##### 历史与迁移
 
-早期 SASA 算法的运行数据（`algorithm` 字段）与配置项（`deathThreshold` / `halfLife` / `anchorCount`）会在 `loadConfig()` 时被识别并丢弃，避免两套模型混算；`rhine_config` 存储键也会自动迁移到 `lonetrail_config`。
+早期 SASA 算法的运行数据（`algorithm` 字段）与配置项（`deathThreshold` / `halfLife` / `anchorCount`）会在 `loadConfig()` 时被识别并丢弃，避免两套模型混算；`rhine_config` / `lonetrail_config` 两个旧存储键也会按序自动迁移到 `ch3orange_config`。
 
 ---
 

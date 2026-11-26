@@ -1,8 +1,8 @@
-# LoneTrail-Tab
+# CH3-Orange Tab
 
-LoneTrail-Tab 是一个粗野主义科幻终端风格的浏览器新标签页扩展。可以完全通过键盘操作快速检索收藏夹内容，并进行网页跳转。
+CH3-Orange Tab 是一个粗野主义科幻终端风格的浏览器新标签页扩展。可以完全通过键盘操作快速检索收藏夹内容，并进行网页跳转。
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.0.0--alpha-green.svg) ![Style](https://img.shields.io/badge/style-Brutalist_Sci--Fi_Terminal-white)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.1.0--alpha-green.svg) ![Style](https://img.shields.io/badge/style-Brutalist_Sci--Fi_Terminal-white)
 
 
 ## ✨ 特性 (Features)
@@ -22,13 +22,13 @@ LoneTrail-Tab 是一个粗野主义科幻终端风格的浏览器新标签页扩
 
 提供随机星空的生成，适配夜间使用场景：
 
-![LoneTrail-Tab 暗色模式演示](assets/dark.png)
+![CH3-Orange-Tab 暗色模式演示](assets/dark.png)
 
 ### 🌕 亮色主题（Light Theme）
 
 提供随机等高线地形图生成，适配日间使用场景：
 
-![LoneTrail-Tab 亮色模式演示](assets/light.png)
+![CH3-Orange-Tab 亮色模式演示](assets/light.png)
 
 ## 🚀 安装指南 (Installation)
 
@@ -36,20 +36,20 @@ Chrome / Edge 等 Chromium 浏览器，任选一种方式获取扩展：
 
 **方式一：下载 Release 包（推荐）**
 
-前往 [Releases 页面](https://github.com/JiangMingQin/LoneTrail-Tab/releases) 下载
-[`LoneTrail-Tab-v1.1.0-alpha.zip`](https://github.com/JiangMingQin/LoneTrail-Tab/releases/download/v1.1.0-alpha/LoneTrail-Tab-v1.1.0-alpha.zip)，
-解压出 `LoneTrail-Tab` 文件夹。
+前往 [Releases 页面](https://github.com/JiangMingQin/CH3-Orange-Tab/releases) 下载
+[`CH3-Orange-Tab-v1.1.0-alpha.zip`](https://github.com/JiangMingQin/CH3-Orange-Tab/releases/download/v1.1.0-alpha/CH3-Orange-Tab-v1.1.0-alpha.zip)，
+解压出 `CH3-Orange-Tab` 文件夹。
 
 **方式二：克隆仓库（适合开发 / 贡献）**
 
 ```bash
-git clone https://github.com/JiangMingQin/LoneTrail-Tab.git
+git clone https://github.com/JiangMingQin/CH3-Orange-Tab.git
 ```
 
-获取到 `LoneTrail-Tab` 文件夹后：
+获取到 `CH3-Orange-Tab` 文件夹后：
 
 1. 打开 `chrome://extensions/`（Edge 为 `edge://extensions/`），开启右上角「开发者模式」
-2. 点击「加载已解压的扩展程序」，选中 `LoneTrail-Tab` 文件夹
+2. 点击「加载已解压的扩展程序」，选中 `CH3-Orange-Tab` 文件夹
 
 打开新标签页（`Ctrl+T`）即可使用。没有书签权限时会自动加载演示数据。
 
@@ -71,10 +71,10 @@ git clone https://github.com/JiangMingQin/LoneTrail-Tab.git
 
 ## 🛠️ 项目结构 (Structure)
 
-扩展本体位于 `LoneTrail-Tab/`，保持极简扁平结构，便于学习与二次开发：
+扩展本体位于 `CH3-Orange-Tab/`，保持极简扁平结构，便于学习与二次开发：
 
 ```text
-LoneTrail-Tab/
+CH3-Orange-Tab/
 ├── manifest.json      # Chrome 扩展配置（Manifest V3）
 ├── newtab.html        # 新标签页入口
 ├── css/               # 样式层（主题变量、布局、拨盘、列表 + modules/ 组件样式）
@@ -102,4 +102,4 @@ LoneTrail-Tab/
 
 ---
 
-*设计灵感源自《明日方舟》、粗野主义*
+*设计灵感源自《明日方舟》、《尼尔机械纪元》，粗野主义*

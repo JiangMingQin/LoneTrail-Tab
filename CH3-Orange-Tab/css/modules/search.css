@@ -1,0 +1,118 @@
+/* 取景框式搜索栏：默认完全透明，只有四个 L 形角 + SEARCH 提示。
+   聚焦时沿用全局选中色做底，底色从右往左覆盖；角标与文字反色；
+   占位提示在聚焦时隐去，让用户直接输入。 */
+
+.top-search-wrapper {
+    position: absolute;
+    right: 0;
+    top: var(--search-top, -35px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 180px;
+    height: 30px;
+    box-sizing: border-box;
+    background: transparent;
+
+    transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* 选中底色：独立一层从右往左铺满，与列表选中项共用 200ms 曲线 */
+.top-search-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: var(--search-active-bg);
+    backdrop-filter: blur(var(--search-blur));
+    -webkit-backdrop-filter: blur(var(--search-blur));
+    transition: width var(--select-duration) var(--select-easing);
+}
+.top-search-wrapper:focus-within { width: 240px; }
+.top-search-wrapper:focus-within::before { width: 100%; }
+
+/* 取景角：1px 描边、6px 臂长，与全站细线统一。
+   四边统一留 6px：选中底色铺满容器后，角标到底色四边的距离一致。
+   角标跟随容器左右定位，聚焦时自然向外分开，不做额外位移或放大。 */
+.search-corner {
+    --arm: 6px;
+    --stroke: 1px;
+    position: absolute;
+    top: 6px;
+    bottom: 6px;
+    width: var(--arm);
+    z-index: 1;
+    pointer-events: none;
+}
+.search-corner-left  { left: 6px; }
+.search-corner-right { right: 6px; }
+
+.search-corner::before,
+.search-corner::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: var(--arm);
+    height: var(--arm);
+    border: 0 solid var(--search-corner);
+    transition: border-color 0.2s ease;
+}
+.search-corner::before { top: 0; border-top-width: var(--stroke); }
+.search-corner::after  { bottom: 0; border-bottom-width: var(--stroke); }
+.search-corner-left::before,
+.search-corner-left::after  { border-left-width: var(--stroke); }
+.search-corner-right::before,
+.search-corner-right::after { border-right-width: var(--stroke); }
+
+/* 选中：角标反色，与选中底色形成反相 */
+.top-search-wrapper:focus-within .search-corner::before,
+.top-search-wrapper:focus-within .search-corner::after {
+    border-color: var(--row-active-text);
+}
+
+#top-search-input {
+    position: relative;
+    z-index: 1;
+    width: calc(100% - 40px);
+    background: transparent;
+    border: none;
+    outline: none;
+
+    font-family: var(--font-stack);
+    font-size: var(--ui-font-size);
+    font-weight: 700;
+    text-align: center;
+    /* 保留用户输入的大小写，不再强制终端式全大写 */
+    color: var(--search-corner);
+    caret-color: var(--search-corner);
+    transition: color 0.2s ease;
+}
+#top-search-input::placeholder {
+    color: var(--search-corner);
+    opacity: 0.72;
+    letter-spacing: 2px;
+}
+
+/* 选中：输入文字反色，占位提示直接隐去，不必先删掉 SEARCH 再输入 */
+.top-search-wrapper:focus-within #top-search-input {
+    color: var(--row-active-text);
+    caret-color: var(--row-active-text);
+}
+.top-search-wrapper:focus-within #top-search-input::placeholder {
+    color: transparent;
+}
+
+/* 3D 透视开启时的适配：填充层改回纯色。
+   backdrop-filter 属于 grouping property，会把自身强制 flat 并在倾斜平面里
+   逐帧重采样背景，容易带来栅格化发虚；选中底色本就是实色，去掉模糊不影响外观。
+   搜索框的倾斜、左移仍由父级 .tilt-plane 统一提供，这里不再叠加任何 transform。 */
+[data-perspective="on"] .top-search-wrapper::before {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+}

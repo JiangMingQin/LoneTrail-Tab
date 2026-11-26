@@ -2,6 +2,14 @@
 
 本项目以 GitHub 仓库版本（v0.9.x）为最早基线，当前版本为 **1.1.0-alpha**（扩展清单版本号使用 `1.1.0`）。
 
+## [未发布] - 品牌更名
+
+### 变更 (Changed)
+- **项目更名**：`LoneTrail-Tab` → `CH3-Orange Tab`（仓库 / 目录 `CH3-Orange-Tab`）。
+- **界面品牌串**：`LONETRAIL // OS` → `CH3-ORANGE // OS`；页面标题改为 `CH3-ORANGE TERMINAL`（en）/ `CH3-ORANGE 终端`（zh）。
+- **存储键**：`lonetrail_config` → `ch3orange_config`，`loadConfig()` 会按 `lonetrail_config` → `rhine_config` 的顺序自动迁移旧数据；设置面板「恢复默认」会一并清掉三个键。
+- **扩展清单**：`manifest.json` 的 `name` 改为 `CH3-Orange Tab`，`description` 明确这是新标签页扩展。
+
 ## [1.1.0-alpha] - 2026-11-21
 
 ### 新增 (Added)

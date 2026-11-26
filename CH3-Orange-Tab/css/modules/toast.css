@@ -1,0 +1,80 @@
+/* 操作反馈条：从中间向两侧展开，深色实底 + 反色文字，两端各两个小方块标记。
+   配色沿用全局选中色（--row-active-bg / --row-active-text），
+   亮色黑底白字、暗色白底深字，与列表选中态保持同一套反相语言。 */
+
+.action-toast {
+    position: fixed;
+    /* 放在视口下方，靠近设置面板按钮所在的注意力区域 */
+    bottom: clamp(48px, 10vh, 120px);
+    left: 50%;
+    z-index: 1200;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 220px;
+    height: 26px;
+    padding: 0 34px;
+    box-sizing: border-box;
+
+    background: var(--row-active-bg);
+    color: var(--row-active-text);
+    font-family: var(--font-stack);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    white-space: nowrap;
+
+    pointer-events: none;
+    opacity: 0;
+    /* 从中线向两侧裁切展开；内容本身不缩放，文字不会变形 */
+    clip-path: inset(0 50% 0 50%);
+    transform: translateX(-50%);
+    transition: clip-path 260ms cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 160ms ease;
+}
+.action-toast.is-visible {
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+}
+
+/* 消失：原地闪烁一次后隐去，不做收回动画。
+   steps(1) 让明暗硬切，符合终端的方波质感 */
+.action-toast.is-blinking {
+    animation: toast-blink 100ms steps(1, end) forwards;
+}
+@keyframes toast-blink {
+    0%   { opacity: 1; }
+    33%  { opacity: 0; }
+    66%  { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* 文字稍晚于横条出现：展开接近完成后再显现，避免与展开边缘重叠 */
+.toast-text {
+    opacity: 0;
+    transition: opacity 140ms ease 90ms;
+}
+.action-toast.is-visible .toast-text { opacity: 1; }
+
+/* 两端的小方块标记：与文字同步显现 */
+.toast-mark {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--row-active-text);
+    opacity: 0;
+    transition: opacity 140ms ease 90ms;
+}
+.action-toast.is-visible .toast-mark { opacity: 0.9; }
+.toast-mark-tl { top: 4px;    left: 6px; }
+.toast-mark-bl { bottom: 4px; left: 6px; }
+.toast-mark-tr { top: 4px;    right: 6px; }
+.toast-mark-br { bottom: 4px; right: 6px; }
+
+/* 降低动态效果偏好下直接显示/淡出，不做展开与闪烁 */
+@media (prefers-reduced-motion: reduce) {
+    .action-toast { transition: opacity 0.01ms; clip-path: inset(0 0 0 0); }
+    .action-toast.is-blinking { animation: none; }
+    .toast-text, .toast-mark { transition-duration: 0.01ms; }
+}

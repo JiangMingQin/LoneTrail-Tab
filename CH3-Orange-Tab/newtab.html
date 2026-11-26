@@ -2,14 +2,14 @@
 <html lang="en" data-perspective="off">
 <head>
     <meta charset="UTF-8">
-    <title>LONETRAIL TERMINAL</title>
+    <title>CH3-ORANGE TERMINAL</title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
     <div id="bg-layer"></div>
     <div class="top-bar">
-        <div class="system-status" data-i18n="brand.system">LONETRAIL // OS</div>
+        <div class="system-status" data-i18n="brand.system">CH3-ORANGE // OS</div>
         <div class="top-bar-line"></div>
         
         <div class="top-right-group">
@@ -48,8 +48,9 @@
                  标题与返回按钮留在外层，避免被一起栅格化而发虚 -->
             <div class="tilt-plane" id="tilt-plane">
                 <div class="top-search-wrapper">
-                    <span class="search-icon" data-i18n="search.icon">SEARCH ::</span>
-                    <input type="text" id="top-search-input" placeholder="INPUT KEYWORD..." autocomplete="off" aria-label="Search bookmarks" data-i18n-placeholder="search.placeholder" data-i18n-aria="search.aria">
+                    <span class="search-corner search-corner-left" aria-hidden="true"></span>
+                    <input type="text" id="top-search-input" placeholder="SEARCH" autocomplete="off" spellcheck="false" aria-label="Search bookmarks" data-i18n-placeholder="search.placeholder" data-i18n-aria="search.aria">
+                    <span class="search-corner search-corner-right" aria-hidden="true"></span>
                 </div>
 
                 <div class="header-line"></div>
@@ -306,6 +307,15 @@
                 <button id="save-settings" class="primary-btn" data-i18n="settings.apply">APPLY</button>
             </div>
         </div>
+    </div>
+
+    <!-- 操作反馈：设置已应用 / 已重置，从中间向两侧展开 -->
+    <div id="action-toast" class="action-toast" role="status" aria-live="polite">
+        <span class="toast-mark toast-mark-tl"></span>
+        <span class="toast-mark toast-mark-bl"></span>
+        <span class="toast-text"></span>
+        <span class="toast-mark toast-mark-tr"></span>
+        <span class="toast-mark toast-mark-br"></span>
     </div>
 
     <script type="module" src="js/main.js"></script>

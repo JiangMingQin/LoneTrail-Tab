@@ -23,7 +23,7 @@
 /* 时间 (HH:MM) */
 .clock-time {
     /* 使用等宽字体，数字对齐更漂亮 */
-    font-family: "Impact", "Roboto Mono", monospace;
+    font-family: "Impact", "Roboto Mono", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", monospace;
     font-size: 84px;
     font-weight: 400;
     line-height: 0.9;
@@ -72,18 +72,11 @@
     font-family: var(--font-stack);
 }
 
-/* 星期 */
+/* 星期：与日期共用同样的左对齐，无底色标签 */
 .clock-week {
     font-size: 12px;
     color: var(--text-sub);
     letter-spacing: 1px;
     text-transform: uppercase;
     font-weight: 600;
-
-    /* 变成一个小标签样式 */
-    display: inline-block;
-    background: var(--inset);
-    padding: 2px 8px;
-    border-radius: 2px;
-    width: fit-content;
 }

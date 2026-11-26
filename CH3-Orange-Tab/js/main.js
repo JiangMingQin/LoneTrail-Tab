@@ -5,6 +5,7 @@ import { initClock } from './clock.js';
 import { applyTheme, applyPerspective } from './utils.js';
 import { applyI18n, t } from './i18n.js';
 import { initBackground } from './background.js';
+import { showToast } from './features/toast.js';
 
 /** Default theme if not configured */
 const DEFAULT_THEME = 'light';
@@ -46,6 +47,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     initEventListeners();
     initBackground();
     initTiltPlane();
+
+    // 恢复默认设置会 reload；在重载后的页面上显示"已重置"提示
+    const pendingToast = sessionStorage.getItem('ch3orange_toast');
+    if (pendingToast) {
+        sessionStorage.removeItem('ch3orange_toast');
+        showToast(pendingToast);
+    }
 
     // Re-render background on resize (debounced)
     let resizeTimer;
@@ -90,7 +98,7 @@ async function loadBookmarks() {
         }
         throw new Error('Chrome bookmarks API unavailable');
     } catch (err) {
-        console.warn('LoneTrail: Running in Demo Mode');
+        console.warn('CH3-Orange: Running in Demo Mode');
         // [统一协议] Demo 模式下也保持一致
         state.rootParents = [quickFolder, ...DEMO_BOOKMARKS];
         state.parents = [...state.rootParents];

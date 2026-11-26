@@ -26,9 +26,13 @@
     font-family: var(--font-ui);
 
     border-bottom: 1px solid var(--row-sep);
+    /* color 必须与子元素 .title/.url 用同一时长与曲线：
+       父层若用 0.25s、子层用 --select-duration，同一 color 被两层过渡叠加，
+       子元素继承父层中间色会出现非单调回摆，浮层卡交接瞬间颜色对不上 → 闪一下。
+       这是 0c45fd6「取消选中文字闪一下」修复的配套条件，后续被拆散了。 */
     transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
                 background-color 0.25s ease,
-                color 0.25s ease;
+                color var(--select-duration) var(--select-easing);
     transform-origin: left center;
     opacity: 0; transform: translateX(-20px);
 }
@@ -65,7 +69,7 @@
                 border-color 0.28s ease;
 }
 
-.list-item .title, .list-item .url, .list-item .list-favicon, .list-item .folder-indicator {
+.list-item .title, .list-item .url, .list-item .list-favicon {
     position: relative; z-index: 2;
     /* 只过渡颜色；opacity 不做过渡，取消选中后行内容直接恢复（无淡入） */
     transition: color var(--select-duration) var(--select-easing);
@@ -84,15 +88,24 @@
 }
 .list-item.selected::before { width: 100%; }
 
+/* 字重不随选中变化：Segoe UI / 微软雅黑不是可变字体，800↔500 只能瞬间跳变，
+   在满宽选中底色上会被看成一次闪烁；选中感由反色、底色、投影和抬升承担 */
 .list-item.selected .title,
 .list-item.selected .url {
     color: var(--row-active-text) !important;
-    font-weight: 800;
 }
-.list-item.selected .folder-indicator { color: var(--row-active-text) !important; }
 .list-item .list-favicon { width: 16px; height: 16px; margin-right: 20px; opacity: 0.7; vertical-align: middle; transition: transform 0.3s; }
 .list-item.selected .list-favicon { opacity: 1; filter: none; }
-.list-item .folder-indicator { margin-right: 15px; transition: 0.2s; color: var(--accent-text); font-weight: bold; }
+/* 文件夹图标放大到 20px；右间距同步减少 4px，保持「图标 + 间距」总宽 36px，
+   标题起点与 favicon 行一致。middle + 1px 上移用于和字体视觉中心对齐 */
+.list-item .list-favicon.folder-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+    vertical-align: middle;
+    position: relative;
+    top: -1px;
+}
 .list-item .title { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list-item .url { font-size: 11px; margin-left: 20px; opacity: 0.75; font-family: var(--font-stack); }
 
@@ -222,22 +235,12 @@
     letter-spacing: 1px;
     font-weight: 700;
     color: inherit;
-    font-family: monospace;
+    font-family: var(--font-stack);
     opacity: 0.8;
 
     border-top: 1px solid currentColor;
     padding-top: 6px;
     display: inline-block;
-}
-
-/* 无结果样式 */
-.empty-state-wrapper[data-type="no-result"] .es-center-box {
-    background: var(--danger);
-    color: var(--text-on-danger);
-    outline-color: var(--danger);
-}
-.empty-state-wrapper[data-type="no-result"] .es-center-box::before {
-    background-color: var(--text-on-danger);
 }
 
 /* =========================================================
@@ -259,8 +262,7 @@
    让 color 跟着 .selected 的移除同步过渡到 text-sub，交接瞬间颜色才对得上。 */
 .list-item.is-lifted .title,
 .list-item.is-lifted .url,
-.list-item.is-lifted .list-favicon,
-.list-item.is-lifted .folder-indicator { opacity: 0; }
+.list-item.is-lifted .list-favicon { opacity: 0; }
 .list-item.is-lifted::before { width: 0 !important; transition: none; }
 
 /* 浮层平面：与磨砂带同尺寸，但不裁剪；倾斜由父级 .tilt-plane 统一提供。

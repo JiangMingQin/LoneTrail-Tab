@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "LoneTrail-Tab",
+  "name": "CH3-Orange Tab",
   "version": "1.1.0",
-  "description": "Retro terminal style bookmark navigation with keyboard control.",
+  "description": "Brutalist sci-fi terminal new tab page, with keyboard-driven bookmark navigation.",
   "chrome_url_overrides": {
     "newtab": "newtab.html"
   },

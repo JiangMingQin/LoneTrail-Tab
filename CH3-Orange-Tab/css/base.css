@@ -60,6 +60,21 @@ body {
     fill: var(--star-color);
 }
 
+/* =========================================
+   INLINE ICONS (Phosphor SVG)
+   ========================================= */
+
+/* 图标走 currentColor，随主题与选中态反色；不设 transition，
+   让颜色继承父级已过渡的值，避免与文字反色不同步 */
+.ph-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    vertical-align: middle;
+    pointer-events: none;
+}
+
 /* 统一的交互鼠标样式 */
 button,
 .icon-btn,

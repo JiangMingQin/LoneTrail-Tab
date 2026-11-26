@@ -95,7 +95,7 @@
 
 /* 序列号 */
 .dial-idx {
-    font-family: "Impact", "Roboto Mono", monospace;
+    font-family: "Impact", "Roboto Mono", "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", monospace;
     font-size: 14px;
     color: var(--accent-text);
     opacity: 0.55;
@@ -142,6 +142,19 @@
     font-weight: bold;
     color: var(--accent-text);
 }
+
+/* 内联图标：保留原本 / 图标的 accent 色，并让 color 与拨盘反色共用
+   --select-duration / --select-easing，避免选中填充扫过时图标瞬变 */
+.dial-icon.ph-icon {
+    color: var(--accent-text);
+    transition: transform 0.3s,
+                color var(--select-duration) var(--select-easing);
+}
+
+/* 选中底是 --text-main，图标必须反色为可读的近白/近黑；
+   focus-dimmed 时填充收回，恢复 accent 描边态 */
+.dial-item.active .dial-icon.ph-icon { color: var(--text-inverse); }
+.dial-item.active.focus-dimmed .dial-icon.ph-icon { color: var(--accent-text); }
 
 /* 右侧装饰条 */
 .dial-decor {

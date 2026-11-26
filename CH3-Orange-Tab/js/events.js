@@ -1,10 +1,12 @@
 import { state, saveConfig } from './state.js';
 import { Actions } from './actions.js';
 import { applyTheme, applyPerspective } from './utils.js';
-import { applyI18n, t } from './i18n.js';
+import { applyI18n, t, tSettings } from './i18n.js';
 import { refreshClock } from './clock.js';
 import { fullRender, updateKeyHints } from './render.js';
 import { initBackground } from './background.js';
+import { showToast } from './features/toast.js';
+import { icon } from './icons.js';
 
 /** Currently recording key binding button */
 let recordingBtn = null;
@@ -181,10 +183,10 @@ function handleKeyBinding(e) {
     const msg = document.getElementById('setting-msg');
     if (msg) {
         if (conflictAction) {
-            msg.textContent = t('settings.keyReassigned', { action: conflictAction });
+            msg.textContent = tSettings('settings.keyReassigned', { action: conflictAction });
             msg.style.color = 'var(--accent-color)';
         } else {
-            msg.textContent = t('settings.keySet');
+            msg.textContent = tSettings('settings.keySet');
             msg.style.color = 'inherit';
         }
     }
@@ -255,6 +257,9 @@ function initSettingsModal() {
     const resetBtn = document.getElementById('reset-settings');
     const msgEl = document.getElementById('setting-msg');
 
+    // 关闭按钮的 X 改为 Phosphor 内联图标，尺寸/颜色由 .close-icon 控制
+    if (closeBtn) closeBtn.innerHTML = icon('x', 'close-icon');
+
     if (settingsBtn) {
         settingsBtn.onclick = () => openSettingsModal(modal, msgEl);
     }
@@ -279,7 +284,7 @@ function initSettingsModal() {
     if (halfLifeRange) {
         halfLifeRange.oninput = (e) => {
             const valSpan = document.getElementById('half-life-val');
-            if (valSpan) valSpan.textContent = e.target.value + t('unit.days');
+            if (valSpan) valSpan.textContent = e.target.value + tSettings('unit.days');
         };
     }
 
@@ -314,9 +319,12 @@ function initSettingsModal() {
     if (saveBtn) saveBtn.onclick = () => saveSettings(modal);
     if (resetBtn) {
         resetBtn.onclick = () => {
-            if (confirm(t('settings.resetConfirm'))) {
-                localStorage.removeItem('rhine_config');
+            if (confirm(tSettings('settings.resetConfirm'))) {
+                localStorage.removeItem('ch3orange_config');
                 localStorage.removeItem('lonetrail_config');
+                localStorage.removeItem('rhine_config');
+                // reload 会清空当前 DOM，用 sessionStorage 把提示带到重载后的页面
+                sessionStorage.setItem('ch3orange_toast', 'toast.reset');
                 location.reload();
             }
         };
@@ -368,7 +376,7 @@ function openSettingsModal(modal, msgEl) {
     if (controls.clearSearchCheck) controls.clearSearchCheck.checked = prefs.clearSearchOnActivate === true;
     if (controls.halfLifeRange) {
         controls.halfLifeRange.value = prefs.frecencyHalfLifeDays || 7;
-        if (controls.halfLifeVal) controls.halfLifeVal.textContent = controls.halfLifeRange.value + t('unit.days');
+        if (controls.halfLifeVal) controls.halfLifeVal.textContent = controls.halfLifeRange.value + tSettings('unit.days');
     }
 
     // Sync segmented controls
@@ -404,7 +412,7 @@ function startKeyRecording(btn, msgEl) {
     btn.textContent = '...';
 
     if (msgEl) {
-        msgEl.textContent = t('settings.keyRecording');
+        msgEl.textContent = tSettings('settings.keyRecording');
         msgEl.style.color = 'inherit';
     }
 }
@@ -465,6 +473,7 @@ function saveSettings(modal) {
     updateKeyHints();
 
     if (modal) modal.classList.add('hidden');
+    showToast('toast.applied');
 }
 
 /** Applies visual settings changes */

@@ -1,6 +1,10 @@
 /**
- * Lightweight i18n layer for LoneTrail.
- * Keeps UI copy in one place and applies it to static DOM plus JS render paths.
+ * Lightweight i18n layer for CH3-Orange.
+ *
+ * Scope: the language switcher only affects the settings modal. The main UI
+ * (top bar, footer, dial, list, clock, toast, document title) stays in English:
+ *   - t()         -> always English, for every main-UI render path
+ *   - tSettings() -> follows the active language, for the #settings-modal subtree
  */
 
 export const SUPPORTED_LANGUAGES = [
@@ -10,9 +14,9 @@ export const SUPPORTED_LANGUAGES = [
 
 const DICTIONARIES = {
     en: {
-        'document.title': 'LONETRAIL TERMINAL',
+        'document.title': 'CH3-ORANGE TERMINAL',
 
-        'brand.system': 'LONETRAIL // OS',
+        'brand.system': 'CH3-ORANGE // OS',
         'top.settings': 'SETTING',
         'top.settingsTitle': 'CONFIG',
         'top.settingsAria': 'Open settings',
@@ -26,11 +30,9 @@ const DICTIONARIES = {
         'common.backAria': 'Back to parent',
         'common.root': 'ROOT',
         'common.untitled': 'Untitled',
-        'common.dir': 'DIR',
         'common.empty': 'EMPTY',
 
-        'search.icon': 'SEARCH ::',
-        'search.placeholder': 'INPUT KEYWORD...',
+        'search.placeholder': 'SEARCH',
         'search.aria': 'Search bookmarks',
         'search.title': 'SEARCH: "{query}"',
         'search.searching': 'SEARCHING...',
@@ -63,7 +65,7 @@ const DICTIONARIES = {
 
         'settings.ready': 'SYSTEM READY... WAITING FOR INPUT',
         'settings.language': 'LANGUAGE',
-        'settings.languageHint': 'Interface language',
+        'settings.languageHint': 'Settings language',
         'settings.theme': 'THEME',
         'settings.themeHint': 'Light / Dark interface',
         'settings.font': 'UI_FONT_SIZE',
@@ -85,6 +87,8 @@ const DICTIONARIES = {
         'settings.reset': 'RESET_DEFAULTS',
         'settings.apply': 'APPLY',
         'settings.resetConfirm': 'Reset all settings to default?',
+        'toast.applied': 'SETTINGS APPLIED',
+        'toast.reset': 'SETTINGS RESET',
         'settings.keyRecording': 'PRESS KEY TO BIND...',
         'settings.keySet': 'KEY SET. REMEMBER TO APPLY.',
         'settings.keyReassigned': 'KEY REASSIGNED (STOLEN FROM {action})',
@@ -112,9 +116,9 @@ const DICTIONARIES = {
     },
 
     zh: {
-        'document.title': 'LONETRAIL 终端',
+        'document.title': 'CH3-ORANGE 终端',
 
-        'brand.system': 'LONETRAIL // OS',
+        'brand.system': 'CH3-ORANGE // OS',
         'top.settings': '设置',
         'top.settingsTitle': '配置',
         'top.settingsAria': '打开设置',
@@ -128,11 +132,9 @@ const DICTIONARIES = {
         'common.backAria': '返回上级',
         'common.root': '根目录',
         'common.untitled': '未命名',
-        'common.dir': 'DIR',
         'common.empty': '空',
 
-        'search.icon': '搜索 ::',
-        'search.placeholder': '输入关键词...',
+        'search.placeholder': '搜索',
         'search.aria': '搜索书签',
         'search.title': '搜索：“{query}”',
         'search.searching': '搜索中...',
@@ -165,7 +167,7 @@ const DICTIONARIES = {
 
         'settings.ready': 'SYSTEM READY... WAITING FOR INPUT',
         'settings.language': '语言',
-        'settings.languageHint': '界面语言',
+        'settings.languageHint': '设置界面语言',
         'settings.theme': '主题',
         'settings.themeHint': '亮色 / 暗色界面',
         'settings.font': '界面字号',
@@ -187,6 +189,8 @@ const DICTIONARIES = {
         'settings.reset': '恢复默认',
         'settings.apply': '应用',
         'settings.resetConfirm': '确定恢复所有设置为默认值吗？',
+        'toast.applied': '设置已应用',
+        'toast.reset': '设置已重置',
         'settings.keyRecording': '按下按键以绑定...',
         'settings.keySet': '按键已设置，请记得应用。',
         'settings.keyReassigned': '按键已重新分配（原属于 {action}）',
@@ -200,7 +204,6 @@ const DICTIONARIES = {
         'empty.noMatches': '无匹配结果',
         'empty.query': '查询：“{query}”',
 
-        'clock.sysLocalTime': '系统本地时间 //',
         'week.sun': '周日',
         'week.mon': '周一',
         'week.tue': '周二',
@@ -226,9 +229,8 @@ export function getLanguage() {
     return currentLang;
 }
 
-/** Translates a key, with optional {name} interpolation. */
-export function t(key, vars = {}) {
-    const table = DICTIONARIES[currentLang] || DICTIONARIES.en;
+/** Shared lookup + {name} interpolation. */
+function lookup(table, key, vars) {
     let value = table[key] ?? DICTIONARIES.en[key] ?? key;
 
     for (const [name, replacement] of Object.entries(vars)) {
@@ -237,7 +239,18 @@ export function t(key, vars = {}) {
     return value;
 }
 
-/** Applies a language to the whole document. */
+/** Main-UI copy: always English, independent of the language preference. */
+export function t(key, vars = {}) {
+    return lookup(DICTIONARIES.en, key, vars);
+}
+
+/** Settings-modal copy: follows the language selected in preferences. */
+export function tSettings(key, vars = {}) {
+    const table = DICTIONARIES[currentLang] || DICTIONARIES.en;
+    return lookup(table, key, vars);
+}
+
+/** Applies the language to the settings modal only; main UI stays English. */
 export function applyI18n(lang) {
     currentLang = normalizeLang(lang);
 
@@ -246,20 +259,21 @@ export function applyI18n(lang) {
     root.dataset.lang = currentLang;
     document.title = t('document.title');
 
-    document.querySelectorAll('[data-i18n]').forEach((el) => {
-        el.textContent = t(el.dataset.i18n);
+    const scope = document.getElementById('settings-modal') || document;
+    scope.querySelectorAll('[data-i18n]').forEach((el) => {
+        el.textContent = tSettings(el.dataset.i18n);
     });
-    document.querySelectorAll('[data-i18n-title]').forEach((el) => {
-        el.setAttribute('title', t(el.dataset.i18nTitle));
+    scope.querySelectorAll('[data-i18n-title]').forEach((el) => {
+        el.setAttribute('title', tSettings(el.dataset.i18nTitle));
     });
-    document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
-        el.setAttribute('aria-label', t(el.dataset.i18nAria));
+    scope.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+        el.setAttribute('aria-label', tSettings(el.dataset.i18nAria));
     });
-    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
-        el.setAttribute('placeholder', t(el.dataset.i18nPlaceholder));
+    scope.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+        el.setAttribute('placeholder', tSettings(el.dataset.i18nPlaceholder));
     });
 
-    // CSS-generated labels cannot read dictionaries directly.
+    // Main-UI clock label is CSS-generated: keep it English like the rest.
     root.style.setProperty('--i18n-sys-local-time', `"${t('clock.sysLocalTime')}"`);
 
     return currentLang;
