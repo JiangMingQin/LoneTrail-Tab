@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <title>CH3-Orange Tab icon</title>
+  <!-- Orange base: center (256,280), radius 210 -->
+  <circle cx="256" cy="280" r="210" fill="#FF7300"/>
+  <!-- Three grey nodes: centers sit on the orange circumference at 270 / 45 / 135 degrees -->
+  <circle cx="256" cy="70" r="64" fill="#3A3A3A"/>
+  <circle cx="404.49" cy="428.49" r="64" fill="#3A3A3A"/>
+  <circle cx="107.51" cy="428.49" r="64" fill="#3A3A3A"/>
+  <!-- White core -->
+  <circle cx="256" cy="280" r="29" fill="#FFFFFF"/>
+</svg>
