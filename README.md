@@ -77,25 +77,44 @@ git clone https://github.com/JiangMingQin/CH3-Orange-Tab.git
 
 ## 🛠️ 项目结构 (Structure)
 
-扩展本体位于 `CH3-Orange-Tab/`，保持极简扁平结构，便于学习与二次开发：
+扩展本体位于 `CH3-Orange-Tab/`，无构建步骤、无第三方运行时依赖：
 
 ```text
 CH3-Orange-Tab/
-├── manifest.json      # Chrome 扩展配置（Manifest V3）
-├── newtab.html        # 新标签页入口
-├── icons/             # 扩展图标（16/32/48/128 PNG + SVG 源）
-├── css/               # 样式层（主题变量、布局、拨盘、列表 + modules/ 组件样式）
-└── js/                # 逻辑层（原生 ES Modules，无构建）
-    ├── features/      # navigation（导航）、search（搜索）、algorithm（Frecency）
-    ├── actions.js     # 动作分发（命令模式）
-    ├── background.js  # 动态背景生成（等高线 / 星场）
-    ├── clock.js       # 时钟 HUD
-    ├── events.js      # 键盘、鼠标与设置事件
-    ├── main.js        # 程序入口与书签数据加载
-    ├── render.js      # 增量渲染引擎
-    ├── state.js       # 集中状态管理与配置持久化
-    └── utils.js       # 工具函数（XSS 转义、防抖、主题应用等）
+├── manifest.json          # 扩展清单（Manifest V3），注册 newtab 与 16/32/48/128 图标
+├── newtab.html            # 新标签页入口：静态骨架 + data-i18n 绑定
+├── icons/                 # icon.svg 源文件 + 导出的 16/32/48/128 PNG
+├── css/
+│   ├── main.css           # 样式入口，按序 @import 下列文件
+│   ├── variables.css      # 主题变量：亮色「米色塑料磁带机」/ 暗色「星空之夜」
+│   ├── base.css           # Reset 与基础样式
+│   ├── layout.css         # 顶栏、主容器与品牌位
+│   ├── dial.css           # 左侧圆形拨盘（环形定位、选中扫描、图标反色）
+│   ├── list.css           # 右侧列表、浮层卡与空状态
+│   └── modules/           # 独立组件样式
+│       ├── search.css     # 取景框式搜索栏
+│       ├── modal.css      # 设置弹窗
+│       ├── toast.css      # 操作反馈横条
+│       └── clock.css      # 时钟 HUD
+└── js/                    # 逻辑层（原生 ES Modules，无构建）
+    ├── main.js            # 入口：加载配置、初始化模块、书签数据（无扩展 API 时用 Lorem 演示数据）
+    ├── state.js           # 集中状态、localStorage 持久化与旧存储键迁移
+    ├── render.js          # 增量渲染：拨盘、列表、浮层卡、倾斜平面
+    ├── events.js          # 键盘 / 鼠标 / 设置弹窗事件
+    ├── actions.js         # 动作分发（命令模式）
+    ├── background.js      # 背景生成：亮色等高线 / 暗色星场
+    ├── clock.js           # 时钟 HUD
+    ├── i18n.js            # 文案字典：t() 主界面固定英文，tSettings() 随语言切换
+    ├── icons.js           # 内联 Phosphor regular SVG（search / folder / x）
+    ├── utils.js           # 工具：XSS 转义、防抖、主题与透视应用
+    └── features/          # 功能模块
+        ├── navigation.js  # WASD / 方向键层级导航
+        ├── search.js      # 书签递归搜索
+        ├── algorithm.js   # Frecency：频率 × 时间衰减的快捷栏排序
+        └── toast.js       # 操作反馈横条的显示与闪烁
 ```
+
+仓库根目录另存放 README、CHANGELOG、PROJECT_DOCS、LICENSE，以及 `assets/`（README 用的界面截图）。
 
 详细架构说明见 [PROJECT_DOCS.md](PROJECT_DOCS.md)。
 
