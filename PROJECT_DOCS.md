@@ -204,6 +204,64 @@ score = score × 2^(−Δt / halfLife) + 1
 
 早期 SASA 算法的运行数据（`algorithm` 字段）与配置项（`deathThreshold` / `halfLife` / `anchorCount`）会在 `loadConfig()` 时被识别并丢弃，避免两套模型混算；`rhine_config` / `lonetrail_config` 两个旧存储键也会按序自动迁移到 `ch3orange_config`。
 
+#### 3.4 操作反馈 (features/toast.js)
+
+**核心职责**: 设置面板 Apply / Reset 之后的轻量确认提示，不打断当前操作。
+
+| 导出 | 说明 |
+|------|------|
+| `showToast(messageKey, duration = 1800)` | 显示一条文案为 `t(messageKey)` 的横条；重复调用会重启动画 |
+
+**关键设计**:
+
+| 特性 | 说明 |
+|------|------|
+| **展开方式** | `clip-path: inset(0 50%)` → `inset(0)` 从中间向两侧展开；不用 `scaleX`，否则文字会被一起压缩 |
+| **消失方式** | 先加 `is-blinking` 做方波闪烁（`BLINK_MS = 100`），闪完再移除可见类，而不是平滑收回 |
+| **重入保护** | 先清两个定时器 → 移除类 → `void offsetWidth` 强制重排 → 重新加类，保证连续调用也能重播过渡 |
+| **Reset 跨刷新** | Reset 会 `location.reload()`，故经 `sessionStorage('ch3orange_toast')` 带标记到新页面，由 `main.js` 启动时消费并显示 |
+| **无障碍** | 容器为 `role="status"` + `aria-live="polite"`，文案更新会被读屏播报 |
+
+元素由 `ensureElements()` 惰性缓存（`#action-toast` 与 `.toast-text`）；页面缺结构时返回 `false`，调用方静默跳过而非报错。
+
+#### 3.5 国际化 (i18n.js)
+
+**核心职责**: 用单一字典集中管理文案，但**主界面固定英文，只有设置弹窗跟随语言偏好**。
+
+| 导出 | 说明 |
+|------|------|
+| `t(key, vars)` | 主界面文案，恒定读 `DICTIONARIES.en` |
+| `tSettings(key, vars)` | 设置弹窗文案，读 `currentLang` 对应的字典 |
+| `applyI18n(lang)` | 应用语言：写 `<html lang>` / `data-lang`、刷新标题，并只扫描 `#settings-modal` 子树 |
+| `normalizeLang(lang)` | `zh` / `zh-CN` → `zh`，其余一律回落 `en` |
+| `SUPPORTED_LANGUAGES` | 语言选项源（EN / 中文） |
+
+**回退链**: `lookup()` 依次取 `字典[key]` → `DICTIONARIES.en[key]` → `key` 本身，缺译不会渲染成空白。
+
+**作用域为什么收敛**: 主界面是等宽大写排版，混入中文会破坏节奏；且部分"文案"其实是 CSS 伪元素输出的装饰标签（如 `SYS_LOCAL_TIME //`）。因此语言偏好只作用于设置弹窗，`--i18n-sys-local-time` 这个 CSS 变量也固定用 `t()` 保证英文。
+
+**绑定方式**: 静态节点走 `data-i18n` / `data-i18n-title` / `data-i18n-aria` / `data-i18n-placeholder` 属性；动态路径（toast、空状态、拨盘标签、页标题）直接调函数。
+
+#### 3.6 内联图标 (icons.js)
+
+**核心职责**: 以字符串形式提供少量内联 SVG，替代字符图标，不引入图标字体或外部依赖。
+
+| 图标 | 使用位置 |
+|------|------|
+| `search` | 拨盘的 `search-root`（搜索结果）项 |
+| `folder` | 下钻出来的真实书签文件夹（拨盘 14px / 右栏 20px） |
+| `x` | 设置弹窗关闭按钮 |
+
+**实现约定**:
+
+| 项 | 说明 |
+|------|------|
+| **来源** | Phosphor Icons `regular` 字重的原始单路径 SVG（MIT © 2023 Phosphor Icons），只内联实际用到的三个 |
+| **着色** | `fill="currentColor"`，颜色完全由 CSS `color` 决定，随主题与选中态反色 |
+| **尺寸** | 由 class 控制（`.ph-icon`、`.list-favicon.folder-icon` 等），SVG 自身不写宽高 |
+| **无障碍** | 统一 `aria-hidden="true"` + `focusable="false"`，语义交由宿主元素承担 |
+| **未知图标** | `icon()` 返回空串，调用处可直接拼进模板而不报错 |
+
 ---
 
 ### 4. 渲染系统 (Render System)
