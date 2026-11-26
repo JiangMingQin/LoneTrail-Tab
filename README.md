@@ -1,8 +1,12 @@
+<p align="center">
+  <img src="CH3-Orange-Tab/icons/icon.svg" width="88" height="88" alt="CH3-Orange Tab icon">
+</p>
+
 # CH3-Orange Tab
 
 CH3-Orange Tab 是一个粗野主义科幻终端风格的浏览器新标签页扩展。可以完全通过键盘操作快速检索收藏夹内容，并进行网页跳转。
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.1.0--alpha-green.svg) ![Style](https://img.shields.io/badge/style-Brutalist_Sci--Fi_Terminal-white)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Version](https://img.shields.io/badge/version-1.2.0-green.svg) ![Style](https://img.shields.io/badge/style-Brutalist_Sci--Fi_Terminal-white)
 
 
 ## ✨ 特性 (Features)
@@ -18,17 +22,19 @@ CH3-Orange Tab 是一个粗野主义科幻终端风格的浏览器新标签页�
 
 ## 🎬 界面演示 (Demo)
 
+以下截图均为 **3D 透视模式**（设置中开启 `PERSPECTIVE`），界面数据为 Lorem 占位演示数据。
+
 ### 🌑 暗色主题（Dark Theme）
 
-提供随机星空的生成，适配夜间使用场景：
+随机星空背景，适配夜间使用场景：
 
-![CH3-Orange-Tab 暗色模式演示](assets/dark.png)
+![CH3-Orange Tab 暗色主题 · 3D 透视](assets/dark.png)
 
 ### 🌕 亮色主题（Light Theme）
 
-提供随机等高线地形图生成，适配日间使用场景：
+随机等高线地形图背景，适配日间使用场景：
 
-![CH3-Orange-Tab 亮色模式演示](assets/light.png)
+![CH3-Orange Tab 亮色主题 · 3D 透视](assets/light.png)
 
 ## 🚀 安装指南 (Installation)
 
@@ -37,7 +43,7 @@ Chrome / Edge 等 Chromium 浏览器，任选一种方式获取扩展：
 **方式一：下载 Release 包（推荐）**
 
 前往 [Releases 页面](https://github.com/JiangMingQin/CH3-Orange-Tab/releases) 下载
-[`CH3-Orange-Tab-v1.1.0-alpha.zip`](https://github.com/JiangMingQin/CH3-Orange-Tab/releases/download/v1.1.0-alpha/CH3-Orange-Tab-v1.1.0-alpha.zip)，
+[`CH3-Orange-Tab-v1.2.0.zip`](https://github.com/JiangMingQin/CH3-Orange-Tab/releases/download/v1.2.0/CH3-Orange-Tab-v1.2.0.zip)，
 解压出 `CH3-Orange-Tab` 文件夹。
 
 **方式二：克隆仓库（适合开发 / 贡献）**
@@ -77,6 +83,7 @@ git clone https://github.com/JiangMingQin/CH3-Orange-Tab.git
 CH3-Orange-Tab/
 ├── manifest.json      # Chrome 扩展配置（Manifest V3）
 ├── newtab.html        # 新标签页入口
+├── icons/             # 扩展图标（16/32/48/128 PNG + SVG 源）
 ├── css/               # 样式层（主题变量、布局、拨盘、列表 + modules/ 组件样式）
 └── js/                # 逻辑层（原生 ES Modules，无构建）
     ├── features/      # navigation（导航）、search（搜索）、algorithm（Frecency）

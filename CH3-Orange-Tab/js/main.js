@@ -16,19 +16,54 @@ const DEFAULT_FONT_SIZE = 14;
 /** Debounce delay for window resize events (ms) */
 const RESIZE_DEBOUNCE_DELAY = 200;
 
-/** Demo data for non-Chrome environments */
+/**
+ * Demo data for non-Chrome environments.
+ * 结构模拟真实收藏夹：根层是两个收藏夹目录，其中第一个目录下固定放
+ * 「3 个网站 + 4 个文件夹」的占位内容（文案一律 Lorem，后两个文件夹留空）。
+ */
 const DEMO_BOOKMARKS = [
     {
         id: 'root-1',
-        title: 'Bookmarks Bar',
+        title: 'Lorem Ipsum',
         children: [
-            { title: 'Google', url: 'https://google.com' },
-            { title: 'GitHub', url: 'https://github.com' },
+            // --- 3 个网站 ---
+            { id: 'demo-site-1', title: 'Consectetur Adipiscing', url: 'https://adipiscing.example.com' },
+            { id: 'demo-site-2', title: 'Sed Do Eiusmod', url: 'https://eiusmod.example.com' },
+            { id: 'demo-site-3', title: 'Tempor Incididunt', url: 'https://incididunt.example.com' },
+
+            // --- 4 个文件夹 ---
+            {
+                id: 'demo-folder-1',
+                title: 'Ut Labore Et',
+                children: [
+                    { id: 'demo-f1-a', title: 'Dolore Magna Aliqua', url: 'https://example.com/lorem/1' },
+                    { id: 'demo-f1-b', title: 'Ut Enim Ad Minim', url: 'https://example.com/lorem/2' },
+                    { id: 'demo-f1-c', title: 'Veniam Quis Nostrud', url: 'https://example.com/lorem/3' },
+                ],
+            },
+            {
+                id: 'demo-folder-2',
+                title: 'Magna Aliqua',
+                children: [],
+            },
+            {
+                id: 'demo-folder-3',
+                title: 'Veniam Quis',
+                children: [
+                    { id: 'demo-f3-a', title: 'Exercitation Ullamco', url: 'https://example.com/lorem/4' },
+                    { id: 'demo-f3-b', title: 'Laboris Nisi Aliquip', url: 'https://example.com/lorem/5' },
+                ],
+            },
+            {
+                id: 'demo-folder-4',
+                title: 'Nostrud Exercitation',
+                children: [],
+            },
         ],
     },
     {
         id: 'root-2',
-        title: 'Other Bookmarks',
+        title: 'Dolor Sit Amet',
         children: [],
     },
 ];

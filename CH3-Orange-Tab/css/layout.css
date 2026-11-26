@@ -38,12 +38,11 @@
 .system-status::before {
     content: '';
     display: inline-block;
-    width: 11px;
-    height: 12px;
-    background: var(--accent);
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
     margin-right: 10px;
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    box-shadow: 0 0 8px var(--led-glow);
+    background: url('../icons/icon.svg') center / contain no-repeat;
 }
 
 /* 右侧图标组 (设置/主题) */

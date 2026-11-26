@@ -12,6 +12,7 @@ CH3-Orange Tab 是一个 Chrome 扩展新标签页应用，采用**双栏导航�
 CH3-Orange-Tab/
 ├── manifest.json         # Chrome 扩展核心配置 (V3)
 ├── newtab.html           # 新标签页入口文件
+├── icons/                # 扩展图标 (16/32/48/128 PNG + SVG 源)
 ├── PROJECT_DOCS.md       # 项目架构文档
 ├── README.md             # 开源说明文档
 ├── css/                  # 样式层
